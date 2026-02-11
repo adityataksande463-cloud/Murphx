@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MurphX Cosmic Focus Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap');
+
+body{
+    margin:0;
+    font-family:'Orbitron',sans-serif;
+    background: radial-gradient(circle at center, #0b0f2a, #000000 70%);
+    color:white;
+    overflow-x:hidden;
+}
+
+/* Star background */
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+/* Layout */
+.sidebar{
+    position:fixed;
+    width:220px;
+    height:100vh;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(10px);
+    padding-top:20px;
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.sidebar button{
+    width:90%;
+    margin:5px auto;
+    display:block;
+    padding:10px;
+    border:none;
+    background:transparent;
+    color:white;
+    cursor:pointer;
+    border-radius:8px;
+}
+
+.sidebar button:hover{
+    background:rgba(255,255,255,0.1);
+}
+
+.main{
+    margin-left:220px;
+    padding:20px;
+}
+
+.card{
+    background:rgba(255,255,255,0.07);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.timer{
+    font-size:60px;
+    text-align:center;
+}
+
+.progress-bar{
+    width:100%;
+    height:10px;
+    background:rgba(255,255,255,0.2);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#00d4ff,#6a00ff);
+}
+
+button.action{
+    padding:10px 20px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(90deg,#00d4ff,#6a00ff);
+    color:white;
+    cursor:pointer;
+}
+
+.rank{
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+.hidden{
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="sidebar">
+    <h2>🌌 MurphX</h2>
+    <button onclick="showSection('dashboard')">Dashboard</button>
+    <button onclick="showSection('focus')">Focus Timer</button>
+    <button onclick="showSection('pomodoro')">Pomodoro</button>
+    <button onclick="showSection('deep')">Deep Work</button>
+    <button onclick="showSection('countdown')">Countdown</button>
+    <button onclick="toggleAmbient()">🎵 Ambient</button>
+</div>
+
+<div class="main">
+
+<div id="dashboard" class="card">
+    <div class="rank">Rank: <span id="rankName"></span></div>
+    <div>XP: <span id="xpValue"></span></div>
+    <div class="progress-bar"><div class="progress" id="xpBar"></div></div>
+    <p>Season Reset In: <span id="seasonTimer"></span></p>
+</div>
+
+<div id="focus" class="card hidden">
+    <h3>Focus Timer</h3>
+    <div class="timer" id="focusDisplay">00:00</div>
+    <button class="action" onclick="startTimer()">Start</button>
+    <button class="action" onclick="stopTimer()">Stop</button>
+    <button class="action" onclick="resetTimer()">Reset</button>
+</div>
+
+<div id="pomodoro" class="card hidden">
+    <h3>Pomodoro (25/5)</h3>
+    <div class="timer" id="pomodoroDisplay">25:00</div>
+    <button class="action" onclick="startPomodoro()">Start</button>
+</div>
+
+<div id="deep" class="card hidden">
+    <h3>Deep Work (90 Min)</h3>
+    <div class="timer" id="deepDisplay">90:00</div>
+    <button class="action" onclick="startDeep()">Start</button>
+</div>
+
+<div id="countdown" class="card hidden">
+    <h3>Exam Countdown</h3>
+    <p>NEET: <span id="neetCountdown"></span></p>
+    <p>JEE: <span id="jeeCountdown"></span></p>
+</div>
+
+</div>
+
+<script>
+
+/* ---------- STARFIELD ---------- */
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+for(let i=0;i<200;i++){
+    stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2});
+}
+
+function drawStars(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="white";
+    stars.forEach(s=>{
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+}
+drawStars();
+
+/* ---------- APP STATE ---------- */
+let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+let seasonStart = localStorage.getItem("seasonStart") || Date.now();
+localStorage.setItem("seasonStart", seasonStart);
+
+/* ---------- RANK SYSTEM ---------- */
+function getRank(xp){
+    if(xp<2000) return "🌍 Planet";
+    if(xp<5000) return "🌙 Moon";
+    if(xp<10000) return "⭐ Star";
+    if(xp<20000) return "🌌 Nebula";
+    if(xp<35000) return "🌠 Galaxy";
+    return "☄ Supernova";
+}
+
+function updateDashboard(){
+    document.getElementById("xpValue").innerText=xp;
+    document.getElementById("rankName").innerText=getRank(xp);
+    let percent=Math.min((xp/35000)*100,100);
+    document.getElementById("xpBar").style.width=percent+"%";
+}
+updateDashboard();
+
+/* ---------- SEASON RESET ---------- */
+function updateSeason(){
+    let now=Date.now();
+    let diff=now-seasonStart;
+    let daysLeft=12 - Math.floor(diff/(1000*60*60*24));
+    if(daysLeft<=0){
+        xp=0;
+        seasonStart=Date.now();
+        localStorage.setItem("seasonStart",seasonStart);
+        localStorage.setItem("xp",xp);
+    }
+    document.getElementById("seasonTimer").innerText=daysLeft+" days";
+}
+setInterval(updateSeason,1000);
+
+/* ---------- TIMER ENGINE ---------- */
+let timerInterval;
+let seconds=0;
+
+function startTimer(){
+    if(timerInterval) return;
+    timerInterval=setInterval(()=>{
+        seconds++;
+        if(seconds%60===0){
+            xp+=2;
+            localStorage.setItem("xp",xp);
+            updateDashboard();
+        }
+        displayTime(seconds,"focusDisplay");
+    },1000);
+}
+
+function stopTimer(){
+    clearInterval(timerInterval);
+    timerInterval=null;
+}
+
+function resetTimer(){
+    stopTimer();
+    seconds=0;
+    displayTime(seconds,"focusDisplay");
+}
+
+function displayTime(sec,id){
+    let m=Math.floor(sec/60);
+    let s=sec%60;
+    document.getElementById(id).innerText=
+        (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+
+/* ---------- POMODORO ---------- */
+function startPomodoro(){
+    let time=1500;
+    let int=setInterval(()=>{
+        time--;
+        displayTime(time,"pomodoroDisplay");
+        if(time<=0){
+            clearInterval(int);
+            xp+=50;
+            localStorage.setItem("xp",xp);
+            updateDashboard();
+            alert("Session Complete +50 XP");
+        }
+    },1000);
+}
+
+/* ---------- DEEP WORK ---------- */
+function startDeep(){
+    let time=5400;
+    let int=setInterval(()=>{
+        time--;
+        displayTime(time,"deepDisplay");
+        if(time<=0){
+            clearInterval(int);
+            xp+=180;
+            localStorage.setItem("xp",xp);
+            updateDashboard();
+            alert("Deep Work Complete +180 XP");
+        }
+    },1000);
+}
+
+/* ---------- COUNTDOWN ---------- */
+function updateCountdown(){
+    let neet=new Date("May 3, 2026 00:00:00").getTime();
+    let jee=new Date("April 5, 2026 00:00:00").getTime();
+    let now=Date.now();
+    function calc(date){
+        let diff=date-now;
+        let d=Math.floor(diff/(1000*60*60*24));
+        let h=Math.floor((diff/(1000*60*60))%24);
+        let m=Math.floor((diff/(1000*60))%60);
+        let s=Math.floor((diff/1000)%60);
+        return d+"d "+h+"h "+m+"m "+s+"s";
+    }
+    document.getElementById("neetCountdown").innerText=calc(neet);
+    document.getElementById("jeeCountdown").innerText=calc(jee);
+}
+setInterval(updateCountdown,1000);
+
+/* ---------- NAVIGATION ---------- */
+function showSection(id){
+    document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+}
+
+/* ---------- AMBIENT SOUND ---------- */
+let ambient=new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b08d2.mp3");
+ambient.loop=true;
+let ambientOn=false;
+
+function toggleAmbient(){
+    if(!ambientOn){
+        ambient.play();
+        ambientOn=true;
+    }else{
+        ambient.pause();
+        ambientOn=false;
+    }
+}
+
+</script>
+</body>
+  </html>
