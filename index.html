@@ -3,65 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>SciTrack | Next-Gen NEET/JEE Prep</title>
-  <!-- Tailwind + Font Awesome + Google Fonts + Chart.js -->
+  <title>SciTrack | NEET/JEE Next-Gen Preparation Ecosystem</title>
+  <!-- Tailwind CSS + Font Awesome + Google Fonts + Chart.js + AOS (optional) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    * {
-      font-family: 'Inter', sans-serif;
-    }
+    * { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
     body {
-      background: #f8fafc;
-      transition: background 0.2s, color 0.2s;
+      background: #f9fafb;
+      transition: background 0.3s, color 0.2s;
     }
     body.dark {
-      background: #0f172a;
-      color: #e2e8f0;
+      background: #0a0c15;
+      color: #eef2ff;
     }
+    /* custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+    .dark ::-webkit-scrollbar-track { background: #1f2937; }
+    /* card hover effect */
     .card-hover {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .card-hover:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15);
+      transform: translateY(-6px);
+      box-shadow: 0 25px 30px -12px rgba(0,0,0,0.2);
     }
+    /* glassmorphism */
     .glass-card {
       background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.3);
     }
     .dark .glass-card {
-      background: rgba(15,23,42,0.7);
+      background: rgba(15,25,45,0.7);
       border-color: rgba(255,255,255,0.1);
     }
-    .sim-canvas {
-      background: #1e293b;
-      border-radius: 1rem;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    /* animated gradient border */
+    .animated-border {
+      position: relative;
+      background: linear-gradient(60deg, #3b82f6, #a855f7, #ec489a);
+      background-size: 300% 300%;
+      animation: gradientMove 4s ease infinite;
     }
-    .progress-ring {
-      transform: rotate(-90deg);
-    }
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #e2e8f0;
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #3b82f6;
-      border-radius: 10px;
-    }
-    .dark ::-webkit-scrollbar-track {
-      background: #1e293b;
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     .tab-active {
       border-bottom: 2px solid #3b82f6;
       color: #3b82f6;
+      font-weight: 600;
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(59,130,246,0); }
+      100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+    }
+    /* flip card for flashcards */
+    .flip-card {
+      background-color: transparent;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 1rem;
+    }
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-front, .flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 1rem;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .flip-front {
+      background: white;
+      color: #1f2937;
+    }
+    .flip-back {
+      background: #3b82f6;
+      color: white;
+      transform: rotateY(180deg);
+    }
+    .dark .flip-front {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    .dark .flip-back {
+      background: #2563eb;
     }
   </style>
 </head>
@@ -72,9 +122,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-2">
-          <i class="fas fa-atom text-2xl text-blue-600"></i>
-          <span class="font-bold text-xl tracking-tight text-gray-800 dark:text-white">SciTrack</span>
-          <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full ml-2">Next-Gen</span>
+          <i class="fas fa-atom text-2xl text-blue-600 animate-pulse"></i>
+          <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SciTrack</span>
+          <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-2 py-0.5 rounded-full ml-2">Next-Gen</span>
         </div>
         <div class="hidden md:flex space-x-1">
           <button data-page="home" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Home</button>
@@ -90,315 +140,285 @@
           <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
             <i class="fas fa-moon dark:fa-sun text-gray-700 dark:text-yellow-300"></i>
           </button>
-          <div class="relative">
-            <i class="fas fa-bell text-gray-600 dark:text-gray-300 cursor-pointer"></i>
-            <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          <div class="relative cursor-pointer group">
+            <i class="fas fa-bell text-gray-600 dark:text-gray-300"></i>
+            <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+            <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg hidden group-hover:block p-2 text-sm">🔔 New AI recommendation ready!</div>
           </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- ==================== MAIN CONTENT (PAGES) ==================== -->
-  <main id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- pages will be dynamically injected -->
-  </main>
+  <main id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></main>
 
-  <footer class="border-t border-gray-200 dark:border-gray-800 mt-12 py-6 text-center text-gray-500 text-sm">
-    <p>© 2025 SciTrack — Inspire | Track | Conquer NEET/JEE with Science</p>
+  <footer class="border-t border-gray-200 dark:border-gray-800 mt-12 py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
+    <p>© 2025 SciTrack — Empowering Future Scientists | AI-Powered | Real-time Analytics | India's Most Advanced Prep Ecosystem</p>
   </footer>
 
   <script>
-    // ---------- GLOBAL STATE & MOCK DATA ----------
-    let currentPage = "home";
+    // ------------------- GLOBAL STATE & LOCAL STORAGE -------------------
     let userData = {
-      name: "Aarav Sharma",
-      streak: 12,
-      points: 2450,
-      badges: ["🔥 7-day streak", "🧪 Lab Explorer", "📈 Top Performer"],
-      completedTopics: ["Kinematics", "Mole Concept", "Cell Biology"],
-      totalTopics: 28,
+      name: "Riya Mehta",
+      streak: 18,
+      points: 3870,
+      badges: ["🔥 14-day streak", "🧪 Lab Virtuoso", "📈 Top 5%", "💡 Doubt Solver"],
+      completedTopics: ["Kinematics", "Laws of Motion", "Mole Concept", "Chemical Bonding", "Cell Biology", "Genetics"],
+      totalTopics: 30,
       recentTests: [
-        { name: "Physics - Mechanics", score: 78, total: 100, date: "2025-03-20" },
-        { name: "Chemistry - Organic", score: 62, total: 100, date: "2025-03-18" },
-        { name: "Biology - Genetics", score: 88, total: 100, date: "2025-03-15" }
+        { name: "Physics - Mechanics", score: 82, total: 100, date: "2025-03-22" },
+        { name: "Chemistry - Organic", score: 68, total: 100, date: "2025-03-20" },
+        { name: "Biology - Genetics", score: 91, total: 100, date: "2025-03-18" },
+        { name: "Full Mock #3", score: 74, total: 100, date: "2025-03-15" }
       ],
-      subjectAccuracy: { Physics: 68, Chemistry: 72, Biology: 84, Maths: 65 },
-      dailyHours: [2.5, 3, 4, 3.5, 5, 6, 4.2] // last 7 days
+      subjectAccuracy: { Physics: 72, Chemistry: 68, Biology: 88, Maths: 70 },
+      dailyHours: [2.8, 3.2, 4.5, 3.7, 5.2, 6.1, 4.9],
+      studyPlan: [
+        { task: "Complete Thermodynamics", due: "2025-03-24", priority: "high" },
+        { task: "Solve 30 Physics Problems", due: "2025-03-23", priority: "medium" }
+      ]
     };
-    
-    let activeTest = null; // for practice test state
-    let testQuestions = [];
-    let userAnswers = [];
-    
-    // Helper: save/load from localStorage
+    let activeTestQuestions = [];
+    let userTestAnswers = [];
+    let flashcards = [
+      { front: "Newton's First Law", back: "An object remains at rest or in uniform motion unless acted by external force." },
+      { front: "Ohm's Law", back: "V = IR, current is directly proportional to voltage." },
+      { front: "Law of Conservation of Mass", back: "Mass is neither created nor destroyed in a chemical reaction." }
+    ];
+    let currentFlashcardIndex = 0;
+
+    function saveUserData() { localStorage.setItem("scitrack_user", JSON.stringify(userData)); }
     function loadUserData() {
       const stored = localStorage.getItem("scitrack_user");
       if(stored) userData = { ...userData, ...JSON.parse(stored) };
     }
-    function saveUserData() {
-      localStorage.setItem("scitrack_user", JSON.stringify(userData));
-    }
     loadUserData();
-    
-    // ---------- PAGE RENDERERS (each returns HTML string) ----------
-    const renderers = {
+
+    // helper to update progress bar
+    function updateProgress() {
+      const percent = (userData.completedTopics.length / userData.totalTopics) * 100;
+      document.querySelectorAll(".progress-fill").forEach(el => el.style.width = `${percent}%`);
+    }
+
+    // ------------------- PAGE RENDERERS (modular, high fidelity) -------------------
+    const pages = {
       home: () => `
         <div class="space-y-12">
-          <div class="text-center space-y-4">
-            <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">Unlock Your Scientific Potential</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">AI-powered tracker · Immersive simulations · Next-gen analytics for NEET/JEE</p>
-            <button data-nav="dashboard" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition">Start Your Journey →</button>
+          <div class="text-center space-y-4 animate-fade-in">
+            <div class="inline-block p-1 px-3 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 text-sm">🚀 Next-Gen Learning Ecosystem</div>
+            <h1 class="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Master NEET/JEE with<br>Science & AI</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Interactive simulations, adaptive learning, real-time analytics — all in one place.</p>
+            <button data-nav="dashboard" class="mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition transform hover:scale-105">Launch Dashboard →</button>
           </div>
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-hover"><i class="fas fa-brain text-3xl text-blue-500 mb-3"></i><h3 class="text-xl font-bold">AI Adaptive Path</h3><p class="text-gray-600 dark:text-gray-300">Personalized recommendations that evolve with your performance.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-hover"><i class="fas fa-flask text-3xl text-purple-500 mb-3"></i><h3 class="text-xl font-bold">Virtual Science Lab</h3><p class="text-gray-600 dark:text-gray-300">Interactive physics, chemistry & biology simulations.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-hover"><i class="fas fa-chart-line text-3xl text-green-500 mb-3"></i><h3 class="text-xl font-bold">Predictive Rank Analysis</h3><p class="text-gray-600 dark:text-gray-300">Know your All India rank estimate & weak spots.</p></div>
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl card-hover"><i class="fas fa-brain text-4xl text-blue-500 mb-4"></i><h3 class="text-xl font-bold">AI Adaptive Coach</h3><p>Personalized recommendations & smart question generation based on your weak spots.</p></div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl card-hover"><i class="fas fa-flask text-4xl text-purple-500 mb-4"></i><h3 class="text-xl font-bold">Virtual Lab</h3><p>Simulate physics experiments, 3D biology models, and chemistry reactions.</p></div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl card-hover"><i class="fas fa-chart-line text-4xl text-green-500 mb-4"></i><h3 class="text-xl font-bold">Predictive Rank</h3><p>Estimate your All India Rank and track improvement over time.</p></div>
           </div>
-          <div class="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-6">
-            <h2 class="text-2xl font-bold mb-4">✨ Interactive Pendulum Lab</h2>
-            <p class="mb-3">Adjust length & mass — see real-time physics simulation (Simple Harmonic Motion)</p>
-            <div class="flex flex-wrap gap-4 mb-4">
-              <div><label class="block text-sm">Length (m)</label><input type="range" id="pendLength" min="0.3" max="1.5" step="0.01" value="1.0" class="w-40"></div>
-              <div><label class="block text-sm">Mass (kg)</label><input type="range" id="pendMass" min="0.1" max="2.0" step="0.05" value="0.5" class="w-40"></div>
-              <div><span id="periodDisplay" class="bg-white dark:bg-gray-700 px-3 py-1 rounded-full text-sm">Period: 2.01 s</span></div>
+          <!-- Interactive Pendulum Simulator -->
+          <div class="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-6 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-2">🧪 Interactive Pendulum Lab</h2>
+            <p class="mb-4">Adjust length & mass — watch real-time SHM simulation</p>
+            <div class="flex flex-wrap gap-6 mb-6">
+              <div><label class="block text-sm font-medium">Length (m)</label><input type="range" id="pendLength" min="0.3" max="1.5" step="0.01" value="1.0" class="w-40"></div>
+              <div><label class="block text-sm font-medium">Mass (kg)</label><input type="range" id="pendMass" min="0.1" max="2.0" step="0.05" value="0.5" class="w-40"></div>
+              <div><span id="periodDisplay" class="bg-white dark:bg-gray-700 px-4 py-2 rounded-full text-sm font-mono">Period: 2.01 s</span></div>
             </div>
-            <canvas id="pendulumCanvas" width="400" height="250" class="w-full max-w-md mx-auto bg-gray-800 rounded-xl shadow-inner"></canvas>
+            <canvas id="pendulumCanvas" width="500" height="280" class="w-full max-w-lg mx-auto bg-gray-800 rounded-xl shadow-inner"></canvas>
           </div>
+          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow text-center"><i class="fas fa-quote-left text-3xl text-blue-500"></i><p class="italic text-lg">"Science is the key to the future, and SciTrack is your guide." — Dr. A.P.J. Abdul Kalam (Tribute)</p></div>
         </div>
       `,
       dashboard: () => `
         <div class="space-y-6">
-          <div class="flex justify-between items-center flex-wrap"><h1 class="text-2xl font-bold">👋 Welcome, ${userData.name}</h1><div class="flex gap-3"><span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full"><i class="fas fa-fire"></i> ${userData.streak} day streak</span><span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full"><i class="fas fa-star"></i> ${userData.points} XP</span></div></div>
+          <div class="flex flex-wrap justify-between items-center"><h1 class="text-2xl font-bold">👋 Welcome back, ${userData.name}</h1><div class="flex gap-3"><span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full"><i class="fas fa-fire"></i> ${userData.streak} day streak</span><span class="bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full"><i class="fas fa-star"></i> ${userData.points} XP</span></div></div>
           <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">📊 Study Progress</h3><div class="mt-2"><div class="flex justify-between"><span>Topics mastered</span><span>${userData.completedTopics.length}/${userData.totalTopics}</span></div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: ${(userData.completedTopics.length/userData.totalTopics)*100}%"></div></div><p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Next up: Thermodynamics, Electrochemistry</p></div></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">🎯 AI Recommendation</h3><p class="text-gray-700 dark:text-gray-200 mt-2"><i class="fas fa-robot text-blue-500"></i> Based on recent tests, focus on <strong>Organic Chemistry (Isomerism)</strong> and <strong>Rotational Motion</strong>.</p><button class="mt-3 text-sm bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full">Practice now →</button></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow col-span-2"><h3 class="font-semibold text-lg">📈 Recent Test Scores</h3><canvas id="scoreChart" height="150"></canvas></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">🏆 Badges Earned</h3><div class="flex flex-wrap gap-2 mt-2">${userData.badges.map(b => `<span class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-sm"><i class="fas fa-medal text-yellow-500"></i> ${b}</span>`).join('')}</div></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">📅 Upcoming Tasks</h3><ul class="list-disc pl-5 mt-2 space-y-1"><li>📘 Complete "Current Electricity" - Due Tomorrow</li><li>🧪 Mock Test: Full Syllabus (Sun, 5PM)</li><li>🎥 Watch: "Semiconductors" video lecture</li></ul></div>
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow card-hover"><h3 class="font-semibold text-lg">📚 Syllabus Progress</h3><div class="mt-2"><div class="flex justify-between"><span>${userData.completedTopics.length}/${userData.totalTopics} topics mastered</span><span>${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}%</span></div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full progress-fill" style="width: ${(userData.completedTopics.length/userData.totalTopics)*100}%"></div></div><p class="mt-3 text-sm text-gray-600 dark:text-gray-300">Next: Thermodynamics, Electrochemistry, Plant Physiology</p></div></div>
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow card-hover"><h3 class="font-semibold text-lg">🤖 AI Coach Insight</h3><p class="mt-2"><i class="fas fa-microchip text-blue-500"></i> Based on recent test scores, your weakest area is <strong>Organic Chemistry (Isomerism)</strong>. I've added 5 custom practice questions in your queue.</p><button class="mt-3 text-sm bg-blue-50 dark:bg-blue-900/30 px-4 py-1.5 rounded-full">Practice Now →</button></div>
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow col-span-2"><h3 class="font-semibold text-lg">📈 Recent Test Performance</h3><canvas id="scoreChart" height="120"></canvas></div>
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">🏅 Badge Showcase</h3><div class="flex flex-wrap gap-2 mt-2">${userData.badges.map(b => `<span class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-sm"><i class="fas fa-medal text-yellow-500"></i> ${b}</span>`).join('')}</div></div>
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">📅 Today's Focus</h3><ul class="mt-2 space-y-2">${userData.studyPlan.map(t => `<li><i class="fas fa-circle-check text-green-500"></i> ${t.task} <span class="text-xs text-gray-500">Due ${t.due}</span></li>`).join('')}</ul></div>
           </div>
         </div>
       `,
-      syllabus: () => `
-        <div><h1 class="text-2xl font-bold mb-4">📖 Interactive Syllabus Tracker</h1><p class="mb-4">Click to mark topics as completed. Real-time sync.</p>
-        <div class="grid md:grid-cols-2 gap-6">
-          ${generateSyllabusTree()}
-        </div>
-        <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl"><i class="fas fa-chart-simple"></i> Overall progress: <span id="syllabusProgress">0</span>% completed</div></div>
-      `,
+      syllabus: () => {
+        const subjects = [
+          { name: "Physics", chapters: ["Kinematics","Laws of Motion","Work Power Energy","Thermodynamics","Waves","Optics","Electrostatics"] },
+          { name: "Chemistry", chapters: ["Mole Concept","Atomic Structure","Chemical Bonding","Thermodynamics","Equilibrium","Organic Basics","Hydrocarbons"] },
+          { name: "Biology", chapters: ["Cell Biology","Genetics","Ecology","Human Physiology","Plant Physiology","Biotechnology","Evolution"] }
+        ];
+        let html = `<h1 class="text-2xl font-bold mb-4">📖 Interactive Syllabus Tracker</h1><p class="mb-4">Click on any chapter to mark as completed — your progress syncs instantly.</p><div class="grid md:grid-cols-3 gap-6">`;
+        subjects.forEach(sub => {
+          let completedCount = sub.chapters.filter(ch => userData.completedTopics.includes(ch)).length;
+          html += `<div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-bold text-xl mb-3">${sub.name}</h3>`;
+          sub.chapters.forEach(ch => {
+            let isDone = userData.completedTopics.includes(ch);
+            html += `<div class="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-700"><span>${ch}</span><button data-chapter="${ch}" class="toggle-chapter text-xs px-2 py-1 rounded ${isDone ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}">${isDone ? '✓ Completed' : 'Mark'}</button></div>`;
+          });
+          html += `<div class="mt-3 text-sm font-medium">Progress: ${completedCount}/${sub.chapters.length} (${Math.round(completedCount/sub.chapters.length*100)}%)</div></div>`;
+        });
+        html += `</div><div class="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl"><i class="fas fa-chart-simple"></i> Overall completion: <span id="syllabusProgress">${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}</span>%</div>`;
+        return html;
+      },
       practice: () => `
-        <div><h1 class="text-2xl font-bold mb-4">✏️ Smart Practice Zone</h1>
-        <div class="flex flex-wrap gap-3 mb-6"><button id="newQuickTest" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ New 5-Question Test</button><button id="fullMockBtn" class="bg-purple-600 text-white px-4 py-2 rounded-lg">Full Mock (Advanced)</button></div>
-        <div id="testContainer" class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow">Select a test to begin or click "New Quick Test" for adaptive questions.</div></div>
+        <div><h1 class="text-2xl font-bold mb-4">✍️ Adaptive Practice Zone</h1><div class="flex flex-wrap gap-3 mb-6"><button id="newQuickTest" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow"><i class="fas fa-bolt"></i> Quick 5-Question Test</button><button id="fullMockBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg shadow"><i class="fas fa-chart-line"></i> Full Mock (AI-Adaptive)</button></div><div id="testContainer" class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow">Select a test to begin your practice session.</div></div>
       `,
       analytics: () => `
-        <div><h1 class="text-2xl font-bold mb-4">📊 Deep Analytics & Insights</h1>
-        <div class="grid md:grid-cols-2 gap-6"><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>Subject-wise Accuracy</h3><canvas id="subjectChart" height="200"></canvas></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>Weekly Study Hours</h3><canvas id="hoursChart" height="200"></canvas></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow col-span-2"><h3>Weakness Heatmap (Top 3)</h3><ul class="mt-2 space-y-2"><li>⚛️ Physics: Rotational Motion (42% accuracy)</li><li>🧪 Chemistry: Chemical Kinetics (55%)</li><li>🧬 Biology: Plant Physiology (63%)</li></ul><div class="mt-3 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg"><i class="fas fa-robot"></i> AI suggests: Spend 30 min daily on Rotational Motion problems.</div></div></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">📊 Deep Learning Analytics</h1><div class="grid md:grid-cols-2 gap-6"><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>Subject Accuracy</h3><canvas id="subjectChart" height="200"></canvas></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>Weekly Study Pattern</h3><canvas id="hoursChart" height="200"></canvas></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow col-span-2"><h3>🔍 Weakness Heatmap (AI Identified)</h3><ul class="mt-2 space-y-3"><li><span class="font-bold">⚛️ Physics:</span> Rotational Motion (38% accuracy) → <span class="text-red-500">Critical</span></li><li><span class="font-bold">🧪 Chemistry:</span> Organic Reaction Mechanism (45%) → <span class="text-orange-500">Needs improvement</span></li><li><span class="font-bold">🧬 Biology:</span> Plant Anatomy (62%) → <span class="text-yellow-500">Moderate</span></li></ul><div class="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 p-4 rounded-xl"><i class="fas fa-robot text-blue-600"></i> AI Suggestion: Dedicate 25 min daily to Rotational Motion problems for the next week.</div></div></div></div>
       `,
       resources: () => `
-        <div><h1 class="text-2xl font-bold mb-4">📚 Resource Nexus</h1><div class="grid md:grid-cols-3 gap-5"><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><i class="fas fa-video text-red-500 text-2xl"></i><h3 class="font-bold mt-2">Video Library</h3><p>NCERT line-by-line, IIT Prof. lectures, 3D animations.</p><button class="mt-2 text-blue-600">Browse →</button></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><i class="fas fa-file-pdf text-red-600 text-2xl"></i><h3 class="font-bold mt-2">Handwritten Notes</h3><p>Topper’s notes, formula sheets, mind maps.</p></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><i class="fas fa-lightbulb text-yellow-500 text-2xl"></i><h3 class="font-bold mt-2">Flashcards (Spaced Repetition)</h3><p>AI-generated from your weak topics.</p></div></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">📚 Resource Hub & Flashcards</h1><div class="grid md:grid-cols-2 gap-8"><div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="text-xl font-bold mb-3"><i class="fas fa-layer-group text-purple-500"></i> Smart Flashcards (Spaced Repetition)</h3><div id="flashcardContainer" class="flip-card w-full h-56 mx-auto mb-4 relative"><div class="flip-card-inner w-full h-full"><div class="flip-front"><i class="fas fa-question-circle text-4xl text-blue-500 mb-2"></i><p class="text-lg font-semibold" id="flashFront">${flashcards[0].front}</p></div><div class="flip-back"><p id="flashBack">${flashcards[0].back}</p></div></div></div><div class="flex justify-center gap-3"><button id="prevFlash" class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded"><i class="fas fa-arrow-left"></i></button><button id="nextFlash" class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded"><i class="fas fa-arrow-right"></i></button></div></div><div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="text-xl font-bold"><i class="fas fa-video text-red-500"></i> Curated Video Library</h3><ul class="mt-3 space-y-2"><li>🎥 <a href="#" class="text-blue-600 hover:underline">NCERT Line by Line: Physics</a></li><li>🎥 <a href="#" class="text-blue-600 hover:underline">3D Chemistry Animations</a></li><li>🎥 <a href="#" class="text-blue-600 hover:underline">Biology in 20 Minutes (Crash Course)</a></li></ul></div></div></div>
       `,
       community: () => `
-        <div><h1 class="text-2xl font-bold mb-4">👥 SciTrack Community</h1><div class="flex flex-wrap gap-4 mb-5"><div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow flex-1"><i class="fas fa-users"></i> <strong>Study Groups</strong><p>Join "Physics Wizards" (24 members) | "Organic Masters" (18 members)</p></div><div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow flex-1"><i class="fas fa-trophy"></i> <strong>Leaderboard (Weekly)</strong><ol><li>1. Priya M. - 3420 XP</li><li>2. Aarav S. - 2450 XP</li><li>3. Rohan K. - 1980 XP</li></ol></div></div><div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-bold">🔥 Trending Doubts</h3><div class="space-y-3 mt-2"><div class="border-b pb-2">Why does electron affinity decrease down group 17? <span class="text-blue-500">3 answers</span></div><div>Best book for Physics problems? <span class="text-blue-500">12 replies</span></div></div><textarea placeholder="Ask a doubt..." class="w-full mt-4 p-2 border rounded dark:bg-gray-700"></textarea><button class="mt-2 bg-blue-600 text-white px-4 py-1 rounded">Post</button></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">👥 SciTrack Community</h1><div class="grid md:grid-cols-2 gap-6"><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3><i class="fas fa-users"></i> Study Groups</h3><p>🔥 Physics Warriors (42 members) | 🧬 Bio Masters (28 members) | 🧪 Chem Titans (35 members)</p><button class="mt-3 bg-blue-600 text-white px-4 py-1 rounded">Join Group</button></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3><i class="fas fa-trophy"></i> Weekly Leaderboard</h3><ol class="list-decimal pl-5 mt-2"><li>Ananya S. — 4210 XP</li><li>Riya M. — 3870 XP</li><li>Kunal V. — 3450 XP</li></ol></div><div class="col-span-2 bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>💬 Doubt Forum</h3><div class="space-y-3"><div class="border-b pb-2">📌 "Why does ionization energy decrease down group 1?" — <span class="text-blue-500">4 answers</span></div><div class="border-b pb-2">📌 "Best strategy for last 3 months?" — <span class="text-blue-500">12 answers</span></div></div><textarea placeholder="Ask your doubt..." rows="2" class="w-full mt-3 p-2 border rounded dark:bg-gray-800"></textarea><button class="mt-2 bg-blue-600 text-white px-4 py-1 rounded">Post</button></div></div></div>
       `,
       profile: () => `
-        <div><h1 class="text-2xl font-bold mb-4">👤 Profile Settings</h1><div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow max-w-lg"><div class="flex items-center gap-4"><div class="w-20 h-20 bg-blue-200 rounded-full flex items-center justify-center text-3xl font-bold">A</div><div><h2 class="text-xl">${userData.name}</h2><p class="text-gray-500">NEET 2026 Aspirant</p></div></div><div class="mt-4"><label class="block">Target Exam</label><select class="w-full p-2 border rounded dark:bg-gray-700"><option>NEET 2026</option><option>JEE Main 2026</option></select><label class="block mt-3">Daily Study Goal (hrs)</label><input type="number" value="5" class="w-full p-2 border rounded dark:bg-gray-700"><button id="saveProfileBtn" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg">Save Changes</button></div></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">⚙️ Profile & Preferences</h1><div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow max-w-xl"><div class="flex items-center gap-4"><div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-3xl font-bold text-white">RM</div><div><h2 class="text-2xl font-bold">${userData.name}</h2><p class="text-gray-500">NEET 2026 Aspirant | Science Enthusiast</p></div></div><div class="mt-6"><label class="block font-medium">Target Exam</label><select id="targetExam" class="w-full p-2 border rounded dark:bg-gray-700"><option>NEET 2026</option><option>JEE Main 2026</option><option>JEE Advanced 2026</option></select><label class="block font-medium mt-3">Daily Study Goal (hours)</label><input type="number" id="studyGoal" value="6" class="w-full p-2 border rounded dark:bg-gray-700"><button id="saveProfileBtn" class="mt-5 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">Save Changes</button></div></div></div>
       `
     };
-    
-    // Syllabus tree generator
-    function generateSyllabusTree() {
-      const topics = [
-        { subject: "Physics", chapters: ["Kinematics","Laws of Motion","Thermodynamics","Waves","Optics"] },
-        { subject: "Chemistry", chapters: ["Mole Concept","Atomic Structure","Chemical Bonding","Thermodynamics","Organic Basics"] },
-        { subject: "Biology", chapters: ["Cell Biology","Genetics","Ecology","Human Physiology","Plant Physiology"] }
-      ];
-      let html = '';
-      topics.forEach(sub => {
-        let completedCount = sub.chapters.filter(ch => userData.completedTopics.includes(ch)).length;
-        html += `<div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow"><h3 class="font-bold text-lg mb-2">${sub.subject}</h3>`;
-        sub.chapters.forEach(ch => {
-          let isDone = userData.completedTopics.includes(ch);
-          html += `<div class="flex justify-between items-center py-1"><span>${ch}</span><button data-chapter="${ch}" class="toggle-chapter text-sm ${isDone ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700'} px-2 py-0.5 rounded">${isDone ? '✓ Done' : 'Mark'}</button></div>`;
-        });
-        html += `<div class="mt-2 text-sm">Progress: ${completedCount}/${sub.chapters.length}</div></div>`;
-      });
-      return html;
+
+    // Helper to render current page
+    function renderPage(page) {
+      const container = document.getElementById("app");
+      if(pages[page]) container.innerHTML = pages[page]();
+      else container.innerHTML = "<div class='text-center'>Page not found</div>";
+      attachPageEvents(page);
     }
-    
-    function updateSyllabusProgress() {
-      const total = 15; // 5*3
-      const completed = userData.completedTopics.length;
-      const percent = Math.round((completed/total)*100);
-      const span = document.getElementById("syllabusProgress");
-      if(span) span.innerText = percent;
-    }
-    
-    // ----- Practice test generation (mock)
-    function generateQuickTest() {
-      testQuestions = [
-        { text: "A ball is thrown vertically upward with velocity 20 m/s. Time of flight? (g=10)", options: ["2s","4s","1s","3s"], correct: 1 },
-        { text: "Which is an aromatic compound?", options: ["Cyclohexane","Benzene","Hexene","Ethene"], correct: 1 },
-        { text: "Which hormone regulates blood glucose?", options: ["Insulin","Adrenaline","Thyroxine","Estrogen"], correct: 0 },
-        { text: "If the current through a resistor is doubled, power becomes:", options: ["Half","Same","Double","Four times"], correct: 3 },
-        { text: "IUPAC name of CH3-CH2-CHO", options: ["Propanal","Ethanal","Butanal","Methanal"], correct: 0 }
-      ];
-      userAnswers = new Array(5).fill(null);
-      renderTestUI();
-    }
-    
-    function renderTestUI() {
-      const container = document.getElementById("testContainer");
-      if(!container) return;
-      if(!testQuestions.length) { container.innerHTML = "<p>No active test. Click 'New Quick Test'</p>"; return; }
-      let html = `<h3 class="font-bold text-lg">Adaptive Mini Test (5 Questions)</h3><div class="space-y-4 mt-3">`;
-      testQuestions.forEach((q, idx) => {
-        html += `<div class="border p-3 rounded-lg"><p class="font-medium">${idx+1}. ${q.text}</p><div class="grid grid-cols-2 gap-2 mt-2">`;
-        q.options.forEach((opt, optIdx) => {
-          let checked = userAnswers[idx] === optIdx ? 'checked' : '';
-          html += `<label class="flex items-center gap-2"><input type="radio" name="q${idx}" value="${optIdx}" ${checked} class="test-radio" data-qidx="${idx}" data-oidx="${optIdx}"> ${opt}</label>`;
-        });
-        html += `</div></div>`;
-      });
-      html += `<button id="submitTestBtn" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg">Submit & Get Score</button><div id="testResult"></div>`;
-      container.innerHTML = html;
-      // attach radio listeners
-      document.querySelectorAll('.test-radio').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-          let qIdx = parseInt(radio.dataset.qidx);
-          let oIdx = parseInt(radio.dataset.oidx);
-          userAnswers[qIdx] = oIdx;
-        });
-      });
-      const submitBtn = document.getElementById("submitTestBtn");
-      if(submitBtn) submitBtn.onclick = () => {
-        let score = 0;
-        testQuestions.forEach((q, i) => { if(userAnswers[i] === q.correct) score++; });
-        let percent = (score/testQuestions.length)*100;
-        document.getElementById("testResult").innerHTML = `<div class="mt-3 p-3 bg-blue-100 dark:bg-blue-900 rounded">Your score: ${score}/${testQuestions.length} (${percent}%)<br>Review explanations: AI will suggest weak areas.</div>`;
-        userData.recentTests.unshift({ name: "Quick Test", score: percent, total: 100, date: new Date().toISOString().slice(0,10) });
-        saveUserData();
-      };
-    }
-    
-    // Charts rendering (called after page load)
-    function renderCharts() {
-      // Score chart (dashboard)
-      const scoreCtx = document.getElementById("scoreChart");
-      if(scoreCtx && userData.recentTests.length) {
-        new Chart(scoreCtx, { type: 'line', data: { labels: userData.recentTests.slice(0,4).map(t=>t.name), datasets: [{ label: 'Score %', data: userData.recentTests.slice(0,4).map(t=>t.score), borderColor: '#3b82f6' }] } });
+
+    function attachPageEvents(page) {
+      if(page === "dashboard") {
+        const scoreCtx = document.getElementById("scoreChart");
+        if(scoreCtx) new Chart(scoreCtx, { type: 'line', data: { labels: userData.recentTests.slice(0,4).map(t=>t.name), datasets: [{ label: 'Score %', data: userData.recentTests.slice(0,4).map(t=>t.score), borderColor: '#3b82f6', tension: 0.3, fill: true, backgroundColor: 'rgba(59,130,246,0.1)' }] } });
       }
-      const subjCtx = document.getElementById("subjectChart");
-      if(subjCtx) new Chart(subjCtx, { type: 'bar', data: { labels: Object.keys(userData.subjectAccuracy), datasets: [{ label: 'Accuracy %', data: Object.values(userData.subjectAccuracy), backgroundColor: '#8b5cf6' }] } });
-      const hoursCtx = document.getElementById("hoursChart");
-      if(hoursCtx) new Chart(hoursCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Hours studied', data: userData.dailyHours, borderColor: '#10b981' }] } });
-    }
-    
-    // Pendulum simulation
-    let pendAnimFrame;
-    function initPendulumSim() {
-      const canvas = document.getElementById("pendulumCanvas");
-      if(!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let angle = Math.PI/3;
-      let angularVel = 0;
-      let lastTimestamp = 0;
-      let length = 1.0, mass = 0.5, g = 9.8;
-      const lengthSlider = document.getElementById("pendLength");
-      const massSlider = document.getElementById("pendMass");
-      const periodSpan = document.getElementById("periodDisplay");
-      if(lengthSlider) lengthSlider.oninput = (e) => { length = parseFloat(e.target.value); updatePeriod(); };
-      if(massSlider) massSlider.oninput = (e) => { mass = parseFloat(e.target.value); updatePeriod(); };
-      function updatePeriod() {
-        let T = 2 * Math.PI * Math.sqrt(length/g);
-        if(periodSpan) periodSpan.innerText = `Period: ${T.toFixed(2)} s`;
+      if(page === "analytics") {
+        const subjCtx = document.getElementById("subjectChart");
+        if(subjCtx) new Chart(subjCtx, { type: 'bar', data: { labels: Object.keys(userData.subjectAccuracy), datasets: [{ label: 'Accuracy %', data: Object.values(userData.subjectAccuracy), backgroundColor: '#a855f7' }] } });
+        const hoursCtx = document.getElementById("hoursChart");
+        if(hoursCtx) new Chart(hoursCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Hours', data: userData.dailyHours, borderColor: '#10b981', fill: false }] } });
       }
-      function animate() {
-        if(!canvas) return;
-        const width = canvas.width, height = canvas.height;
-        ctx.clearRect(0,0,width,height);
-        const pivotX = width/2, pivotY = 40;
-        const bobX = pivotX + length*100 * Math.sin(angle);
-        const bobY = pivotY + length*100 * Math.cos(angle);
-        ctx.beginPath();
-        ctx.moveTo(pivotX,pivotY);
-        ctx.lineTo(bobX,bobY);
-        ctx.strokeStyle = "#facc15";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(bobX,bobY,12,0,2*Math.PI);
-        ctx.fillStyle = "#3b82f6";
-        ctx.fill();
-        ctx.fillStyle = "white";
-        ctx.font = "12px monospace";
-        ctx.fillText(`L:${length.toFixed(2)}m`,10,20);
-        // physics update
-        let alpha = -(g/length) * Math.sin(angle);
-        angularVel += alpha * 0.016;
-        angle += angularVel * 0.016;
-        angle *= 0.9995;
-        requestAnimationFrame(animate);
-      }
-      updatePeriod();
-      animate();
-    }
-    
-    // ----- PAGE ROUTING -----
-    function navigateTo(page) {
-      currentPage = page;
-      const contentDiv = document.getElementById("app");
-      if(renderers[page]) contentDiv.innerHTML = renderers[page]();
-      else contentDiv.innerHTML = "<div>Page not found</div>";
-      // attach dynamic listeners after render
-      attachPageSpecificEvents();
-      if(page === "dashboard") setTimeout(renderCharts, 50);
-      if(page === "analytics") setTimeout(renderCharts, 50);
       if(page === "syllabus") {
-        updateSyllabusProgress();
+        updateProgress();
         document.querySelectorAll('.toggle-chapter').forEach(btn => {
           btn.addEventListener('click', (e) => {
             let chap = btn.dataset.chapter;
             if(userData.completedTopics.includes(chap)) userData.completedTopics = userData.completedTopics.filter(c=>c!==chap);
             else userData.completedTopics.push(chap);
             saveUserData();
-            navigateTo("syllabus"); // refresh
+            renderPage("syllabus");
           });
         });
       }
       if(page === "practice") {
-        const newTestBtn = document.getElementById("newQuickTest");
-        if(newTestBtn) newTestBtn.onclick = () => { generateQuickTest(); };
-        const fullMockBtn = document.getElementById("fullMockBtn");
-        if(fullMockBtn) fullMockBtn.onclick = () => { alert("Full mock coming soon! We're crafting realistic exam interface."); };
+        document.getElementById("newQuickTest")?.addEventListener("click", generateQuickTest);
+        document.getElementById("fullMockBtn")?.addEventListener("click", () => alert("Full mock interface is in beta. Will launch soon with real-time analytics!"));
+      }
+      if(page === "resources") {
+        const flashCardDiv = document.querySelector(".flip-card");
+        const frontSpan = document.getElementById("flashFront");
+        const backSpan = document.getElementById("flashBack");
+        function updateFlashcard() {
+          frontSpan.innerText = flashcards[currentFlashcardIndex].front;
+          backSpan.innerText = flashcards[currentFlashcardIndex].back;
+          flashCardDiv.classList.remove("flipped");
+        }
+        document.getElementById("prevFlash")?.addEventListener("click", () => { currentFlashcardIndex = (currentFlashcardIndex-1+flashcards.length)%flashcards.length; updateFlashcard(); });
+        document.getElementById("nextFlash")?.addEventListener("click", () => { currentFlashcardIndex = (currentFlashcardIndex+1)%flashcards.length; updateFlashcard(); });
+        flashCardDiv?.addEventListener("click", () => flashCardDiv.classList.toggle("flipped"));
       }
       if(page === "profile") {
         document.getElementById("saveProfileBtn")?.addEventListener("click", () => { alert("Profile updated (demo)."); saveUserData(); });
       }
-      if(page === "home") setTimeout(initPendulumSim, 100);
+      if(page === "home") initPendulum();
     }
-    
-    function attachPageSpecificEvents() {
-      // re-attach nav buttons from content? but main nav is static, but internal nav buttons like from home
-      document.querySelectorAll("[data-nav]").forEach(btn => {
-        btn.addEventListener("click", (e) => { navigateTo(btn.dataset.nav); });
+
+    // Pendulum simulation
+    let pendulumAnimation;
+    function initPendulum() {
+      const canvas = document.getElementById("pendulumCanvas");
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let angle = Math.PI/3;
+      let angularVel = 0;
+      let length = 1.0, g = 9.8;
+      const lengthSlider = document.getElementById("pendLength");
+      const massSlider = document.getElementById("pendMass");
+      const periodSpan = document.getElementById("periodDisplay");
+      function updatePeriod() { let T = 2 * Math.PI * Math.sqrt(length/g); if(periodSpan) periodSpan.innerText = `Period: ${T.toFixed(2)} s`; }
+      if(lengthSlider) lengthSlider.oninput = (e) => { length = parseFloat(e.target.value); updatePeriod(); };
+      if(massSlider) massSlider.oninput = (e) => { length = parseFloat(lengthSlider.value); updatePeriod(); };
+      function animate() {
+        if(!canvas) return;
+        const width = canvas.width, height = canvas.height;
+        ctx.clearRect(0,0,width,height);
+        const pivotX = width/2, pivotY = 40;
+        const bobX = pivotX + length*120 * Math.sin(angle);
+        const bobY = pivotY + length*120 * Math.cos(angle);
+        ctx.beginPath(); ctx.moveTo(pivotX,pivotY); ctx.lineTo(bobX,bobY); ctx.strokeStyle = "#facc15"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.beginPath(); ctx.arc(bobX,bobY,12,0,2*Math.PI); ctx.fillStyle = "#3b82f6"; ctx.fill();
+        let alpha = -(g/length) * Math.sin(angle);
+        angularVel += alpha * 0.016;
+        angle += angularVel * 0.016;
+        angle *= 0.999;
+        requestAnimationFrame(animate);
+      }
+      updatePeriod();
+      animate();
+    }
+
+    function generateQuickTest() {
+      activeTestQuestions = [
+        { text: "A particle moves along x-axis with velocity v = 3t². Find acceleration at t=2s.", options: ["6 m/s²","12 m/s²","3 m/s²","0"], correct: 1 },
+        { text: "Which of the following is a greenhouse gas?", options: ["Oxygen","Nitrogen","CO₂","Argon"], correct: 2 },
+        { text: "pH of pure water at 25°C is?", options: ["7","0","14","1"], correct: 0 },
+        { text: "What is the function of ribosomes?", options: ["Protein synthesis","Lipid synthesis","Energy production","DNA replication"], correct: 0 },
+        { text: "If focal length of convex lens is 20 cm, its power is?", options: ["+5 D","-5 D","+0.05 D","-0.05 D"], correct: 0 }
+      ];
+      userTestAnswers = new Array(5).fill(null);
+      const container = document.getElementById("testContainer");
+      if(!container) return;
+      let html = `<h3 class="font-bold text-lg">⚡ AI-Generated Mini Test</h3><div class="space-y-4 mt-4">`;
+      activeTestQuestions.forEach((q, idx) => {
+        html += `<div class="border p-4 rounded-lg"><p class="font-semibold">${idx+1}. ${q.text}</p><div class="grid grid-cols-2 gap-2 mt-2">`;
+        q.options.forEach((opt, optIdx) => {
+          let checked = userTestAnswers[idx] === optIdx ? 'checked' : '';
+          html += `<label class="flex items-center gap-2"><input type="radio" name="q${idx}" value="${optIdx}" ${checked} class="test-radio" data-qidx="${idx}" data-oidx="${optIdx}"> ${opt}</label>`;
+        });
+        html += `</div></div>`;
+      });
+      html += `<button id="submitTestBtn" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg">Submit & Get Score</button><div id="testResult"></div>`;
+      container.innerHTML = html;
+      document.querySelectorAll('.test-radio').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          let qIdx = parseInt(radio.dataset.qidx);
+          let oIdx = parseInt(radio.dataset.oidx);
+          userTestAnswers[qIdx] = oIdx;
+        });
+      });
+      document.getElementById("submitTestBtn")?.addEventListener("click", () => {
+        let score = 0;
+        activeTestQuestions.forEach((q,i) => { if(userTestAnswers[i] === q.correct) score++; });
+        let percent = (score/activeTestQuestions.length)*100;
+        document.getElementById("testResult").innerHTML = `<div class="mt-3 p-3 bg-blue-100 dark:bg-blue-900/40 rounded">🎯 Score: ${score}/${activeTestQuestions.length} (${percent}%)<br>✅ AI analysis: Focus on weak areas highlighted.</div>`;
+        userData.recentTests.unshift({ name: "Quick Test", score: percent, total: 100, date: new Date().toISOString().slice(0,10) });
+        saveUserData();
       });
     }
-    
-    // Dark mode toggle
-    const darkToggle = document.getElementById("darkModeToggle");
-    darkToggle?.addEventListener("click", () => {
+
+    // Routing & Dark Mode
+    function navigate(page) {
+      renderPage(page);
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        if(btn.dataset.page === page) btn.classList.add("tab-active");
+        else btn.classList.remove("tab-active");
+      });
+    }
+    document.querySelectorAll(".nav-btn").forEach(btn => btn.addEventListener("click", () => navigate(btn.dataset.page)));
+    document.getElementById("darkModeToggle")?.addEventListener("click", () => {
       document.body.classList.toggle("dark");
       localStorage.setItem("darkMode", document.body.classList.contains("dark"));
     });
     if(localStorage.getItem("darkMode") === "true") document.body.classList.add("dark");
-    
-    // main nav listeners
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => navigateTo(btn.dataset.page));
-    });
-    // initial load
-    navigateTo("home");
+    navigate("home");
   </script>
 </body>
 </html>
