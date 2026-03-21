@@ -3,71 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>SciTrack | NEET/JEE Next-Gen Preparation Ecosystem</title>
-  <!-- Tailwind CSS + Font Awesome + Google Fonts + Chart.js + AOS (optional) -->
+  <title>SciTrack | NEET/JEE Next-Gen Prep — Anime Aesthetic</title>
+  <!-- Tailwind CSS + Font Awesome + Google Fonts + Chart.js + Anime.js (optional) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    * { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    * { font-family: 'Poppins', 'Inter', sans-serif; scroll-behavior: smooth; }
     body {
-      background: #f9fafb;
+      background: linear-gradient(135deg, #fff5f8 0%, #f0f9ff 100%);
       transition: background 0.3s, color 0.2s;
     }
     body.dark {
-      background: #0a0c15;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       color: #eef2ff;
     }
     /* custom scrollbar */
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-    .dark ::-webkit-scrollbar-track { background: #1f2937; }
-    /* card hover effect */
+    ::-webkit-scrollbar-track { background: #ffe4e9; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #ff85a1; border-radius: 10px; }
+    .dark ::-webkit-scrollbar-track { background: #2d2b55; }
+    .dark ::-webkit-scrollbar-thumb { background: #a78bfa; }
+    /* card hover & anime glow */
     .card-hover {
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
     .card-hover:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 25px 30px -12px rgba(0,0,0,0.2);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);
     }
-    /* glassmorphism */
+    /* glassmorphism with pastel */
     .glass-card {
-      background: rgba(255,255,255,0.7);
+      background: rgba(255,245,248,0.7);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,200,210,0.4);
+      border-radius: 2rem;
     }
     .dark .glass-card {
-      background: rgba(15,25,45,0.7);
-      border-color: rgba(255,255,255,0.1);
+      background: rgba(30,30,60,0.6);
+      border-color: rgba(167,139,250,0.2);
     }
     /* animated gradient border */
-    .animated-border {
-      position: relative;
-      background: linear-gradient(60deg, #3b82f6, #a855f7, #ec489a);
+    .anime-border {
+      background: linear-gradient(60deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
       background-size: 300% 300%;
-      animation: gradientMove 4s ease infinite;
+      animation: gradientShift 5s ease infinite;
     }
-    @keyframes gradientMove {
+    @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+    /* tab active style */
     .tab-active {
-      border-bottom: 2px solid #3b82f6;
-      color: #3b82f6;
-      font-weight: 600;
+      background: #ff85a1;
+      color: white;
+      border-radius: 2rem;
+      box-shadow: 0 4px 12px rgba(255,133,161,0.3);
     }
-    .pulse-glow {
-      animation: pulseGlow 2s infinite;
+    .dark .tab-active {
+      background: #a78bfa;
+      box-shadow: 0 4px 12px rgba(167,139,250,0.3);
     }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
-      70% { box-shadow: 0 0 0 12px rgba(59,130,246,0); }
-      100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+    /* floating kawaii elements */
+    .float-bubble {
+      position: fixed;
+      background: rgba(255,218,224,0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      animation: float 12s infinite ease-in-out;
     }
-    /* flip card for flashcards */
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    /* flashcard flip */
     .flip-card {
       background-color: transparent;
       perspective: 1000px;
@@ -80,7 +93,7 @@
       text-align: center;
       transition: transform 0.6s;
       transform-style: preserve-3d;
-      border-radius: 1rem;
+      border-radius: 1.5rem;
     }
     .flip-card.flipped .flip-card-inner {
       transform: rotateY(180deg);
@@ -90,7 +103,7 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      border-radius: 1rem;
+      border-radius: 1.5rem;
       padding: 1rem;
       display: flex;
       align-items: center;
@@ -98,92 +111,111 @@
       flex-direction: column;
     }
     .flip-front {
-      background: white;
-      color: #1f2937;
+      background: #fff0f3;
+      color: #c44569;
+      border: 2px solid #ffb6c1;
     }
     .flip-back {
-      background: #3b82f6;
+      background: #ffb6c1;
       color: white;
       transform: rotateY(180deg);
     }
     .dark .flip-front {
-      background: #1e293b;
-      color: #e2e8f0;
+      background: #2d2b55;
+      color: #c4b5fd;
+      border-color: #a78bfa;
     }
     .dark .flip-back {
-      background: #2563eb;
+      background: #a78bfa;
+    }
+    /* cute pulse */
+    .pulse-cute {
+      animation: pulseSoft 2s infinite;
+    }
+    @keyframes pulseSoft {
+      0% { box-shadow: 0 0 0 0 rgba(255,133,161,0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(255,133,161,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,133,161,0); }
     }
   </style>
 </head>
-<body class="antialiased">
+<body class="relative overflow-x-hidden">
 
-  <!-- ==================== NAVIGATION BAR ==================== -->
-  <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-sm">
+  <!-- Floating decorative bubbles (anime vibe) -->
+  <div class="float-bubble w-64 h-64 top-20 left-10"></div>
+  <div class="float-bubble w-96 h-96 bottom-20 right-10 bg-pink-200/20" style="animation-duration: 18s;"></div>
+  <div class="float-bubble w-48 h-48 top-1/2 right-1/4 bg-purple-200/20" style="animation-duration: 14s;"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="sticky top-0 z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-pink-200 dark:border-purple-800 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-2">
-          <i class="fas fa-atom text-2xl text-blue-600 animate-pulse"></i>
-          <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SciTrack</span>
-          <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-2 py-0.5 rounded-full ml-2">Next-Gen</span>
+          <i class="fas fa-star-of-life text-2xl text-pink-500 animate-pulse"></i>
+          <span class="font-extrabold text-xl bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">SciTrack</span>
+          <span class="text-xs bg-pink-100 dark:bg-purple-900 text-pink-600 dark:text-purple-200 px-2 py-0.5 rounded-full ml-2">✨ kawaii</span>
         </div>
         <div class="hidden md:flex space-x-1">
-          <button data-page="home" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Home</button>
-          <button data-page="dashboard" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Dashboard</button>
-          <button data-page="syllabus" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Syllabus</button>
-          <button data-page="practice" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Practice</button>
-          <button data-page="analytics" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Analytics</button>
-          <button data-page="resources" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Resources</button>
-          <button data-page="community" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Community</button>
-          <button data-page="profile" class="nav-btn px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Profile</button>
+          <button data-page="home" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">🏠 Home</button>
+          <button data-page="dashboard" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">📊 Dashboard</button>
+          <button data-page="syllabus" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">📖 Syllabus</button>
+          <button data-page="practice" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">✏️ Practice</button>
+          <button data-page="analytics" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">📈 Analytics</button>
+          <button data-page="resources" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">📚 Resources</button>
+          <button data-page="community" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">👥 Community</button>
+          <button data-page="profile" class="nav-btn px-4 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-purple-800 transition">👤 Profile</button>
         </div>
         <div class="flex items-center space-x-3">
-          <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-            <i class="fas fa-moon dark:fa-sun text-gray-700 dark:text-yellow-300"></i>
+          <button id="darkModeToggle" class="p-2 rounded-full hover:bg-pink-100 dark:hover:bg-purple-800 transition">
+            <i class="fas fa-moon dark:fa-sun text-pink-600 dark:text-yellow-300"></i>
           </button>
-          <div class="relative cursor-pointer group">
-            <i class="fas fa-bell text-gray-600 dark:text-gray-300"></i>
+          <div class="relative group">
+            <i class="fas fa-bell text-pink-500 dark:text-purple-300 cursor-pointer"></i>
             <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-            <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg hidden group-hover:block p-2 text-sm">🔔 New AI recommendation ready!</div>
+            <div class="absolute right-0 mt-2 w-64 bg-white/90 dark:bg-gray-800 rounded-2xl shadow-lg hidden group-hover:block p-2 text-sm backdrop-blur">🔔 New AI study plan ready! 🎀</div>
           </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <main id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></main>
+  <main id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10"></main>
 
-  <footer class="border-t border-gray-200 dark:border-gray-800 mt-12 py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
-    <p>© 2025 SciTrack — Empowering Future Scientists | AI-Powered | Real-time Analytics | India's Most Advanced Prep Ecosystem</p>
+  <footer class="border-t border-pink-200 dark:border-purple-800 mt-12 py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
+    <p>🌸 SciTrack — where science meets magic | AI-powered | 🧪 Virtual Labs | 🎴 Flashcards | Made with 💖 for NEET/JEE warriors</p>
   </footer>
 
   <script>
-    // ------------------- GLOBAL STATE & LOCAL STORAGE -------------------
+    // ------------------- GLOBAL STATE (cute & functional) -------------------
     let userData = {
-      name: "Riya Mehta",
-      streak: 18,
-      points: 3870,
-      badges: ["🔥 14-day streak", "🧪 Lab Virtuoso", "📈 Top 5%", "💡 Doubt Solver"],
-      completedTopics: ["Kinematics", "Laws of Motion", "Mole Concept", "Chemical Bonding", "Cell Biology", "Genetics"],
-      totalTopics: 30,
+      name: "Yuki Tanaka",
+      streak: 23,
+      points: 5120,
+      badges: ["🔥 21-day streak", "🧪 Lab Genius", "🎀 Top 3%", "🌸 Doubt Master"],
+      completedTopics: ["Kinematics", "Laws of Motion", "Mole Concept", "Chemical Bonding", "Cell Biology", "Genetics", "Thermodynamics"],
+      totalTopics: 32,
       recentTests: [
-        { name: "Physics - Mechanics", score: 82, total: 100, date: "2025-03-22" },
-        { name: "Chemistry - Organic", score: 68, total: 100, date: "2025-03-20" },
-        { name: "Biology - Genetics", score: 91, total: 100, date: "2025-03-18" },
-        { name: "Full Mock #3", score: 74, total: 100, date: "2025-03-15" }
+        { name: "Physics - Mechanics", score: 85, total: 100, date: "2025-03-22" },
+        { name: "Chemistry - Organic", score: 72, total: 100, date: "2025-03-20" },
+        { name: "Biology - Genetics", score: 94, total: 100, date: "2025-03-18" },
+        { name: "Full Mock #4", score: 79, total: 100, date: "2025-03-15" }
       ],
-      subjectAccuracy: { Physics: 72, Chemistry: 68, Biology: 88, Maths: 70 },
-      dailyHours: [2.8, 3.2, 4.5, 3.7, 5.2, 6.1, 4.9],
+      subjectAccuracy: { Physics: 74, Chemistry: 70, Biology: 89, Maths: 72 },
+      dailyHours: [3.2, 3.8, 5.0, 4.5, 6.2, 7.0, 5.5],
       studyPlan: [
-        { task: "Complete Thermodynamics", due: "2025-03-24", priority: "high" },
-        { task: "Solve 30 Physics Problems", due: "2025-03-23", priority: "medium" }
+        { task: "Complete Electrochemistry", due: "2025-03-24", priority: "high" },
+        { task: "Solve 40 Physics Problems", due: "2025-03-23", priority: "medium" },
+        { task: "Revise Plant Physiology", due: "2025-03-25", priority: "high" }
       ]
     };
     let activeTestQuestions = [];
     let userTestAnswers = [];
     let flashcards = [
-      { front: "Newton's First Law", back: "An object remains at rest or in uniform motion unless acted by external force." },
-      { front: "Ohm's Law", back: "V = IR, current is directly proportional to voltage." },
-      { front: "Law of Conservation of Mass", back: "Mass is neither created nor destroyed in a chemical reaction." }
+      { front: "🌸 Newton's 1st Law", back: "An object remains at rest or uniform motion unless acted upon." },
+      { front: "🎀 Ohm's Law", back: "V = IR — current is proportional to voltage." },
+      { front: "🧪 Law of Conservation of Mass", back: "Mass is neither created nor destroyed." },
+      { front: "💡 What is the pH of pure water?", back: "7 (neutral)" },
+      { front: "⚛️ Who discovered penicillin?", back: "Alexander Fleming" }
     ];
     let currentFlashcardIndex = 0;
 
@@ -194,90 +226,89 @@
     }
     loadUserData();
 
-    // helper to update progress bar
+    // helper progress bar
     function updateProgress() {
-      const percent = (userData.completedTopics.length / userData.totalTopics) * 100;
+      let percent = (userData.completedTopics.length / userData.totalTopics) * 100;
       document.querySelectorAll(".progress-fill").forEach(el => el.style.width = `${percent}%`);
     }
 
-    // ------------------- PAGE RENDERERS (modular, high fidelity) -------------------
+    // ------------------- PAGE RENDERERS (anime/kawaii style) -------------------
     const pages = {
       home: () => `
         <div class="space-y-12">
           <div class="text-center space-y-4 animate-fade-in">
-            <div class="inline-block p-1 px-3 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 text-sm">🚀 Next-Gen Learning Ecosystem</div>
-            <h1 class="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Master NEET/JEE with<br>Science & AI</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Interactive simulations, adaptive learning, real-time analytics — all in one place.</p>
-            <button data-nav="dashboard" class="mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition transform hover:scale-105">Launch Dashboard →</button>
+            <div class="inline-block p-1 px-4 rounded-full bg-pink-100 dark:bg-purple-900 text-pink-600 text-sm">✨ Next-Gen Learning Universe ✨</div>
+            <h1 class="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Master NEET/JEE with<br>✨ Anime Energy ✨</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">AI Coach, Interactive Sims, Gamified Progress — all wrapped in kawaii vibes.</p>
+            <button data-nav="dashboard" class="mt-4 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-3 rounded-full font-semibold shadow-lg transition transform hover:scale-105 pulse-cute">✨ Launch Dashboard ✨</button>
           </div>
           <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl card-hover"><i class="fas fa-brain text-4xl text-blue-500 mb-4"></i><h3 class="text-xl font-bold">AI Adaptive Coach</h3><p>Personalized recommendations & smart question generation based on your weak spots.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl card-hover"><i class="fas fa-flask text-4xl text-purple-500 mb-4"></i><h3 class="text-xl font-bold">Virtual Lab</h3><p>Simulate physics experiments, 3D biology models, and chemistry reactions.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl card-hover"><i class="fas fa-chart-line text-4xl text-green-500 mb-4"></i><h3 class="text-xl font-bold">Predictive Rank</h3><p>Estimate your All India Rank and track improvement over time.</p></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl card-hover border border-pink-100"><i class="fas fa-robot text-4xl text-pink-500 mb-4"></i><h3 class="text-xl font-bold">🤖 AI Sensei</h3><p>Personalized path, smart recommendations, and motivational kawaii tips.</p></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl card-hover border border-pink-100"><i class="fas fa-flask text-4xl text-purple-500 mb-4"></i><h3 class="text-xl font-bold">🧪 Virtual Lab</h3><p>Interactive physics, chemistry experiments — like anime science!</p></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl card-hover border border-pink-100"><i class="fas fa-chart-line text-4xl text-green-400 mb-4"></i><h3 class="text-xl font-bold">🎯 Rank Predictor</h3><p>AI-powered rank estimation & improvement roadmap.</p></div>
           </div>
-          <!-- Interactive Pendulum Simulator -->
-          <div class="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-6 shadow-2xl">
-            <h2 class="text-2xl font-bold mb-2">🧪 Interactive Pendulum Lab</h2>
-            <p class="mb-4">Adjust length & mass — watch real-time SHM simulation</p>
+          <!-- Pendulum Sim with kawaii style -->
+          <div class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-slate-800 dark:to-slate-900 rounded-3xl p-6 shadow-2xl border border-pink-200">
+            <h2 class="text-2xl font-bold mb-2 flex items-center gap-2"><i class="fas fa-dove text-pink-500"></i> Pendulum-chan Simulation</h2>
+            <p class="mb-4">Adjust length & mass — watch the graceful swing (SHM)</p>
             <div class="flex flex-wrap gap-6 mb-6">
-              <div><label class="block text-sm font-medium">Length (m)</label><input type="range" id="pendLength" min="0.3" max="1.5" step="0.01" value="1.0" class="w-40"></div>
-              <div><label class="block text-sm font-medium">Mass (kg)</label><input type="range" id="pendMass" min="0.1" max="2.0" step="0.05" value="0.5" class="w-40"></div>
-              <div><span id="periodDisplay" class="bg-white dark:bg-gray-700 px-4 py-2 rounded-full text-sm font-mono">Period: 2.01 s</span></div>
+              <div><label class="block text-sm font-medium">Length (m) 📏</label><input type="range" id="pendLength" min="0.3" max="1.5" step="0.01" value="1.0" class="w-40 accent-pink-500"></div>
+              <div><label class="block text-sm font-medium">Mass (kg) ⚖️</label><input type="range" id="pendMass" min="0.1" max="2.0" step="0.05" value="0.5" class="w-40 accent-purple-500"></div>
+              <div><span id="periodDisplay" class="bg-white dark:bg-gray-700 px-4 py-2 rounded-full text-sm font-mono shadow">⏱️ Period: 2.01 s</span></div>
             </div>
-            <canvas id="pendulumCanvas" width="500" height="280" class="w-full max-w-lg mx-auto bg-gray-800 rounded-xl shadow-inner"></canvas>
+            <canvas id="pendulumCanvas" width="500" height="280" class="w-full max-w-lg mx-auto bg-gray-800 rounded-2xl shadow-inner border-2 border-pink-300"></canvas>
           </div>
-          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow text-center"><i class="fas fa-quote-left text-3xl text-blue-500"></i><p class="italic text-lg">"Science is the key to the future, and SciTrack is your guide." — Dr. A.P.J. Abdul Kalam (Tribute)</p></div>
+          <div class="bg-white/60 dark:bg-slate-800/60 rounded-2xl p-5 text-center backdrop-blur-sm"><i class="fas fa-quote-right text-3xl text-pink-400"></i><p class="italic text-lg">"Science is the most beautiful story ever told — let's write yours."</p></div>
         </div>
       `,
       dashboard: () => `
         <div class="space-y-6">
-          <div class="flex flex-wrap justify-between items-center"><h1 class="text-2xl font-bold">👋 Welcome back, ${userData.name}</h1><div class="flex gap-3"><span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full"><i class="fas fa-fire"></i> ${userData.streak} day streak</span><span class="bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full"><i class="fas fa-star"></i> ${userData.points} XP</span></div></div>
+          <div class="flex flex-wrap justify-between items-center"><h1 class="text-2xl font-bold">🌸 Konnichiwa, ${userData.name}!</h1><div class="flex gap-3"><span class="bg-pink-100 dark:bg-purple-900/40 text-pink-800 dark:text-purple-200 px-3 py-1 rounded-full"><i class="fas fa-fire"></i> ${userData.streak} day streak 🔥</span><span class="bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200 px-3 py-1 rounded-full"><i class="fas fa-star"></i> ${userData.points} XP ✨</span></div></div>
           <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow card-hover"><h3 class="font-semibold text-lg">📚 Syllabus Progress</h3><div class="mt-2"><div class="flex justify-between"><span>${userData.completedTopics.length}/${userData.totalTopics} topics mastered</span><span>${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}%</span></div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full progress-fill" style="width: ${(userData.completedTopics.length/userData.totalTopics)*100}%"></div></div><p class="mt-3 text-sm text-gray-600 dark:text-gray-300">Next: Thermodynamics, Electrochemistry, Plant Physiology</p></div></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow card-hover"><h3 class="font-semibold text-lg">🤖 AI Coach Insight</h3><p class="mt-2"><i class="fas fa-microchip text-blue-500"></i> Based on recent test scores, your weakest area is <strong>Organic Chemistry (Isomerism)</strong>. I've added 5 custom practice questions in your queue.</p><button class="mt-3 text-sm bg-blue-50 dark:bg-blue-900/30 px-4 py-1.5 rounded-full">Practice Now →</button></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow col-span-2"><h3 class="font-semibold text-lg">📈 Recent Test Performance</h3><canvas id="scoreChart" height="120"></canvas></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">🏅 Badge Showcase</h3><div class="flex flex-wrap gap-2 mt-2">${userData.badges.map(b => `<span class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-sm"><i class="fas fa-medal text-yellow-500"></i> ${b}</span>`).join('')}</div></div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-semibold text-lg">📅 Today's Focus</h3><ul class="mt-2 space-y-2">${userData.studyPlan.map(t => `<li><i class="fas fa-circle-check text-green-500"></i> ${t.task} <span class="text-xs text-gray-500">Due ${t.due}</span></li>`).join('')}</ul></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 shadow card-hover"><h3 class="font-semibold text-lg">📘 Syllabus Progress</h3><div class="mt-2"><div class="flex justify-between"><span>${userData.completedTopics.length}/${userData.totalTopics} topics mastered</span><span>${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}%</span></div><div class="w-full bg-pink-200 rounded-full h-2.5"><div class="bg-pink-500 h-2.5 rounded-full progress-fill" style="width: ${(userData.completedTopics.length/userData.totalTopics)*100}%"></div></div><p class="mt-3 text-sm">🎯 Next: Electrochemistry, Rotational Motion, Biotechnology</p></div></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 shadow card-hover"><h3 class="font-semibold text-lg">🤖 AI Sensei says:</h3><p class="mt-2"><i class="fas fa-heart text-pink-500"></i> Your weak area: <strong>Organic Chemistry (Isomerism)</strong>. I've prepared 5 special practice questions just for you! 🎀</p><button class="mt-3 text-sm bg-pink-100 dark:bg-purple-900/40 px-4 py-1.5 rounded-full">✨ Let's Practice ✨</button></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 shadow col-span-2"><h3 class="font-semibold text-lg">📈 Test Score Evolution</h3><canvas id="scoreChart" height="120"></canvas></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 shadow"><h3 class="font-semibold text-lg">🏅 Kawaii Badges</h3><div class="flex flex-wrap gap-2 mt-2">${userData.badges.map(b => `<span class="bg-pink-50 dark:bg-gray-700 px-3 py-1 rounded-full text-sm"><i class="fas fa-medal text-pink-500"></i> ${b}</span>`).join('')}</div></div>
+            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 shadow"><h3 class="font-semibold text-lg">📅 Today's Quests</h3><ul class="mt-2 space-y-2">${userData.studyPlan.map(t => `<li><i class="fas fa-check-circle text-pink-500"></i> ${t.task} <span class="text-xs text-gray-500">Due ${t.due}</span></li>`).join('')}</ul></div>
           </div>
         </div>
       `,
       syllabus: () => {
         const subjects = [
-          { name: "Physics", chapters: ["Kinematics","Laws of Motion","Work Power Energy","Thermodynamics","Waves","Optics","Electrostatics"] },
-          { name: "Chemistry", chapters: ["Mole Concept","Atomic Structure","Chemical Bonding","Thermodynamics","Equilibrium","Organic Basics","Hydrocarbons"] },
-          { name: "Biology", chapters: ["Cell Biology","Genetics","Ecology","Human Physiology","Plant Physiology","Biotechnology","Evolution"] }
+          { name: "Physics ⚛️", chapters: ["Kinematics","Laws of Motion","Work Energy","Thermodynamics","Waves","Optics","Electrostatics","Current Electricity"] },
+          { name: "Chemistry 🧪", chapters: ["Mole Concept","Atomic Structure","Chemical Bonding","Thermodynamics","Equilibrium","Organic Basics","Hydrocarbons","Biomolecules"] },
+          { name: "Biology 🌸", chapters: ["Cell Biology","Genetics","Ecology","Human Physiology","Plant Physiology","Biotechnology","Evolution","Reproduction"] }
         ];
-        let html = `<h1 class="text-2xl font-bold mb-4">📖 Interactive Syllabus Tracker</h1><p class="mb-4">Click on any chapter to mark as completed — your progress syncs instantly.</p><div class="grid md:grid-cols-3 gap-6">`;
+        let html = `<h1 class="text-2xl font-bold mb-4">📖 Interactive Syllabus (Tap to complete)</h1><p class="mb-4">🌸 Mark topics as done — your progress syncs across the app!</p><div class="grid md:grid-cols-3 gap-6">`;
         subjects.forEach(sub => {
           let completedCount = sub.chapters.filter(ch => userData.completedTopics.includes(ch)).length;
-          html += `<div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="font-bold text-xl mb-3">${sub.name}</h3>`;
+          html += `<div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3 class="font-bold text-xl mb-3">${sub.name}</h3>`;
           sub.chapters.forEach(ch => {
             let isDone = userData.completedTopics.includes(ch);
-            html += `<div class="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-700"><span>${ch}</span><button data-chapter="${ch}" class="toggle-chapter text-xs px-2 py-1 rounded ${isDone ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}">${isDone ? '✓ Completed' : 'Mark'}</button></div>`;
+            html += `<div class="flex justify-between items-center py-1 border-b border-pink-100 dark:border-gray-700"><span>${ch}</span><button data-chapter="${ch}" class="toggle-chapter text-xs px-3 py-1 rounded-full ${isDone ? 'bg-pink-500 text-white' : 'bg-pink-100 dark:bg-gray-700'}">${isDone ? '✓ Done' : '✨ Mark'}</button></div>`;
           });
-          html += `<div class="mt-3 text-sm font-medium">Progress: ${completedCount}/${sub.chapters.length} (${Math.round(completedCount/sub.chapters.length*100)}%)</div></div>`;
+          html += `<div class="mt-3 text-sm font-medium">🎀 Progress: ${completedCount}/${sub.chapters.length} (${Math.round(completedCount/sub.chapters.length*100)}%)</div></div>`;
         });
-        html += `</div><div class="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl"><i class="fas fa-chart-simple"></i> Overall completion: <span id="syllabusProgress">${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}</span>%</div>`;
+        html += `</div><div class="mt-6 bg-pink-50 dark:bg-purple-900/20 p-4 rounded-2xl"><i class="fas fa-chart-simple text-pink-500"></i> Overall completion: <span id="syllabusProgress">${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}</span>%</div>`;
         return html;
       },
       practice: () => `
-        <div><h1 class="text-2xl font-bold mb-4">✍️ Adaptive Practice Zone</h1><div class="flex flex-wrap gap-3 mb-6"><button id="newQuickTest" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow"><i class="fas fa-bolt"></i> Quick 5-Question Test</button><button id="fullMockBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg shadow"><i class="fas fa-chart-line"></i> Full Mock (AI-Adaptive)</button></div><div id="testContainer" class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow">Select a test to begin your practice session.</div></div>
+        <div><h1 class="text-2xl font-bold mb-4">✏️ Practice Dojo</h1><div class="flex flex-wrap gap-3 mb-6"><button id="newQuickTest" class="bg-pink-500 hover:bg-pink-600 text-white px-5 py-2 rounded-full shadow"><i class="fas fa-bolt"></i> Quick 5-Question Test</button><button id="fullMockBtn" class="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-full shadow"><i class="fas fa-chart-line"></i> Full Mock (AI-Adaptive)</button></div><div id="testContainer" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 shadow">🌸 Choose a test to begin your training.</div></div>
       `,
       analytics: () => `
-        <div><h1 class="text-2xl font-bold mb-4">📊 Deep Learning Analytics</h1><div class="grid md:grid-cols-2 gap-6"><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>Subject Accuracy</h3><canvas id="subjectChart" height="200"></canvas></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>Weekly Study Pattern</h3><canvas id="hoursChart" height="200"></canvas></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow col-span-2"><h3>🔍 Weakness Heatmap (AI Identified)</h3><ul class="mt-2 space-y-3"><li><span class="font-bold">⚛️ Physics:</span> Rotational Motion (38% accuracy) → <span class="text-red-500">Critical</span></li><li><span class="font-bold">🧪 Chemistry:</span> Organic Reaction Mechanism (45%) → <span class="text-orange-500">Needs improvement</span></li><li><span class="font-bold">🧬 Biology:</span> Plant Anatomy (62%) → <span class="text-yellow-500">Moderate</span></li></ul><div class="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 p-4 rounded-xl"><i class="fas fa-robot text-blue-600"></i> AI Suggestion: Dedicate 25 min daily to Rotational Motion problems for the next week.</div></div></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">📊 Deep Analytics (with kawaii insights)</h1><div class="grid md:grid-cols-2 gap-6"><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3>Subject Accuracy 🎯</h3><canvas id="subjectChart" height="200"></canvas></div><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3>Weekly Study Hours 📚</h3><canvas id="hoursChart" height="200"></canvas></div><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow col-span-2"><h3>🔍 Weakness Heatmap (AI Identified)</h3><ul class="mt-2 space-y-3"><li><span class="font-bold">⚛️ Physics:</span> Rotational Motion (42% accuracy) → <span class="text-pink-500">Needs love</span></li><li><span class="font-bold">🧪 Chemistry:</span> Organic Reaction Mechanism (48%) → <span class="text-purple-500">Practice more</span></li><li><span class="font-bold">🌸 Biology:</span> Plant Anatomy (65%) → <span class="text-yellow-500">Almost there</span></li></ul><div class="mt-4 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-purple-900/20 p-4 rounded-2xl"><i class="fas fa-robot text-pink-600"></i> AI Sensei: Spend 20 min daily on Rotational Motion problems for a week. You got this! ✨</div></div></div></div>
       `,
       resources: () => `
-        <div><h1 class="text-2xl font-bold mb-4">📚 Resource Hub & Flashcards</h1><div class="grid md:grid-cols-2 gap-8"><div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="text-xl font-bold mb-3"><i class="fas fa-layer-group text-purple-500"></i> Smart Flashcards (Spaced Repetition)</h3><div id="flashcardContainer" class="flip-card w-full h-56 mx-auto mb-4 relative"><div class="flip-card-inner w-full h-full"><div class="flip-front"><i class="fas fa-question-circle text-4xl text-blue-500 mb-2"></i><p class="text-lg font-semibold" id="flashFront">${flashcards[0].front}</p></div><div class="flip-back"><p id="flashBack">${flashcards[0].back}</p></div></div></div><div class="flex justify-center gap-3"><button id="prevFlash" class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded"><i class="fas fa-arrow-left"></i></button><button id="nextFlash" class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded"><i class="fas fa-arrow-right"></i></button></div></div><div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow"><h3 class="text-xl font-bold"><i class="fas fa-video text-red-500"></i> Curated Video Library</h3><ul class="mt-3 space-y-2"><li>🎥 <a href="#" class="text-blue-600 hover:underline">NCERT Line by Line: Physics</a></li><li>🎥 <a href="#" class="text-blue-600 hover:underline">3D Chemistry Animations</a></li><li>🎥 <a href="#" class="text-blue-600 hover:underline">Biology in 20 Minutes (Crash Course)</a></li></ul></div></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">📚 Resource Hub & Flashcards</h1><div class="grid md:grid-cols-2 gap-8"><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3 class="text-xl font-bold mb-3"><i class="fas fa-layer-group text-pink-500"></i> Spaced Repetition Flashcards</h3><div id="flashcardContainer" class="flip-card w-full h-56 mx-auto mb-4 relative"><div class="flip-card-inner w-full h-full"><div class="flip-front"><i class="fas fa-question-circle text-4xl text-pink-500 mb-2"></i><p class="text-lg font-semibold" id="flashFront">${flashcards[0].front}</p></div><div class="flip-back"><p id="flashBack">${flashcards[0].back}</p></div></div></div><div class="flex justify-center gap-3"><button id="prevFlash" class="bg-pink-100 dark:bg-gray-700 px-4 py-2 rounded-full"><i class="fas fa-arrow-left"></i></button><button id="nextFlash" class="bg-pink-100 dark:bg-gray-700 px-4 py-2 rounded-full"><i class="fas fa-arrow-right"></i></button></div><p class="text-center text-sm mt-2">✨ Click card to flip ✨</p></div><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3 class="text-xl font-bold"><i class="fas fa-video text-pink-500"></i> Anime-style Video Library</h3><ul class="mt-3 space-y-2"><li>🎥 <a href="#" class="text-pink-600 hover:underline">NCERT Line by Line: Physics (with cute animations)</a></li><li>🎥 <a href="#" class="text-pink-600 hover:underline">3D Chemistry Reactions — like magical girl transformations</a></li><li>🎥 <a href="#" class="text-pink-600 hover:underline">Biology in 20 Minutes (Manga style)</a></li></ul></div></div></div>
       `,
       community: () => `
-        <div><h1 class="text-2xl font-bold mb-4">👥 SciTrack Community</h1><div class="grid md:grid-cols-2 gap-6"><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3><i class="fas fa-users"></i> Study Groups</h3><p>🔥 Physics Warriors (42 members) | 🧬 Bio Masters (28 members) | 🧪 Chem Titans (35 members)</p><button class="mt-3 bg-blue-600 text-white px-4 py-1 rounded">Join Group</button></div><div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3><i class="fas fa-trophy"></i> Weekly Leaderboard</h3><ol class="list-decimal pl-5 mt-2"><li>Ananya S. — 4210 XP</li><li>Riya M. — 3870 XP</li><li>Kunal V. — 3450 XP</li></ol></div><div class="col-span-2 bg-white dark:bg-slate-800 p-5 rounded-xl shadow"><h3>💬 Doubt Forum</h3><div class="space-y-3"><div class="border-b pb-2">📌 "Why does ionization energy decrease down group 1?" — <span class="text-blue-500">4 answers</span></div><div class="border-b pb-2">📌 "Best strategy for last 3 months?" — <span class="text-blue-500">12 answers</span></div></div><textarea placeholder="Ask your doubt..." rows="2" class="w-full mt-3 p-2 border rounded dark:bg-gray-800"></textarea><button class="mt-2 bg-blue-600 text-white px-4 py-1 rounded">Post</button></div></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">👥 SciTrack Community (Anime-themed)</h1><div class="grid md:grid-cols-2 gap-6"><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3><i class="fas fa-users text-pink-500"></i> Study Circles</h3><p>🔥 Physics Warriors (42 members) | 🧬 Bio Masters (28 members) | 🧪 Chem Titans (35 members)</p><button class="mt-3 bg-pink-500 text-white px-4 py-1 rounded-full">Join Group</button></div><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3><i class="fas fa-trophy text-pink-500"></i> Weekly Leaderboard</h3><ol class="list-decimal pl-5 mt-2"><li>🌸 Yuki M. — 5120 XP</li><li>✨ Ananya S. — 4980 XP</li><li>🎀 Kunal V. — 4350 XP</li></ol></div><div class="col-span-2 bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow"><h3>💬 Doubt Forum (Kawaii Edition)</h3><div class="space-y-3"><div class="border-b pb-2">📌 "Why does electron affinity decrease down group 17?" — <span class="text-pink-500">4 answers</span></div><div class="border-b pb-2">📌 "Best strategy for last 3 months?" — <span class="text-pink-500">12 answers</span></div></div><textarea placeholder="Ask your doubt..." rows="2" class="w-full mt-3 p-2 border rounded-2xl dark:bg-gray-800"></textarea><button class="mt-2 bg-pink-500 text-white px-4 py-1 rounded-full">Post</button></div></div></div>
       `,
       profile: () => `
-        <div><h1 class="text-2xl font-bold mb-4">⚙️ Profile & Preferences</h1><div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow max-w-xl"><div class="flex items-center gap-4"><div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-3xl font-bold text-white">RM</div><div><h2 class="text-2xl font-bold">${userData.name}</h2><p class="text-gray-500">NEET 2026 Aspirant | Science Enthusiast</p></div></div><div class="mt-6"><label class="block font-medium">Target Exam</label><select id="targetExam" class="w-full p-2 border rounded dark:bg-gray-700"><option>NEET 2026</option><option>JEE Main 2026</option><option>JEE Advanced 2026</option></select><label class="block font-medium mt-3">Daily Study Goal (hours)</label><input type="number" id="studyGoal" value="6" class="w-full p-2 border rounded dark:bg-gray-700"><button id="saveProfileBtn" class="mt-5 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">Save Changes</button></div></div></div>
+        <div><h1 class="text-2xl font-bold mb-4">⚙️ Profile & Preferences (kawaii settings)</h1><div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-6 shadow max-w-xl"><div class="flex items-center gap-4"><div class="w-20 h-20 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow">YT</div><div><h2 class="text-2xl font-bold">${userData.name}</h2><p class="text-gray-500">NEET 2026 Aspirant | ✨ Science Enthusiast</p></div></div><div class="mt-6"><label class="block font-medium">Target Exam</label><select id="targetExam" class="w-full p-2 border rounded-2xl dark:bg-gray-700"><option>NEET 2026</option><option>JEE Main 2026</option><option>JEE Advanced 2026</option></select><label class="block font-medium mt-3">Daily Study Goal (hours)</label><input type="number" id="studyGoal" value="6" class="w-full p-2 border rounded-2xl dark:bg-gray-700"><button id="saveProfileBtn" class="mt-5 bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition">Save Changes ✨</button></div></div></div>
       `
     };
 
-    // Helper to render current page
     function renderPage(page) {
       const container = document.getElementById("app");
       if(pages[page]) container.innerHTML = pages[page]();
@@ -288,13 +319,13 @@
     function attachPageEvents(page) {
       if(page === "dashboard") {
         const scoreCtx = document.getElementById("scoreChart");
-        if(scoreCtx) new Chart(scoreCtx, { type: 'line', data: { labels: userData.recentTests.slice(0,4).map(t=>t.name), datasets: [{ label: 'Score %', data: userData.recentTests.slice(0,4).map(t=>t.score), borderColor: '#3b82f6', tension: 0.3, fill: true, backgroundColor: 'rgba(59,130,246,0.1)' }] } });
+        if(scoreCtx) new Chart(scoreCtx, { type: 'line', data: { labels: userData.recentTests.slice(0,4).map(t=>t.name), datasets: [{ label: 'Score %', data: userData.recentTests.slice(0,4).map(t=>t.score), borderColor: '#ff85a1', tension: 0.3, fill: true, backgroundColor: 'rgba(255,133,161,0.1)' }] } });
       }
       if(page === "analytics") {
         const subjCtx = document.getElementById("subjectChart");
-        if(subjCtx) new Chart(subjCtx, { type: 'bar', data: { labels: Object.keys(userData.subjectAccuracy), datasets: [{ label: 'Accuracy %', data: Object.values(userData.subjectAccuracy), backgroundColor: '#a855f7' }] } });
+        if(subjCtx) new Chart(subjCtx, { type: 'bar', data: { labels: Object.keys(userData.subjectAccuracy), datasets: [{ label: 'Accuracy %', data: Object.values(userData.subjectAccuracy), backgroundColor: '#c084fc' }] } });
         const hoursCtx = document.getElementById("hoursChart");
-        if(hoursCtx) new Chart(hoursCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Hours', data: userData.dailyHours, borderColor: '#10b981', fill: false }] } });
+        if(hoursCtx) new Chart(hoursCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Hours', data: userData.dailyHours, borderColor: '#f472b6', fill: false }] } });
       }
       if(page === "syllabus") {
         updateProgress();
@@ -310,7 +341,7 @@
       }
       if(page === "practice") {
         document.getElementById("newQuickTest")?.addEventListener("click", generateQuickTest);
-        document.getElementById("fullMockBtn")?.addEventListener("click", () => alert("Full mock interface is in beta. Will launch soon with real-time analytics!"));
+        document.getElementById("fullMockBtn")?.addEventListener("click", () => alert("Full mock coming soon! Prepare for ultimate challenge ✨"));
       }
       if(page === "resources") {
         const flashCardDiv = document.querySelector(".flip-card");
@@ -326,12 +357,12 @@
         flashCardDiv?.addEventListener("click", () => flashCardDiv.classList.toggle("flipped"));
       }
       if(page === "profile") {
-        document.getElementById("saveProfileBtn")?.addEventListener("click", () => { alert("Profile updated (demo)."); saveUserData(); });
+        document.getElementById("saveProfileBtn")?.addEventListener("click", () => { alert("Profile updated! (demo) 🎀"); saveUserData(); });
       }
       if(page === "home") initPendulum();
     }
 
-    // Pendulum simulation
+    // Pendulum simulation (same as before but with aesthetic)
     let pendulumAnimation;
     function initPendulum() {
       const canvas = document.getElementById("pendulumCanvas");
@@ -343,7 +374,7 @@
       const lengthSlider = document.getElementById("pendLength");
       const massSlider = document.getElementById("pendMass");
       const periodSpan = document.getElementById("periodDisplay");
-      function updatePeriod() { let T = 2 * Math.PI * Math.sqrt(length/g); if(periodSpan) periodSpan.innerText = `Period: ${T.toFixed(2)} s`; }
+      function updatePeriod() { let T = 2 * Math.PI * Math.sqrt(length/g); if(periodSpan) periodSpan.innerText = `⏱️ Period: ${T.toFixed(2)} s`; }
       if(lengthSlider) lengthSlider.oninput = (e) => { length = parseFloat(e.target.value); updatePeriod(); };
       if(massSlider) massSlider.oninput = (e) => { length = parseFloat(lengthSlider.value); updatePeriod(); };
       function animate() {
@@ -353,8 +384,8 @@
         const pivotX = width/2, pivotY = 40;
         const bobX = pivotX + length*120 * Math.sin(angle);
         const bobY = pivotY + length*120 * Math.cos(angle);
-        ctx.beginPath(); ctx.moveTo(pivotX,pivotY); ctx.lineTo(bobX,bobY); ctx.strokeStyle = "#facc15"; ctx.lineWidth = 2; ctx.stroke();
-        ctx.beginPath(); ctx.arc(bobX,bobY,12,0,2*Math.PI); ctx.fillStyle = "#3b82f6"; ctx.fill();
+        ctx.beginPath(); ctx.moveTo(pivotX,pivotY); ctx.lineTo(bobX,bobY); ctx.strokeStyle = "#ffb6c1"; ctx.lineWidth = 3; ctx.stroke();
+        ctx.beginPath(); ctx.arc(bobX,bobY,14,0,2*Math.PI); ctx.fillStyle = "#ff85a1"; ctx.fill(); ctx.shadowBlur = 8;
         let alpha = -(g/length) * Math.sin(angle);
         angularVel += alpha * 0.016;
         angle += angularVel * 0.016;
@@ -367,25 +398,25 @@
 
     function generateQuickTest() {
       activeTestQuestions = [
-        { text: "A particle moves along x-axis with velocity v = 3t². Find acceleration at t=2s.", options: ["6 m/s²","12 m/s²","3 m/s²","0"], correct: 1 },
-        { text: "Which of the following is a greenhouse gas?", options: ["Oxygen","Nitrogen","CO₂","Argon"], correct: 2 },
-        { text: "pH of pure water at 25°C is?", options: ["7","0","14","1"], correct: 0 },
-        { text: "What is the function of ribosomes?", options: ["Protein synthesis","Lipid synthesis","Energy production","DNA replication"], correct: 0 },
-        { text: "If focal length of convex lens is 20 cm, its power is?", options: ["+5 D","-5 D","+0.05 D","-0.05 D"], correct: 0 }
+        { text: "🌸 A particle moves with v = 4t². Find acceleration at t=3s.", options: ["12 m/s²","24 m/s²","8 m/s²","36 m/s²"], correct: 1 },
+        { text: "🎀 Which gas is responsible for global warming?", options: ["O₂","CO₂","N₂","H₂"], correct: 1 },
+        { text: "🧪 pH of 0.001 M HCl is?", options: ["2","3","4","1"], correct: 1 },
+        { text: "💡 Function of mitochondria?", options: ["Protein synthesis","ATP production","Photosynthesis","Lipid storage"], correct: 1 },
+        { text: "⚛️ Unit of electric current?", options: ["Volt","Ampere","Ohm","Watt"], correct: 1 }
       ];
       userTestAnswers = new Array(5).fill(null);
       const container = document.getElementById("testContainer");
       if(!container) return;
-      let html = `<h3 class="font-bold text-lg">⚡ AI-Generated Mini Test</h3><div class="space-y-4 mt-4">`;
+      let html = `<h3 class="font-bold text-lg">✨ AI-Generated Mini Test ✨</h3><div class="space-y-4 mt-4">`;
       activeTestQuestions.forEach((q, idx) => {
-        html += `<div class="border p-4 rounded-lg"><p class="font-semibold">${idx+1}. ${q.text}</p><div class="grid grid-cols-2 gap-2 mt-2">`;
+        html += `<div class="border border-pink-200 p-4 rounded-2xl"><p class="font-semibold">${idx+1}. ${q.text}</p><div class="grid grid-cols-2 gap-2 mt-2">`;
         q.options.forEach((opt, optIdx) => {
           let checked = userTestAnswers[idx] === optIdx ? 'checked' : '';
           html += `<label class="flex items-center gap-2"><input type="radio" name="q${idx}" value="${optIdx}" ${checked} class="test-radio" data-qidx="${idx}" data-oidx="${optIdx}"> ${opt}</label>`;
         });
         html += `</div></div>`;
       });
-      html += `<button id="submitTestBtn" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg">Submit & Get Score</button><div id="testResult"></div>`;
+      html += `<button id="submitTestBtn" class="mt-4 bg-pink-500 text-white px-5 py-2 rounded-full">Submit & Get Score 🎀</button><div id="testResult"></div>`;
       container.innerHTML = html;
       document.querySelectorAll('.test-radio').forEach(radio => {
         radio.addEventListener('change', (e) => {
@@ -398,7 +429,7 @@
         let score = 0;
         activeTestQuestions.forEach((q,i) => { if(userTestAnswers[i] === q.correct) score++; });
         let percent = (score/activeTestQuestions.length)*100;
-        document.getElementById("testResult").innerHTML = `<div class="mt-3 p-3 bg-blue-100 dark:bg-blue-900/40 rounded">🎯 Score: ${score}/${activeTestQuestions.length} (${percent}%)<br>✅ AI analysis: Focus on weak areas highlighted.</div>`;
+        document.getElementById("testResult").innerHTML = `<div class="mt-3 p-3 bg-pink-100 dark:bg-purple-900/40 rounded-2xl">🎉 Score: ${score}/${activeTestQuestions.length} (${percent}%)<br>✨ AI Sensei: Keep practicing, you're improving! ✨</div>`;
         userData.recentTests.unshift({ name: "Quick Test", score: percent, total: 100, date: new Date().toISOString().slice(0,10) });
         saveUserData();
       });
