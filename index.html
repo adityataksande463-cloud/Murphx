@@ -2,102 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>SciTrack | NEET/JEE Advanced Preparation Ecosystem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SciTrack | NEET/JEE Next-Gen 3D Ecosystem</title>
   
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  
-  <!-- Fonts: Inter + Space Grotesk for headings -->
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Three.js Core & Extras -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+      }
+    }
+  </script>
+  
+  <!-- GSAP for advanced animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   
-  <!-- AOS Library for scroll animations -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  
   <style>
-    /* ---------- CSS RESET & GLOBAL VARIABLES ---------- */
-    :root {
-      /* Primary Color System - HSL based */
-      --primary-h: 250;
-      --primary-s: 85%;
-      --primary-l: 65%;
-      --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
-      --primary-dark: hsl(var(--primary-h), var(--primary-s), 55%);
-      --primary-light: hsl(var(--primary-h), var(--primary-s), 75%);
-      
-      /* Secondary - Pink/Red tones for accent */
-      --secondary-h: 340;
-      --secondary-s: 82%;
-      --secondary-l: 65%;
-      --secondary: hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
-      
-      /* Success/Emerald */
-      --success: hsl(160, 84%, 39%);
-      --warning: hsl(35, 95%, 55%);
-      --danger: hsl(0, 84%, 60%);
-      
-      /* Neutrals */
-      --gray-50: #fafaf9;
-      --gray-100: #f5f5f4;
-      --gray-200: #e7e5e4;
-      --gray-300: #d6d3d1;
-      --gray-400: #a8a29e;
-      --gray-500: #78716c;
-      --gray-600: #57534e;
-      --gray-700: #44403c;
-      --gray-800: #292524;
-      --gray-900: #1c1917;
-      
-      /* Gradients */
-      --gradient-primary: linear-gradient(135deg, hsl(250, 85%, 65%), hsl(280, 85%, 65%));
-      --gradient-secondary: linear-gradient(135deg, hsl(340, 82%, 65%), hsl(360, 82%, 65%));
-      --gradient-mesh: radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.08), transparent 50%);
-      
-      /* Shadows */
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-      --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-      
-      /* Spacing - 8px base */
-      --space-1: 0.25rem;
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-5: 1.25rem;
-      --space-6: 1.5rem;
-      --space-8: 2rem;
-      --space-10: 2.5rem;
-      --space-12: 3rem;
-      --space-16: 4rem;
-      --space-20: 5rem;
-      
-      /* Border Radius */
-      --radius-sm: 0.375rem;
-      --radius-md: 0.5rem;
-      --radius-lg: 0.75rem;
-      --radius-xl: 1rem;
-      --radius-2xl: 1.5rem;
-      --radius-3xl: 2rem;
-      --radius-full: 9999px;
-      
-      /* Transitions */
-      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
+    /* ---------- RESET & GLOBAL VARIABLES ---------- */
     * {
       margin: 0;
       padding: 0;
@@ -105,264 +35,125 @@
     }
     
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, var(--gray-50) 0%, #ffffff 100%);
-      color: var(--gray-800);
-      line-height: 1.5;
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0f;
+      color: #ffffff;
       overflow-x: hidden;
     }
     
-    body.dark {
-      background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%);
-      color: var(--gray-200);
+    /* Canvas container for Three.js */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
     }
     
-    /* Typography */
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Space Grotesk', 'Inter', sans-serif;
-      font-weight: 600;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+    /* Main content overlay */
+    .content {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      backdrop-filter: blur(2px);
     }
     
-    /* Glass Morphism */
-    .glass {
-      background: rgba(255, 255, 255, 0.7);
+    /* Glassmorphism / Neon */
+    .glass-card {
+      background: rgba(20, 20, 40, 0.5);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(100, 100, 255, 0.3);
+      border-radius: 24px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
     
-    .dark .glass {
-      background: rgba(20, 20, 30, 0.7);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    
-    /* Card Styles */
-    .card {
-      background: white;
-      border-radius: var(--radius-2xl);
-      transition: all var(--transition-base);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .dark .card {
-      background: rgba(30, 30, 40, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .card:hover {
+    .glass-card:hover {
+      border-color: rgba(100, 100, 255, 0.8);
+      box-shadow: 0 0 20px rgba(100, 100, 255, 0.3);
       transform: translateY(-4px);
-      box-shadow: var(--shadow-xl);
     }
     
-    /* Button Styles */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-2);
-      padding: var(--space-2) var(--space-5);
-      border-radius: var(--radius-full);
-      font-weight: 500;
-      font-size: 0.875rem;
-      transition: all var(--transition-base);
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      position: relative;
-      overflow: hidden;
+    /* Glowing text */
+    .glow-text {
+      text-shadow: 0 0 10px rgba(100, 100, 255, 0.5);
     }
     
-    .btn-primary {
-      background: var(--gradient-primary);
-      color: white;
-      box-shadow: var(--shadow-md);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-    
-    .btn-primary:active {
-      transform: translateY(0);
-    }
-    
-    .btn-outline {
-      border: 1px solid var(--gray-300);
-      background: transparent;
-    }
-    
-    .dark .btn-outline {
-      border-color: var(--gray-600);
-      color: var(--gray-300);
-    }
-    
-    /* Navigation Tabs */
-    .nav-tab {
-      position: relative;
-      padding: var(--space-2) var(--space-4);
-      border-radius: var(--radius-full);
-      transition: all var(--transition-fast);
-      cursor: pointer;
-    }
-    
-    .nav-tab.active {
-      background: var(--gradient-primary);
-      color: white;
-    }
-    
-    .nav-tab:not(.active):hover {
-      background: var(--gray-100);
-    }
-    
-    .dark .nav-tab:not(.active):hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-    
-    /* Skeleton Loader */
-    .skeleton {
-      background: linear-gradient(90deg, var(--gray-200) 0%, var(--gray-300) 50%, var(--gray-200) 100%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    
-    /* Progress Ring */
-    .progress-ring {
-      transform: rotate(-90deg);
-    }
-    
-    /* Floating Elements */
-    .floating {
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    /* Gradient Text */
+    /* Gradient text */
     .gradient-text {
-      background: var(--gradient-primary);
+      background: linear-gradient(135deg, #a78bfa, #ec489a);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
     
-    /* Grid Background */
-    .grid-bg {
-      background-image: 
-        linear-gradient(var(--gray-200) 1px, transparent 1px),
-        linear-gradient(90deg, var(--gray-200) 1px, transparent 1px);
-      background-size: 40px 40px;
+    /* Button styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     }
     
-    .dark .grid-bg {
-      background-image: 
-        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
     }
     
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+    /* Navigation tabs */
+    .nav-tab {
+      padding: 8px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
     }
     
-    ::-webkit-scrollbar-track {
-      background: var(--gray-100);
-      border-radius: var(--radius-full);
+    .nav-tab.active {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
     }
     
-    ::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: var(--radius-full);
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1e1e2a; }
+    ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+    
+    /* Floating animation for cards */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
     }
     
-    .dark ::-webkit-scrollbar-track {
-      background: var(--gray-800);
-    }
-    
-    /* Modal Overlay */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: all var(--transition-base);
-    }
-    
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-fade-up {
-      animation: fadeInUp 0.6s ease-out forwards;
-    }
-    
-    /* Responsive Utilities */
-    @media (max-width: 768px) {
-      :root {
-        --space-16: 2rem;
-        --space-20: 3rem;
-      }
+    .float-animation {
+      animation: float 5s ease-in-out infinite;
     }
   </style>
 </head>
-<body class="relative">
+<body>
 
-  <!-- Background Decorations -->
-  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-    <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-l from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-violet-500/5 to-fuchsia-500/5 rounded-full blur-3xl"></div>
-  </div>
+  <!-- Three.js Canvas Container -->
+  <div id="canvas-container"></div>
 
-  <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-200/20 dark:border-gray-700/20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <!-- Logo -->
+  <!-- Main App Content -->
+  <div class="content">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 backdrop-blur-xl bg-black/30 border-b border-white/10">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-            <i class="fas fa-atom text-white text-sm"></i>
-          </div>
-          <span class="font-bold text-xl gradient-text">SciTrack</span>
-          <span class="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Beta</span>
+          <i class="fas fa-atom text-2xl text-indigo-400"></i>
+          <span class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">SciTrack</span>
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">3D</span>
         </div>
-        
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center gap-1">
+        <div class="hidden md:flex gap-2">
           <button data-page="home" class="nav-tab">Home</button>
           <button data-page="dashboard" class="nav-tab">Dashboard</button>
           <button data-page="syllabus" class="nav-tab">Syllabus</button>
@@ -371,945 +162,320 @@
           <button data-page="community" class="nav-tab">Community</button>
           <button data-page="profile" class="nav-tab">Profile</button>
         </div>
-        
-        <!-- Right Actions -->
         <div class="flex items-center gap-3">
-          <button id="themeToggle" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-            <i class="fas fa-moon dark:fa-sun text-gray-600 dark:text-gray-300"></i>
+          <button id="themeToggle" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition">
+            <i class="fas fa-moon text-gray-300"></i>
           </button>
-          <div class="relative group">
-            <button class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition relative">
-              <i class="fas fa-bell text-gray-600 dark:text-gray-300"></i>
-              <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-            </button>
-            <div class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div class="p-4 border-b border-gray-100 dark:border-gray-700">
-                <p class="font-semibold">Notifications</p>
-              </div>
-              <div class="p-3 space-y-2">
-                <div class="text-sm">🎯 New AI study plan available</div>
-                <div class="text-sm">📊 Your weekly report is ready</div>
-              </div>
-            </div>
-          </div>
-          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm cursor-pointer">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-white font-bold cursor-pointer">
             RK
           </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <!-- Main Content Container -->
-  <main id="app" class="relative z-10 pt-20 pb-12">
-    <!-- Content will be dynamically rendered -->
-  </main>
+    <!-- Main Content -->
+    <main id="app" class="pt-24 pb-12 px-4 max-w-7xl mx-auto relative z-10"></main>
 
-  <!-- Footer -->
-  <footer class="relative z-10 border-t border-gray-200 dark:border-gray-800 py-8 mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
-      <p>© 2025 SciTrack — Advanced Preparation Ecosystem for NEET/JEE | Built with ❤️ for the next generation of scientists</p>
-    </div>
-  </footer>
+    <footer class="text-center py-8 text-gray-400 text-sm border-t border-white/10 backdrop-blur-sm">
+      <p>© 2025 SciTrack — 3D Interactive Ecosystem for NEET/JEE | Powered by WebGL & AI</p>
+    </footer>
+  </div>
 
-  <script>
-    // ==================== ADVANCED STATE MANAGEMENT ====================
-    class SciTrackApp {
-      constructor() {
-        this.currentPage = 'home';
-        this.userData = this.loadUserData();
-        this.charts = {};
-        this.modalActive = false;
-        this.init();
-      }
-      
-      loadUserData() {
-        const defaultData = {
-          name: "Riya Kapoor",
-          avatar: "RK",
-          streak: 24,
-          xp: 5120,
-          rank: 1245,
-          badges: [
-            { name: "7-Day Warrior", icon: "🔥", color: "orange" },
-            { name: "Quiz Master", icon: "📝", color: "purple" },
-            { name: "Lab Genius", icon: "🧪", color: "green" },
-            { name: "Top 5%", icon: "🏆", color: "gold" }
-          ],
-          completedTopics: 18,
-          totalTopics: 32,
-          subjectProgress: {
-            Physics: { completed: 6, total: 12, accuracy: 74 },
-            Chemistry: { completed: 5, total: 10, accuracy: 68 },
-            Biology: { completed: 7, total: 10, accuracy: 86 }
-          },
-          recentTests: [
-            { name: "Physics - Mechanics", score: 85, date: "2025-03-22" },
-            { name: "Chemistry - Organic", score: 72, date: "2025-03-20" },
-            { name: "Biology - Genetics", score: 94, date: "2025-03-18" },
-            { name: "Full Mock #4", score: 79, date: "2025-03-15" }
-          ],
-          weeklyHours: [3.2, 4.1, 3.8, 5.2, 6.0, 7.1, 4.5],
-          upcomingTasks: [
-            { title: "Complete Electrochemistry", due: "Tomorrow", priority: "high" },
-            { title: "Physics Problem Set #12", due: "In 2 days", priority: "medium" },
-            { title: "Biology Revision: Genetics", due: "In 3 days", priority: "high" }
-          ],
-          weakTopics: [
-            { name: "Rotational Motion", subject: "Physics", accuracy: 42 },
-            { name: "Organic Isomerism", subject: "Chemistry", accuracy: 48 },
-            { name: "Plant Physiology", subject: "Biology", accuracy: 65 }
-          ]
-        };
-        
-        const saved = localStorage.getItem('scitrack_user');
-        return saved ? { ...defaultData, ...JSON.parse(saved) } : defaultData;
-      }
-      
-      saveUserData() {
-        localStorage.setItem('scitrack_user', JSON.stringify(this.userData));
-      }
-      
-      updateProgress() {
-        const percent = (this.userData.completedTopics / this.userData.totalTopics) * 100;
-        document.querySelectorAll('.progress-fill').forEach(el => {
-          el.style.width = `${percent}%`;
-        });
-        return percent;
-      }
-      
-      async renderPage(page) {
-        this.currentPage = page;
-        const container = document.getElementById('app');
-        if (!container) return;
-        
-        // Show skeleton loader
-        container.innerHTML = this.getSkeletonLoader();
-        
-        // Simulate loading delay for smooth transition
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Render actual page content
-        const content = this.getPageContent(page);
-        container.innerHTML = content;
-        
-        // Initialize page-specific components
-        this.initPageComponents(page);
-        
-        // Trigger AOS refresh
-        if (typeof AOS !== 'undefined') {
-          AOS.refresh();
-        }
-      }
-      
-      getSkeletonLoader() {
-        return `
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="space-y-6">
-              <div class="skeleton h-12 w-64 rounded-xl"></div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="skeleton h-48 rounded-2xl"></div>
-                <div class="skeleton h-48 rounded-2xl"></div>
-                <div class="skeleton h-48 rounded-2xl"></div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      getPageContent(page) {
-        switch(page) {
-          case 'home': return this.renderHome();
-          case 'dashboard': return this.renderDashboard();
-          case 'syllabus': return this.renderSyllabus();
-          case 'practice': return this.renderPractice();
-          case 'analytics': return this.renderAnalytics();
-          case 'community': return this.renderCommunity();
-          case 'profile': return this.renderProfile();
-          default: return this.renderHome();
-        }
-      }
-      
-      renderHome() {
-        return `
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Hero Section -->
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent p-8 md:p-12 mb-16" data-aos="fade-up">
-              <div class="relative z-10">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm mb-6">
-                  <i class="fas fa-sparkle"></i>
-                  <span>Next-Generation Learning Platform</span>
-                </div>
-                <h1 class="text-4xl md:text-6xl font-bold mb-4">
-                  Master NEET/JEE with
-                  <span class="gradient-text">AI-Powered Precision</span>
-                </h1>
-                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
-                  Interactive simulations, real-time analytics, and personalized learning paths designed for the modern aspirant.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                  <button onclick="window.app.navigate('dashboard')" class="btn btn-primary">
-                    <i class="fas fa-rocket"></i>
-                    Start Your Journey
-                  </button>
-                  <button class="btn btn-outline">
-                    <i class="fas fa-play"></i>
-                    Watch Demo
-                  </button>
-                </div>
-              </div>
-              <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl -z-0"></div>
-            </div>
-            
-            <!-- Features Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
-                  <i class="fas fa-brain text-white text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">AI Adaptive Learning</h3>
-                <p class="text-gray-500 dark:text-gray-400">Personalized recommendations that evolve with your performance and learning style.</p>
-              </div>
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-secondary to-pink-500 flex items-center justify-center mb-4">
-                  <i class="fas fa-flask text-white text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Virtual Labs</h3>
-                <p class="text-gray-500 dark:text-gray-400">Interactive physics, chemistry, and biology simulations for hands-on learning.</p>
-              </div>
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mb-4">
-                  <i class="fas fa-chart-line text-white text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Predictive Analytics</h3>
-                <p class="text-gray-500 dark:text-gray-400">Real-time rank prediction and performance insights to guide your preparation.</p>
-              </div>
-            </div>
-            
-            <!-- Stats Section -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-              <div class="text-center p-6 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm" data-aos="zoom-in">
-                <div class="text-3xl font-bold gradient-text">50K+</div>
-                <div class="text-sm text-gray-500">Active Students</div>
-              </div>
-              <div class="text-center p-6 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm" data-aos="zoom-in" data-aos-delay="100">
-                <div class="text-3xl font-bold gradient-text">10K+</div>
-                <div class="text-sm text-gray-500">Practice Questions</div>
-              </div>
-              <div class="text-center p-6 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm" data-aos="zoom-in" data-aos-delay="200">
-                <div class="text-3xl font-bold gradient-text">98%</div>
-                <div class="text-sm text-gray-500">Success Rate</div>
-              </div>
-              <div class="text-center p-6 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm" data-aos="zoom-in" data-aos-delay="300">
-                <div class="text-3xl font-bold gradient-text">24/7</div>
-                <div class="text-sm text-gray-500">AI Support</div>
-              </div>
-            </div>
-            
-            <!-- Interactive Pendulum -->
-            <div class="card p-6 mb-16" data-aos="fade-up">
-              <h2 class="text-2xl font-bold mb-4">Interactive Physics Lab</h2>
-              <p class="text-gray-500 dark:text-gray-400 mb-6">Explore Simple Harmonic Motion with this real-time pendulum simulation</p>
-              <div class="flex flex-wrap gap-6 mb-6">
-                <div>
-                  <label class="block text-sm font-medium mb-1">Length (m)</label>
-                  <input type="range" id="pendulum-length" min="0.3" max="1.5" step="0.01" value="1.0" class="w-40 accent-primary">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1">Mass (kg)</label>
-                  <input type="range" id="pendulum-mass" min="0.1" max="2.0" step="0.05" value="0.5" class="w-40 accent-secondary">
-                </div>
-                <div class="flex items-center">
-                  <div class="px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 font-mono text-sm" id="pendulum-period">Period: 2.01 s</div>
-                </div>
-              </div>
-              <canvas id="pendulum-canvas" width="500" height="280" class="w-full max-w-md mx-auto rounded-xl bg-gray-900"></canvas>
-            </div>
-          </div>
-        `;
-      }
-      
-      renderDashboard() {
-        const progressPercent = (this.userData.completedTopics / this.userData.totalTopics) * 100;
-        return `
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Welcome Header -->
-            <div class="flex flex-wrap justify-between items-center mb-8" data-aos="fade-up">
-              <div>
-                <h1 class="text-3xl font-bold">Welcome back, ${this.userData.name}!</h1>
-                <p class="text-gray-500">Here's your preparation summary</p>
-              </div>
-              <div class="flex gap-3">
-                <div class="px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
-                  <i class="fas fa-fire"></i> ${this.userData.streak} Day Streak
-                </div>
-                <div class="px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
-                  <i class="fas fa-star"></i> ${this.userData.xp} XP
-                </div>
-              </div>
-            </div>
-            
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" data-aos="fade-up" data-aos-delay="100">
-              <div class="card p-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm text-gray-500">Overall Progress</p>
-                    <p class="text-2xl font-bold">${Math.round(progressPercent)}%</p>
-                  </div>
-                  <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <i class="fas fa-chart-simple text-primary"></i>
-                  </div>
-                </div>
-                <div class="mt-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full progress-fill" style="width: ${progressPercent}%"></div>
-                </div>
-              </div>
-              <div class="card p-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm text-gray-500">Current Rank (Est.)</p>
-                    <p class="text-2xl font-bold">#${this.userData.rank}</p>
-                  </div>
-                  <div class="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center">
-                    <i class="fas fa-trophy text-green-500"></i>
-                  </div>
-                </div>
-                <p class="text-xs text-green-500 mt-2">↑ 234 spots this week</p>
-              </div>
-              <div class="card p-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm text-gray-500">Questions Solved</p>
-                    <p class="text-2xl font-bold">2,847</p>
-                  </div>
-                  <div class="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
-                    <i class="fas fa-check-circle text-blue-500"></i>
-                  </div>
-                </div>
-                <p class="text-xs text-green-500 mt-2">+124 this week</p>
-              </div>
-              <div class="card p-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm text-gray-500">Study Hours</p>
-                    <p class="text-2xl font-bold">${this.userData.weeklyHours.reduce((a,b) => a+b, 0)}</p>
-                  </div>
-                  <div class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center">
-                    <i class="fas fa-clock text-purple-500"></i>
-                  </div>
-                </div>
-                <p class="text-xs text-green-500 mt-2">+8 hrs from last week</p>
-              </div>
-            </div>
-            
-            <!-- Main Content Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-              <!-- Test Performance Chart -->
-              <div class="card p-6 lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="font-semibold text-lg mb-4">Recent Test Performance</h3>
-                <canvas id="test-chart" height="250"></canvas>
-              </div>
-              
-              <!-- Badges -->
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="300">
-                <h3 class="font-semibold text-lg mb-4">Achievements</h3>
-                <div class="flex flex-wrap gap-3">
-                  ${this.userData.badges.map(badge => `
-                    <div class="flex items-center gap-2 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800">
-                      <span class="text-xl">${badge.icon}</span>
-                      <span class="text-sm">${badge.name}</span>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-            
-            <!-- Subject Progress -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" data-aos="fade-up" data-aos-delay="400">
-              ${Object.entries(this.userData.subjectProgress).map(([subject, data]) => `
-                <div class="card p-6">
-                  <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-semibold">${subject}</h3>
-                    <span class="text-sm font-medium ${data.accuracy >= 75 ? 'text-green-500' : data.accuracy >= 60 ? 'text-yellow-500' : 'text-red-500'}">${data.accuracy}%</span>
-                  </div>
-                  <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-3 overflow-hidden">
-                    <div class="h-full bg-primary rounded-full" style="width: ${(data.completed / data.total) * 100}%"></div>
-                  </div>
-                  <p class="text-sm text-gray-500">${data.completed}/${data.total} topics completed</p>
-                </div>
-              `).join('')}
-            </div>
-            
-            <!-- Weak Areas & Tasks -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="500">
-                <h3 class="font-semibold text-lg mb-4">Areas Needing Improvement</h3>
-                <div class="space-y-3">
-                  ${this.userData.weakTopics.map(topic => `
-                    <div>
-                      <div class="flex justify-between text-sm mb-1">
-                        <span>${topic.name}</span>
-                        <span class="text-red-500">${topic.accuracy}% accuracy</span>
-                      </div>
-                      <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div class="h-full bg-red-500 rounded-full" style="width: ${topic.accuracy}%"></div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-                <button class="btn btn-primary w-full mt-4">
-                  <i class="fas fa-magic"></i>
-                  Generate Practice Set
-                </button>
-              </div>
-              
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="600">
-                <h3 class="font-semibold text-lg mb-4">Upcoming Tasks</h3>
-                <div class="space-y-3">
-                  ${this.userData.upcomingTasks.map(task => `
-                    <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                      <div class="w-2 h-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' : 'bg-yellow-500'}"></div>
-                      <div class="flex-1">
-                        <p class="font-medium">${task.title}</p>
-                        <p class="text-xs text-gray-500">Due: ${task.due}</p>
-                      </div>
-                      <button class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-check text-gray-400"></i>
-                      </button>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      renderSyllabus() {
-        return `
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold mb-2" data-aos="fade-up">Syllabus Tracker</h1>
-            <p class="text-gray-500 mb-8" data-aos="fade-up" data-aos-delay="100">Track your progress across all subjects</p>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="flex items-center gap-3 mb-4">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                    <i class="fas fa-atom text-white"></i>
-                  </div>
-                  <h2 class="text-xl font-semibold">Physics</h2>
-                </div>
-                <div class="space-y-2">
-                  ${this.getChapterList('Physics')}
-                </div>
-              </div>
-              
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="flex items-center gap-3 mb-4">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
-                    <i class="fas fa-flask text-white"></i>
-                  </div>
-                  <h2 class="text-xl font-semibold">Chemistry</h2>
-                </div>
-                <div class="space-y-2">
-                  ${this.getChapterList('Chemistry')}
-                </div>
-              </div>
-              
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="400">
-                <div class="flex items-center gap-3 mb-4">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                    <i class="fas fa-dna text-white"></i>
-                  </div>
-                  <h2 class="text-xl font-semibold">Biology</h2>
-                </div>
-                <div class="space-y-2">
-                  ${this.getChapterList('Biology')}
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      getChapterList(subject) {
-        const chapters = {
-          Physics: ['Kinematics', 'Laws of Motion', 'Work & Energy', 'Rotational Motion', 'Gravitation', 'Properties of Matter', 'Thermodynamics', 'Oscillations & Waves', 'Electrostatics', 'Current Electricity'],
-          Chemistry: ['Mole Concept', 'Atomic Structure', 'Chemical Bonding', 'Thermodynamics', 'Equilibrium', 'Redox Reactions', 'Organic Basics', 'Hydrocarbons', 'Periodic Table', 'Chemical Kinetics'],
-          Biology: ['Cell Biology', 'Genetics', 'Ecology', 'Human Physiology', 'Plant Physiology', 'Biotechnology', 'Evolution', 'Reproduction', 'Biomolecules', 'Diversity in Living World']
-        };
-        
-        const subjectChapters = chapters[subject] || [];
-        const completed = this.userData.completedTopics;
-        
-        return subjectChapters.map(chapter => `
-          <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-            <span class="text-sm">${chapter}</span>
-            <button class="chapter-toggle w-5 h-5 rounded-full border-2 ${completed.includes(chapter) ? 'bg-primary border-primary' : 'border-gray-300 dark:border-gray-600'} flex items-center justify-center transition" data-chapter="${chapter}">
-              ${completed.includes(chapter) ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
-            </button>
-          </div>
-        `).join('');
-      }
-      
-      renderPractice() {
-        return `
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold mb-2" data-aos="fade-up">Practice Zone</h1>
-            <p class="text-gray-500 mb-8" data-aos="fade-up" data-aos-delay="100">Adaptive practice powered by AI</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div class="card p-6 cursor-pointer" data-aos="fade-up" data-aos-delay="200" onclick="window.app.startQuickTest()">
-                <div class="flex items-center gap-4">
-                  <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                    <i class="fas fa-bolt text-white text-2xl"></i>
-                  </div>
-                  <div>
-                    <h3 class="text-xl font-semibold">Quick Test</h3>
-                    <p class="text-gray-500 text-sm">5 adaptive questions • 10 minutes</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="card p-6 cursor-pointer" data-aos="fade-up" data-aos-delay="300" onclick="window.app.startFullMock()">
-                <div class="flex items-center gap-4">
-                  <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                    <i class="fas fa-chart-line text-white text-2xl"></i>
-                  </div>
-                  <div>
-                    <h3 class="text-xl font-semibold">Full Mock Test</h3>
-                    <p class="text-gray-500 text-sm">Complete syllabus • 3 hours • Real exam interface</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div id="test-container" class="card p-6" data-aos="fade-up" data-aos-delay="400">
-              <p class="text-center text-gray-500">Select a test above to begin your practice session</p>
-            </div>
-          </div>
-        `;
-      }
-      
-      renderAnalytics() {
-        return `
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold mb-2" data-aos="fade-up">Deep Analytics</h1>
-            <p class="text-gray-500 mb-8" data-aos="fade-up" data-aos-delay="100">AI-powered insights to optimize your preparation</p>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="font-semibold text-lg mb-4">Subject-wise Performance</h3>
-                <canvas id="subject-chart" height="250"></canvas>
-              </div>
-              
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="300">
-                <h3 class="font-semibold text-lg mb-4">Weekly Study Pattern</h3>
-                <canvas id="hours-chart" height="250"></canvas>
-              </div>
-            </div>
-            
-            <div class="card p-6 mb-8" data-aos="fade-up" data-aos-delay="400">
-              <h3 class="font-semibold text-lg mb-4">AI Recommendations</h3>
-              <div class="space-y-4">
-                <div class="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-secondary/5">
-                  <i class="fas fa-robot text-primary text-xl mt-1"></i>
-                  <div>
-                    <p class="font-medium">Focus on Rotational Motion</p>
-                    <p class="text-sm text-gray-500">Your accuracy in this topic is 42%. We've prepared 15 targeted practice questions.</p>
-                  </div>
-                </div>
-                <div class="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-secondary/5">
-                  <i class="fas fa-clock text-primary text-xl mt-1"></i>
-                  <div>
-                    <p class="font-medium">Increase daily study time</p>
-                    <p class="text-sm text-gray-500">You're averaging 4.2 hours/day. Top performers study 6-7 hours daily.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      renderCommunity() {
-        return `
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold mb-2" data-aos="fade-up">Community Hub</h1>
-            <p class="text-gray-500 mb-8" data-aos="fade-up" data-aos-delay="100">Connect, learn, and grow together</p>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-              <div class="card p-6 lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="font-semibold text-lg mb-4">Recent Discussions</h3>
-                <div class="space-y-3">
-                  <div class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">AK</div>
-                    <div class="flex-1">
-                      <p class="font-medium">Best strategy for organic chemistry revision?</p>
-                      <p class="text-sm text-gray-500">Posted by Arjun K. • 2 hours ago • 12 replies</p>
-                    </div>
-                  </div>
-                  <div class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold">PS</div>
-                    <div class="flex-1">
-                      <p class="font-medium">How to improve speed in physics problems?</p>
-                      <p class="text-sm text-gray-500">Posted by Priya S. • 5 hours ago • 8 replies</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="card p-6" data-aos="fade-up" data-aos-delay="300">
-                <h3 class="font-semibold text-lg mb-4">Leaderboard</h3>
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="text-yellow-500">🏆</span>
-                      <span>Ananya S.</span>
-                    </div>
-                    <span class="font-bold">4,210 XP</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="text-gray-400">🥈</span>
-                      <span>Riya K.</span>
-                    </div>
-                    <span class="font-bold">3,870 XP</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="text-amber-600">🥉</span>
-                      <span>Kunal V.</span>
-                    </div>
-                    <span class="font-bold">3,450 XP</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="card p-6" data-aos="fade-up" data-aos-delay="400">
-              <h3 class="font-semibold text-lg mb-4">Ask a Doubt</h3>
-              <textarea rows="3" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mb-3" placeholder="What's your question?"></textarea>
-              <button class="btn btn-primary">Post Question</button>
-            </div>
-          </div>
-        `;
-      }
-      
-      renderProfile() {
-        return `
-          <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold mb-8" data-aos="fade-up">Profile Settings</h1>
-            
-            <div class="card p-8" data-aos="fade-up" data-aos-delay="100">
-              <div class="flex items-center gap-6 mb-8">
-                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold">
-                  ${this.userData.avatar}
-                </div>
-                <div>
-                  <h2 class="text-2xl font-bold">${this.userData.name}</h2>
-                  <p class="text-gray-500">NEET 2026 Aspirant</p>
-                  <p class="text-sm text-primary mt-1">Member since March 2025</p>
-                </div>
-              </div>
-              
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium mb-1">Full Name</label>
-                  <input type="text" value="${this.userData.name}" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1">Email</label>
-                  <input type="email" value="riya.kapoor@example.com" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1">Target Exam</label>
-                  <select class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                    <option>NEET 2026</option>
-                    <option>JEE Main 2026</option>
-                    <option>JEE Advanced 2026</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1">Daily Study Goal (hours)</label>
-                  <input type="number" value="6" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                </div>
-                <button class="btn btn-primary w-full mt-4">Save Changes</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      initPageComponents(page) {
-        if (page === 'dashboard') {
-          this.initTestChart();
-        }
-        if (page === 'analytics') {
-          this.initSubjectChart();
-          this.initHoursChart();
-        }
-        if (page === 'home') {
-          this.initPendulumSimulation();
-        }
-        if (page === 'syllabus') {
-          this.initChapterToggles();
-        }
-        
-        // Initialize AOS
-        if (typeof AOS !== 'undefined') {
-          AOS.init({ duration: 600, once: true });
-        }
-      }
-      
-      initTestChart() {
-        const canvas = document.getElementById('test-chart');
-        if (!canvas) return;
-        
-        new Chart(canvas, {
-          type: 'line',
-          data: {
-            labels: this.userData.recentTests.map(t => t.name.split(' - ')[0]),
-            datasets: [{
-              label: 'Score %',
-              data: this.userData.recentTests.map(t => t.score),
-              borderColor: 'hsl(250, 85%, 65%)',
-              backgroundColor: 'rgba(139, 92, 246, 0.1)',
-              tension: 0.3,
-              fill: true
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { position: 'top' } }
-          }
-        });
-      }
-      
-      initSubjectChart() {
-        const canvas = document.getElementById('subject-chart');
-        if (!canvas) return;
-        
-        new Chart(canvas, {
-          type: 'bar',
-          data: {
-            labels: ['Physics', 'Chemistry', 'Biology'],
-            datasets: [{
-              label: 'Accuracy %',
-              data: [74, 68, 86],
-              backgroundColor: ['hsl(250, 85%, 65%)', 'hsl(340, 82%, 65%)', 'hsl(160, 84%, 39%)'],
-              borderRadius: 8
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { position: 'top' } }
-          }
-        });
-      }
-      
-      initHoursChart() {
-        const canvas = document.getElementById('hours-chart');
-        if (!canvas) return;
-        
-        new Chart(canvas, {
-          type: 'line',
-          data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-              label: 'Study Hours',
-              data: this.userData.weeklyHours,
-              borderColor: 'hsl(340, 82%, 65%)',
-              backgroundColor: 'rgba(236, 72, 153, 0.1)',
-              tension: 0.3,
-              fill: true
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true
-          }
-        });
-      }
-      
-      initPendulumSimulation() {
-        const canvas = document.getElementById('pendulum-canvas');
-        if (!canvas) return;
-        
-        const ctx = canvas.getContext('2d');
-        let angle = Math.PI / 3;
-        let angularVel = 0;
-        let length = 1.0;
-        const g = 9.8;
-        
-        const lengthSlider = document.getElementById('pendulum-length');
-        const massSlider = document.getElementById('pendulum-mass');
-        const periodSpan = document.getElementById('pendulum-period');
-        
-        const updatePeriod = () => {
-          const T = 2 * Math.PI * Math.sqrt(length / g);
-          if (periodSpan) periodSpan.textContent = `Period: ${T.toFixed(2)} s`;
-        };
-        
-        if (lengthSlider) {
-          lengthSlider.oninput = (e) => {
-            length = parseFloat(e.target.value);
-            updatePeriod();
-          };
-        }
-        
-        updatePeriod();
-        
-        const animate = () => {
-          if (!canvas) return;
-          
-          const width = canvas.width;
-          const height = canvas.height;
-          ctx.clearRect(0, 0, width, height);
-          
-          const pivotX = width / 2;
-          const pivotY = 40;
-          const bobX = pivotX + length * 120 * Math.sin(angle);
-          const bobY = pivotY + length * 120 * Math.cos(angle);
-          
-          // Draw string
-          ctx.beginPath();
-          ctx.moveTo(pivotX, pivotY);
-          ctx.lineTo(bobX, bobY);
-          ctx.strokeStyle = '#c084fc';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          
-          // Draw bob
-          ctx.beginPath();
-          ctx.arc(bobX, bobY, 12, 0, 2 * Math.PI);
-          ctx.fillStyle = '#8b5cf6';
-          ctx.fill();
-          ctx.shadowBlur = 0;
-          
-          // Physics
-          const alpha = -(g / length) * Math.sin(angle);
-          angularVel += alpha * 0.016;
-          angle += angularVel * 0.016;
-          angle *= 0.999;
-          
-          requestAnimationFrame(animate);
-        };
-        
-        animate();
-      }
-      
-      initChapterToggles() {
-        document.querySelectorAll('.chapter-toggle').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const chapter = btn.dataset.chapter;
-            const completed = this.userData.completedTopics;
-            const index = completed.indexOf(chapter);
-            
-            if (index === -1) {
-              completed.push(chapter);
-              btn.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
-              btn.classList.add('bg-primary', 'border-primary');
-            } else {
-              completed.splice(index, 1);
-              btn.innerHTML = '';
-              btn.classList.remove('bg-primary', 'border-primary');
-              btn.classList.add('border-gray-300', 'dark:border-gray-600');
-            }
-            
-            this.userData.completedTopics = completed;
-            this.userData.completedTopics = completed.filter((v, i, a) => a.indexOf(v) === i);
-            this.userData.completedTopics = this.userData.completedTopics.filter(t => t !== undefined);
-            this.userData.completedTopics = this.userData.completedTopics.filter(t => t && t.length > 0);
-            
-            this.saveUserData();
-            this.updateProgress();
-          });
-        });
-      }
-      
-      startQuickTest() {
-        const container = document.getElementById('test-container');
-        if (!container) return;
-        
-        container.innerHTML = `
-          <div class="text-center">
-            <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="text-gray-500">Generating adaptive questions...</p>
-          </div>
-        `;
-        
-        setTimeout(() => {
-          container.innerHTML = `
-            <h3 class="font-semibold text-lg mb-4">Quick Test • 5 Questions</h3>
-            <div class="space-y-4">
-              <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800">
-                <p class="font-medium mb-2">1. A particle moves with velocity v = 3t² m/s. Find acceleration at t = 2s.</p>
-                <div class="grid grid-cols-2 gap-2 mt-2">
-                  <label class="flex items-center gap-2"><input type="radio" name="q1"> 6 m/s²</label>
-                  <label class="flex items-center gap-2"><input type="radio" name="q1"> 12 m/s²</label>
-                  <label class="flex items-center gap-2"><input type="radio" name="q1"> 3 m/s²</label>
-                  <label class="flex items-center gap-2"><input type="radio" name="q1"> 24 m/s²</label>
-                </div>
-              </div>
-              <button class="btn btn-primary w-full">Submit Test</button>
-            </div>
-          `;
-        }, 1000);
-      }
-      
-      startFullMock() {
-        alert('Full Mock Test interface is being prepared. Coming soon with real exam simulation!');
-      }
-      
-      navigate(page) {
-        this.renderPage(page);
-        
-        // Update active tab
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-          if (tab.textContent.toLowerCase() === page || tab.dataset.page === page) {
-            tab.classList.add('active');
-          } else {
-            tab.classList.remove('active');
-          }
-        });
-      }
-      
-      init() {
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-          themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
-          });
-        }
-        
-        // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'true') {
-          document.body.classList.add('dark');
-        }
-        
-        // Setup navigation
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-          tab.addEventListener('click', () => {
-            const page = tab.textContent.toLowerCase().trim();
-            this.navigate(page);
-          });
-        });
-        
-        // Initial render
-        this.renderPage('home');
-      }
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    
+    // ---------- THREE.JS SCENE SETUP (CGI Level) ----------
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050510);
+    scene.fog = new THREE.FogExp2(0x050510, 0.002);
+    
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 2, 8);
+    camera.lookAt(0, 0, 0);
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.toneMapping = THREE.ReinhardToneMapping;
+    container.appendChild(renderer.domElement);
+    
+    // Post-processing bloom
+    const renderScene = new RenderPass(scene, camera);
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.3, 0.85);
+    bloomPass.threshold = 0.1;
+    bloomPass.strength = 0.8;
+    bloomPass.radius = 0.5;
+    const effectComposer = new EffectComposer(renderer);
+    effectComposer.addPass(renderScene);
+    effectComposer.addPass(bloomPass);
+    
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0x404060);
+    scene.add(ambientLight);
+    const pointLight1 = new THREE.PointLight(0x6366f1, 1);
+    pointLight1.position.set(2, 3, 4);
+    scene.add(pointLight1);
+    const pointLight2 = new THREE.PointLight(0xec489a, 0.8);
+    pointLight2.position.set(-2, 1, 3);
+    scene.add(pointLight2);
+    const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    backLight.position.set(0, 2, -5);
+    scene.add(backLight);
+    
+    // Central Object: Animated Torus Knot with glowing edges
+    const knotGeometry = new THREE.TorusKnotGeometry(1, 0.3, 200, 32, 3, 4);
+    const knotMaterial = new THREE.MeshStandardMaterial({ color: 0x6366f1, emissive: 0x2e2a7a, emissiveIntensity: 0.6, metalness: 0.8, roughness: 0.2 });
+    const knot = new THREE.Mesh(knotGeometry, knotMaterial);
+    scene.add(knot);
+    
+    // Particles (Starfield)
+    const particleCount = 2000;
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      particlePositions[i*3] = (Math.random() - 0.5) * 200;
+      particlePositions[i*3+1] = (Math.random() - 0.5) * 100;
+      particlePositions[i*3+2] = (Math.random() - 0.5) * 80 - 40;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    const particleMaterial = new THREE.PointsMaterial({ color: 0x88aaff, size: 0.08, transparent: true, opacity: 0.6 });
+    const particles = new THREE.Points(particlesGeometry, particleMaterial);
+    scene.add(particles);
+    
+    // Floating glowing orbs
+    const orbCount = 8;
+    const orbs = [];
+    for (let i = 0; i < orbCount; i++) {
+      const geometry = new THREE.SphereGeometry(0.12, 16, 16);
+      const material = new THREE.MeshStandardMaterial({ color: 0xff66cc, emissive: 0xff44aa, emissiveIntensity: 0.8 });
+      const orb = new THREE.Mesh(geometry, material);
+      orb.userData = { speed: 0.5 + Math.random() * 0.5, radius: 2 + Math.random() * 1.5, angle: Math.random() * Math.PI * 2, yOffset: (Math.random() - 0.5) * 2 };
+      scene.add(orb);
+      orbs.push(orb);
     }
     
-    // Initialize app
-    const app = new SciTrackApp();
-    window.app = app;
+    // Animation variables
+    let time = 0;
+    
+    function animate3D() {
+      requestAnimationFrame(animate3D);
+      time += 0.008;
+      
+      // Rotate central knot
+      knot.rotation.x = time * 0.3;
+      knot.rotation.y = time * 0.5;
+      knot.rotation.z = time * 0.2;
+      
+      // Animate orbs in circular paths
+      orbs.forEach((orb, idx) => {
+        const data = orb.userData;
+        data.angle += 0.01 * data.speed;
+        const x = Math.cos(data.angle) * data.radius;
+        const z = Math.sin(data.angle) * data.radius;
+        orb.position.set(x, Math.sin(time * 0.8 + idx) * 0.8 + data.yOffset, z);
+      });
+      
+      // Rotate particle field slowly
+      particles.rotation.y = time * 0.05;
+      particles.rotation.x = time * 0.03;
+      
+      // Subtle camera movement
+      camera.position.x += (0 - camera.position.x) * 0.02;
+      camera.position.y += (Math.sin(time * 0.2) * 0.1 - camera.position.y) * 0.02;
+      camera.lookAt(0, 0, 0);
+      
+      effectComposer.render();
+    }
+    
+    animate3D();
+    
+    // Handle window resize
+    window.addEventListener('resize', onWindowResize, false);
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      effectComposer.setSize(window.innerWidth, window.innerHeight);
+    }
+    
+    // ---------- APP LOGIC (Enhanced with 3D & Animations) ----------
+    // Global user data (same as before, but with enhanced UI)
+    let userData = {
+      name: "Riya Kapoor",
+      streak: 24,
+      xp: 5120,
+      rank: 1245,
+      badges: ["🔥 24-Day Streak", "🧪 Lab Genius", "🏆 Top 5%", "📈 Rank Climber"],
+      completedTopics: ["Kinematics", "Laws of Motion", "Mole Concept", "Cell Biology", "Genetics", "Thermodynamics", "Chemical Bonding"],
+      totalTopics: 32,
+      recentTests: [
+        { name: "Physics - Mechanics", score: 85, date: "2025-03-22" },
+        { name: "Chemistry - Organic", score: 72, date: "2025-03-20" },
+        { name: "Biology - Genetics", score: 94, date: "2025-03-18" }
+      ],
+      subjectAccuracy: { Physics: 74, Chemistry: 68, Biology: 86 },
+      weeklyHours: [3.2, 4.1, 3.8, 5.2, 6.0, 7.1, 4.5],
+      weakTopics: [
+        { name: "Rotational Motion", subject: "Physics", accuracy: 42 },
+        { name: "Organic Isomerism", subject: "Chemistry", accuracy: 48 },
+        { name: "Plant Physiology", subject: "Biology", accuracy: 65 }
+      ]
+    };
+    
+    function saveUserData() { localStorage.setItem('scitrack_user', JSON.stringify(userData)); }
+    function loadUserData() {
+      const stored = localStorage.getItem('scitrack_user');
+      if (stored) userData = { ...userData, ...JSON.parse(stored) };
+    }
+    loadUserData();
+    
+    // Helper: Render pages with 3D friendly markup
+    const pages = {
+      home: () => `
+        <div class="min-h-screen flex flex-col justify-center items-center text-center space-y-8" data-aos="fade-up">
+          <div class="relative">
+            <div class="absolute inset-0 blur-3xl bg-indigo-500/20 rounded-full"></div>
+            <h1 class="text-5xl md:text-7xl font-bold relative z-10">
+              Master <span class="gradient-text">NEET/JEE</span><br>
+              with <span class="glow-text">3D Intelligence</span>
+            </h1>
+          </div>
+          <p class="text-xl text-gray-300 max-w-2xl">AI-powered learning, immersive 3D simulations, and real-time analytics — all in one cosmic ecosystem.</p>
+          <button data-nav="dashboard" class="btn-primary text-lg px-8 py-3">Launch Journey <i class="fas fa-arrow-right ml-2"></i></button>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 w-full">
+            <div class="glass-card p-6 text-center hover:scale-105 transition duration-300"><i class="fas fa-brain text-4xl text-indigo-400 mb-3"></i><h3 class="text-xl font-bold">AI Sensei</h3><p>Personalized path & recommendations</p></div>
+            <div class="glass-card p-6 text-center hover:scale-105 transition duration-300"><i class="fas fa-cube text-4xl text-pink-400 mb-3"></i><h3 class="text-xl font-bold">3D Simulations</h3><p>Interactive physics & chemistry labs</p></div>
+            <div class="glass-card p-6 text-center hover:scale-105 transition duration-300"><i class="fas fa-chart-line text-4xl text-green-400 mb-3"></i><h3 class="text-xl font-bold">Predictive Analytics</h3><p>Rank & performance forecast</p></div>
+          </div>
+        </div>
+      `,
+      dashboard: () => `
+        <div class="space-y-8">
+          <div class="flex flex-wrap justify-between items-center">
+            <div><h1 class="text-3xl font-bold">Welcome back, ${userData.name}</h1><p class="text-gray-400">Your 3D dashboard</p></div>
+            <div class="flex gap-3"><span class="glass-card px-4 py-2 rounded-full"><i class="fas fa-fire text-orange-400"></i> ${userData.streak} Day Streak</span><span class="glass-card px-4 py-2 rounded-full"><i class="fas fa-star text-yellow-400"></i> ${userData.xp} XP</span></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="glass-card p-4"><p class="text-gray-400">Overall Progress</p><p class="text-2xl font-bold">${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}%</p><div class="h-2 bg-gray-700 rounded-full mt-2"><div class="h-full bg-indigo-500 rounded-full" style="width: ${(userData.completedTopics.length/userData.totalTopics)*100}%"></div></div></div>
+            <div class="glass-card p-4"><p class="text-gray-400">Estimated Rank</p><p class="text-2xl font-bold">#${userData.rank}</p><p class="text-green-400 text-sm">↑ 234 spots</p></div>
+            <div class="glass-card p-4"><p class="text-gray-400">Questions Solved</p><p class="text-2xl font-bold">2,847</p></div>
+            <div class="glass-card p-4"><p class="text-gray-400">Study Hours (Week)</p><p class="text-2xl font-bold">${userData.weeklyHours.reduce((a,b)=>a+b,0)}</p></div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="glass-card p-6 lg:col-span-2"><h3 class="text-xl font-bold mb-4">Test Performance</h3><canvas id="test-chart" height="200"></canvas></div>
+            <div class="glass-card p-6"><h3 class="text-xl font-bold mb-4">Badges</h3><div class="flex flex-wrap gap-2">${userData.badges.map(b => `<span class="bg-white/10 px-3 py-1 rounded-full text-sm"><i class="fas fa-medal text-yellow-400"></i> ${b}</span>`).join('')}</div></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            ${Object.entries(userData.subjectAccuracy).map(([sub, acc]) => `<div class="glass-card p-4"><h3 class="font-bold">${sub}</h3><div class="mt-2 h-2 bg-gray-700 rounded-full"><div class="h-full bg-${sub === 'Physics' ? 'indigo' : sub === 'Chemistry' ? 'pink' : 'green'}-500 rounded-full" style="width: ${acc}%"></div></div><p class="text-right text-sm mt-1">${acc}% accuracy</p></div>`).join('')}
+          </div>
+          <div class="glass-card p-6"><h3 class="text-xl font-bold mb-4">AI Recommendations</h3><div class="space-y-3">${userData.weakTopics.map(t => `<div class="flex justify-between items-center"><span>${t.name}</span><span class="text-red-400">${t.accuracy}% accuracy</span><button class="text-sm bg-indigo-600 px-3 py-1 rounded-full">Practice</button></div>`).join('')}</div></div>
+        </div>
+      `,
+      syllabus: () => `
+        <div><h1 class="text-3xl font-bold mb-6">Syllabus Tracker</h1><div class="grid md:grid-cols-3 gap-6">${generateSyllabusHTML()}</div></div>
+      `,
+      practice: () => `
+        <div><h1 class="text-3xl font-bold mb-6">Practice Zone</h1><div class="grid md:grid-cols-2 gap-6"><div class="glass-card p-8 text-center cursor-pointer" onclick="window.startQuickTest()"><i class="fas fa-bolt text-4xl text-indigo-400 mb-3"></i><h3 class="text-xl">Quick Test</h3><p>5 adaptive questions</p></div><div class="glass-card p-8 text-center cursor-pointer" onclick="window.startFullMock()"><i class="fas fa-chart-line text-4xl text-pink-400 mb-3"></i><h3 class="text-xl">Full Mock</h3><p>Real exam simulation</p></div></div><div id="test-container" class="glass-card p-6 mt-6"></div></div>
+      `,
+      analytics: () => `
+        <div><h1 class="text-3xl font-bold mb-6">Deep Analytics</h1><div class="grid md:grid-cols-2 gap-6"><div class="glass-card p-6"><h3>Subject-wise Accuracy</h3><canvas id="subject-chart" height="200"></canvas></div><div class="glass-card p-6"><h3>Weekly Study Pattern</h3><canvas id="hours-chart" height="200"></canvas></div></div><div class="glass-card p-6 mt-6"><h3 class="text-xl">AI Insights</h3><p class="mt-2">Focus on Rotational Motion: 42% accuracy. Recommended 20 min daily.</p></div></div>
+      `,
+      community: () => `
+        <div><h1 class="text-3xl font-bold mb-6">Community Nexus</h1><div class="grid md:grid-cols-2 gap-6"><div class="glass-card p-6"><h3>Trending Doubts</h3><div class="space-y-3 mt-3"><div class="border-b border-white/10 pb-2">Best books for Physics? <span class="text-indigo-400">12 replies</span></div><div>How to memorize reactions? <span class="text-indigo-400">8 replies</span></div></div></div><div class="glass-card p-6"><h3>Leaderboard</h3><ol class="list-decimal pl-5"><li>Ananya S. - 4210 XP</li><li>Riya K. - 3870 XP</li><li>Kunal V. - 3450 XP</li></ol></div></div><div class="glass-card p-6 mt-6"><textarea rows="3" class="w-full bg-black/50 rounded-xl p-3 border border-white/20" placeholder="Ask your doubt..."></textarea><button class="btn-primary mt-3">Post</button></div></div>
+      `,
+      profile: () => `
+        <div class="max-w-2xl mx-auto"><h1 class="text-3xl font-bold mb-6">Profile</h1><div class="glass-card p-8"><div class="flex items-center gap-6"><div class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-2xl font-bold">RK</div><div><h2 class="text-2xl">${userData.name}</h2><p>NEET 2026 Aspirant</p></div></div><div class="mt-6 space-y-4"><div><label>Name</label><input type="text" value="${userData.name}" class="w-full bg-black/50 rounded-xl p-3 border border-white/20"></div><div><label>Target Exam</label><select class="w-full bg-black/50 rounded-xl p-3 border border-white/20"><option>NEET 2026</option><option>JEE Main 2026</option></select></div><button class="btn-primary w-full">Save Changes</button></div></div></div>
+      `
+    };
+    
+    function generateSyllabusHTML() {
+      const subjects = {
+        Physics: ["Kinematics","Laws of Motion","Work Energy","Rotational Motion","Thermodynamics","Waves","Optics","Electrostatics"],
+        Chemistry: ["Mole Concept","Atomic Structure","Chemical Bonding","Thermodynamics","Equilibrium","Organic Basics","Hydrocarbons","Polymers"],
+        Biology: ["Cell Biology","Genetics","Ecology","Human Physiology","Plant Physiology","Biotechnology","Evolution","Reproduction"]
+      };
+      let html = '';
+      for (const [sub, chapters] of Object.entries(subjects)) {
+        let completedCount = chapters.filter(ch => userData.completedTopics.includes(ch)).length;
+        html += `<div class="glass-card p-5"><h3 class="text-xl font-bold mb-3">${sub}</h3>`;
+        chapters.forEach(ch => {
+          let isDone = userData.completedTopics.includes(ch);
+          html += `<div class="flex justify-between items-center py-2 border-b border-white/10"><span>${ch}</span><button data-chapter="${ch}" class="chapter-toggle text-xs px-3 py-1 rounded-full ${isDone ? 'bg-indigo-500' : 'bg-white/10'}">${isDone ? '✓ Done' : 'Mark'}</button></div>`;
+        });
+        html += `<div class="mt-3 text-sm">Progress: ${completedCount}/${chapters.length}</div></div>`;
+      }
+      return html;
+    }
+    
+    // Chart & event handlers
+    function initCharts() {
+      const testCanvas = document.getElementById('test-chart');
+      if (testCanvas) new Chart(testCanvas, { type: 'line', data: { labels: userData.recentTests.map(t=>t.name), datasets: [{ label: 'Score %', data: userData.recentTests.map(t=>t.score), borderColor: '#a78bfa', tension: 0.3, fill: true, backgroundColor: 'rgba(167,139,250,0.1)' }] } });
+      const subjCanvas = document.getElementById('subject-chart');
+      if (subjCanvas) new Chart(subjCanvas, { type: 'bar', data: { labels: Object.keys(userData.subjectAccuracy), datasets: [{ label: 'Accuracy %', data: Object.values(userData.subjectAccuracy), backgroundColor: ['#6366f1','#ec489a','#10b981'] }] } });
+      const hoursCanvas = document.getElementById('hours-chart');
+      if (hoursCanvas) new Chart(hoursCanvas, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Hours', data: userData.weeklyHours, borderColor: '#f472b6', fill: false }] } });
+    }
+    
+    function attachChapterListeners() {
+      document.querySelectorAll('.chapter-toggle').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          let chap = btn.dataset.chapter;
+          if (userData.completedTopics.includes(chap)) userData.completedTopics = userData.completedTopics.filter(c=>c!==chap);
+          else userData.completedTopics.push(chap);
+          saveUserData();
+          renderPage('syllabus');
+        });
+      });
+    }
+    
+    window.startQuickTest = function() {
+      const container = document.getElementById('test-container');
+      container.innerHTML = `<div class="text-center py-8"><div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p>Generating AI test...</p></div>`;
+      setTimeout(() => {
+        container.innerHTML = `<h3 class="text-xl mb-4">Quick Test</h3><div class="space-y-4"><div class="p-4 bg-black/30 rounded-xl"><p>1. A particle moves with v=3t². Find acceleration at t=2s.</p><div class="grid grid-cols-2 gap-2 mt-2"><label><input type="radio" name="q1"> 6 m/s²</label><label><input type="radio" name="q1"> 12 m/s²</label><label><input type="radio" name="q1"> 3 m/s²</label><label><input type="radio" name="q1"> 24 m/s²</label></div></div><button class="btn-primary">Submit</button></div>`;
+      }, 1000);
+    };
+    window.startFullMock = () => alert("Full Mock coming soon with 3D exam environment!");
+    
+    let currentPage = 'home';
+    function renderPage(page) {
+      currentPage = page;
+      const appDiv = document.getElementById('app');
+      if (pages[page]) appDiv.innerHTML = pages[page]();
+      else appDiv.innerHTML = '<div>Page not found</div>';
+      if (page === 'dashboard') initCharts();
+      if (page === 'analytics') initCharts();
+      if (page === 'syllabus') attachChapterListeners();
+      if (page === 'practice') document.getElementById('test-container').innerHTML = '<p class="text-center">Select a test above</p>';
+      // GSAP entrance animation for cards
+      gsap.fromTo('.glass-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: 'back.out' });
+    }
+    
+    // Navigation & theme
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        renderPage(btn.dataset.page);
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      // Additional theme changes handled by CSS
+    });
+    // Initial render
+    renderPage('home');
+    
+    // Add smooth scroll with GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.fromTo('.glass-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.8, scrollTrigger: { trigger: '.glass-card', start: 'top 90%' } });
   </script>
 </body>
 </html>
