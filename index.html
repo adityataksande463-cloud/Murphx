@@ -1,481 +1,558 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>SciTrack | NEET/JEE Next-Gen 3D Ecosystem</title>
-  
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <!-- Three.js Core & Extras -->
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
-      }
-    }
-  </script>
-  
-  <!-- GSAP for advanced animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  
-  <style>
-    /* ---------- RESET & GLOBAL VARIABLES ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0a0a0f;
-      color: #ffffff;
-      overflow-x: hidden;
-    }
-    
-    /* Canvas container for Three.js */
-    #canvas-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-    
-    /* Main content overlay */
-    .content {
-      position: relative;
-      z-index: 10;
-      min-height: 100vh;
-      backdrop-filter: blur(2px);
-    }
-    
-    /* Glassmorphism / Neon */
-    .glass-card {
-      background: rgba(20, 20, 40, 0.5);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(100, 100, 255, 0.3);
-      border-radius: 24px;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-    
-    .glass-card:hover {
-      border-color: rgba(100, 100, 255, 0.8);
-      box-shadow: 0 0 20px rgba(100, 100, 255, 0.3);
-      transform: translateY(-4px);
-    }
-    
-    /* Glowing text */
-    .glow-text {
-      text-shadow: 0 0 10px rgba(100, 100, 255, 0.5);
-    }
-    
-    /* Gradient text */
-    .gradient-text {
-      background: linear-gradient(135deg, #a78bfa, #ec489a);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    /* Button styles */
-    .btn-primary {
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      border: none;
-      padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
-    }
-    
-    /* Navigation tabs */
-    .nav-tab {
-      padding: 8px 20px;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 500;
-    }
-    
-    .nav-tab.active {
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
-    }
-    
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #1e1e2a; }
-    ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
-    
-    /* Floating animation for cards */
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-      100% { transform: translateY(0px); }
-    }
-    
-    .float-animation {
-      animation: float 5s ease-in-out infinite;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>WALL·E - Real-time CGI Animation | Three.js</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', 'Poppins', 'Arial', sans-serif;
+        }
+        #info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 18px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            pointer-events: none;
+            z-index: 10;
+            font-size: 14px;
+            letter-spacing: 1px;
+            border-left: 4px solid #f5a623;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        #controls-note {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.6);
+            background: rgba(0,0,0,0.5);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: monospace;
+            pointer-events: none;
+            z-index: 10;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .title {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            text-shadow: 0 0 15px rgba(0,0,0,0.8);
+            font-weight: 700;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            pointer-events: none;
+            z-index: 10;
+            font-family: 'Segoe UI', 'Impact', sans-serif;
+            background: linear-gradient(135deg, #ffd89b, #c7e9fb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: none;
+            animation: fadeIn 2s ease-out;
+        }
+        @media (max-width: 600px) {
+            .title { font-size: 1.2rem; top: 12px; }
+            #info { font-size: 10px; bottom: 10px; left: 10px; }
+        }
+    </style>
 </head>
 <body>
+    <div class="title">⚙️ WALL·E ⚙️</div>
+    <div id="info">🤖 Real-time CGI | Rustic Hero | Interactive 3D Scene</div>
+    <div id="controls-note">🖱️ Drag to orbit | Scroll to zoom</div>
 
-  <!-- Three.js Canvas Container -->
-  <div id="canvas-container"></div>
+    <!-- Import Three.js core and add-ons from CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
 
-  <!-- Main App Content -->
-  <div class="content">
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 backdrop-blur-xl bg-black/30 border-b border-white/10">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <i class="fas fa-atom text-2xl text-indigo-400"></i>
-          <span class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">SciTrack</span>
-          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">3D</span>
-        </div>
-        <div class="hidden md:flex gap-2">
-          <button data-page="home" class="nav-tab">Home</button>
-          <button data-page="dashboard" class="nav-tab">Dashboard</button>
-          <button data-page="syllabus" class="nav-tab">Syllabus</button>
-          <button data-page="practice" class="nav-tab">Practice</button>
-          <button data-page="analytics" class="nav-tab">Analytics</button>
-          <button data-page="community" class="nav-tab">Community</button>
-          <button data-page="profile" class="nav-tab">Profile</button>
-        </div>
-        <div class="flex items-center gap-3">
-          <button id="themeToggle" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition">
-            <i class="fas fa-moon text-gray-300"></i>
-          </button>
-          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-white font-bold cursor-pointer">
-            RK
-          </div>
-        </div>
-      </div>
-    </nav>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-    <!-- Main Content -->
-    <main id="app" class="pt-24 pb-12 px-4 max-w-7xl mx-auto relative z-10"></main>
+        // --- Setup Scene, Camera, Renderers ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050b1a); // deep space night
+        scene.fog = new THREE.FogExp2(0x050b1a, 0.008); // atmospheric depth
 
-    <footer class="text-center py-8 text-gray-400 text-sm border-t border-white/10 backdrop-blur-sm">
-      <p>© 2025 SciTrack — 3D Interactive Ecosystem for NEET/JEE | Powered by WebGL & AI</p>
-    </footer>
-  </div>
+        // Camera: perspective with nice framing
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(5, 3, 7);
+        camera.lookAt(0, 1.2, 0);
 
-  <script type="module">
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-    
-    // ---------- THREE.JS SCENE SETUP (CGI Level) ----------
-    const container = document.getElementById('canvas-container');
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050510);
-    scene.fog = new THREE.FogExp2(0x050510, 0.002);
-    
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 2, 8);
-    camera.lookAt(0, 0, 0);
-    
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.toneMapping = THREE.ReinhardToneMapping;
-    container.appendChild(renderer.domElement);
-    
-    // Post-processing bloom
-    const renderScene = new RenderPass(scene, camera);
-    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.3, 0.85);
-    bloomPass.threshold = 0.1;
-    bloomPass.strength = 0.8;
-    bloomPass.radius = 0.5;
-    const effectComposer = new EffectComposer(renderer);
-    effectComposer.addPass(renderScene);
-    effectComposer.addPass(bloomPass);
-    
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0x404060);
-    scene.add(ambientLight);
-    const pointLight1 = new THREE.PointLight(0x6366f1, 1);
-    pointLight1.position.set(2, 3, 4);
-    scene.add(pointLight1);
-    const pointLight2 = new THREE.PointLight(0xec489a, 0.8);
-    pointLight2.position.set(-2, 1, 3);
-    scene.add(pointLight2);
-    const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    backLight.position.set(0, 2, -5);
-    scene.add(backLight);
-    
-    // Central Object: Animated Torus Knot with glowing edges
-    const knotGeometry = new THREE.TorusKnotGeometry(1, 0.3, 200, 32, 3, 4);
-    const knotMaterial = new THREE.MeshStandardMaterial({ color: 0x6366f1, emissive: 0x2e2a7a, emissiveIntensity: 0.6, metalness: 0.8, roughness: 0.2 });
-    const knot = new THREE.Mesh(knotGeometry, knotMaterial);
-    scene.add(knot);
-    
-    // Particles (Starfield)
-    const particleCount = 2000;
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlePositions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
-      particlePositions[i*3] = (Math.random() - 0.5) * 200;
-      particlePositions[i*3+1] = (Math.random() - 0.5) * 100;
-      particlePositions[i*3+2] = (Math.random() - 0.5) * 80 - 40;
-    }
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-    const particleMaterial = new THREE.PointsMaterial({ color: 0x88aaff, size: 0.08, transparent: true, opacity: 0.6 });
-    const particles = new THREE.Points(particlesGeometry, particleMaterial);
-    scene.add(particles);
-    
-    // Floating glowing orbs
-    const orbCount = 8;
-    const orbs = [];
-    for (let i = 0; i < orbCount; i++) {
-      const geometry = new THREE.SphereGeometry(0.12, 16, 16);
-      const material = new THREE.MeshStandardMaterial({ color: 0xff66cc, emissive: 0xff44aa, emissiveIntensity: 0.8 });
-      const orb = new THREE.Mesh(geometry, material);
-      orb.userData = { speed: 0.5 + Math.random() * 0.5, radius: 2 + Math.random() * 1.5, angle: Math.random() * Math.PI * 2, yOffset: (Math.random() - 0.5) * 2 };
-      scene.add(orb);
-      orbs.push(orb);
-    }
-    
-    // Animation variables
-    let time = 0;
-    
-    function animate3D() {
-      requestAnimationFrame(animate3D);
-      time += 0.008;
-      
-      // Rotate central knot
-      knot.rotation.x = time * 0.3;
-      knot.rotation.y = time * 0.5;
-      knot.rotation.z = time * 0.2;
-      
-      // Animate orbs in circular paths
-      orbs.forEach((orb, idx) => {
-        const data = orb.userData;
-        data.angle += 0.01 * data.speed;
-        const x = Math.cos(data.angle) * data.radius;
-        const z = Math.sin(data.angle) * data.radius;
-        orb.position.set(x, Math.sin(time * 0.8 + idx) * 0.8 + data.yOffset, z);
-      });
-      
-      // Rotate particle field slowly
-      particles.rotation.y = time * 0.05;
-      particles.rotation.x = time * 0.03;
-      
-      // Subtle camera movement
-      camera.position.x += (0 - camera.position.x) * 0.02;
-      camera.position.y += (Math.sin(time * 0.2) * 0.1 - camera.position.y) * 0.02;
-      camera.lookAt(0, 0, 0);
-      
-      effectComposer.render();
-    }
-    
-    animate3D();
-    
-    // Handle window resize
-    window.addEventListener('resize', onWindowResize, false);
-    function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      effectComposer.setSize(window.innerWidth, window.innerHeight);
-    }
-    
-    // ---------- APP LOGIC (Enhanced with 3D & Animations) ----------
-    // Global user data (same as before, but with enhanced UI)
-    let userData = {
-      name: "Riya Kapoor",
-      streak: 24,
-      xp: 5120,
-      rank: 1245,
-      badges: ["🔥 24-Day Streak", "🧪 Lab Genius", "🏆 Top 5%", "📈 Rank Climber"],
-      completedTopics: ["Kinematics", "Laws of Motion", "Mole Concept", "Cell Biology", "Genetics", "Thermodynamics", "Chemical Bonding"],
-      totalTopics: 32,
-      recentTests: [
-        { name: "Physics - Mechanics", score: 85, date: "2025-03-22" },
-        { name: "Chemistry - Organic", score: 72, date: "2025-03-20" },
-        { name: "Biology - Genetics", score: 94, date: "2025-03-18" }
-      ],
-      subjectAccuracy: { Physics: 74, Chemistry: 68, Biology: 86 },
-      weeklyHours: [3.2, 4.1, 3.8, 5.2, 6.0, 7.1, 4.5],
-      weakTopics: [
-        { name: "Rotational Motion", subject: "Physics", accuracy: 42 },
-        { name: "Organic Isomerism", subject: "Chemistry", accuracy: 48 },
-        { name: "Plant Physiology", subject: "Biology", accuracy: 65 }
-      ]
-    };
-    
-    function saveUserData() { localStorage.setItem('scitrack_user', JSON.stringify(userData)); }
-    function loadUserData() {
-      const stored = localStorage.getItem('scitrack_user');
-      if (stored) userData = { ...userData, ...JSON.parse(stored) };
-    }
-    loadUserData();
-    
-    // Helper: Render pages with 3D friendly markup
-    const pages = {
-      home: () => `
-        <div class="min-h-screen flex flex-col justify-center items-center text-center space-y-8" data-aos="fade-up">
-          <div class="relative">
-            <div class="absolute inset-0 blur-3xl bg-indigo-500/20 rounded-full"></div>
-            <h1 class="text-5xl md:text-7xl font-bold relative z-10">
-              Master <span class="gradient-text">NEET/JEE</span><br>
-              with <span class="glow-text">3D Intelligence</span>
-            </h1>
-          </div>
-          <p class="text-xl text-gray-300 max-w-2xl">AI-powered learning, immersive 3D simulations, and real-time analytics — all in one cosmic ecosystem.</p>
-          <button data-nav="dashboard" class="btn-primary text-lg px-8 py-3">Launch Journey <i class="fas fa-arrow-right ml-2"></i></button>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 w-full">
-            <div class="glass-card p-6 text-center hover:scale-105 transition duration-300"><i class="fas fa-brain text-4xl text-indigo-400 mb-3"></i><h3 class="text-xl font-bold">AI Sensei</h3><p>Personalized path & recommendations</p></div>
-            <div class="glass-card p-6 text-center hover:scale-105 transition duration-300"><i class="fas fa-cube text-4xl text-pink-400 mb-3"></i><h3 class="text-xl font-bold">3D Simulations</h3><p>Interactive physics & chemistry labs</p></div>
-            <div class="glass-card p-6 text-center hover:scale-105 transition duration-300"><i class="fas fa-chart-line text-4xl text-green-400 mb-3"></i><h3 class="text-xl font-bold">Predictive Analytics</h3><p>Rank & performance forecast</p></div>
-          </div>
-        </div>
-      `,
-      dashboard: () => `
-        <div class="space-y-8">
-          <div class="flex flex-wrap justify-between items-center">
-            <div><h1 class="text-3xl font-bold">Welcome back, ${userData.name}</h1><p class="text-gray-400">Your 3D dashboard</p></div>
-            <div class="flex gap-3"><span class="glass-card px-4 py-2 rounded-full"><i class="fas fa-fire text-orange-400"></i> ${userData.streak} Day Streak</span><span class="glass-card px-4 py-2 rounded-full"><i class="fas fa-star text-yellow-400"></i> ${userData.xp} XP</span></div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="glass-card p-4"><p class="text-gray-400">Overall Progress</p><p class="text-2xl font-bold">${Math.round((userData.completedTopics.length/userData.totalTopics)*100)}%</p><div class="h-2 bg-gray-700 rounded-full mt-2"><div class="h-full bg-indigo-500 rounded-full" style="width: ${(userData.completedTopics.length/userData.totalTopics)*100}%"></div></div></div>
-            <div class="glass-card p-4"><p class="text-gray-400">Estimated Rank</p><p class="text-2xl font-bold">#${userData.rank}</p><p class="text-green-400 text-sm">↑ 234 spots</p></div>
-            <div class="glass-card p-4"><p class="text-gray-400">Questions Solved</p><p class="text-2xl font-bold">2,847</p></div>
-            <div class="glass-card p-4"><p class="text-gray-400">Study Hours (Week)</p><p class="text-2xl font-bold">${userData.weeklyHours.reduce((a,b)=>a+b,0)}</p></div>
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="glass-card p-6 lg:col-span-2"><h3 class="text-xl font-bold mb-4">Test Performance</h3><canvas id="test-chart" height="200"></canvas></div>
-            <div class="glass-card p-6"><h3 class="text-xl font-bold mb-4">Badges</h3><div class="flex flex-wrap gap-2">${userData.badges.map(b => `<span class="bg-white/10 px-3 py-1 rounded-full text-sm"><i class="fas fa-medal text-yellow-400"></i> ${b}</span>`).join('')}</div></div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            ${Object.entries(userData.subjectAccuracy).map(([sub, acc]) => `<div class="glass-card p-4"><h3 class="font-bold">${sub}</h3><div class="mt-2 h-2 bg-gray-700 rounded-full"><div class="h-full bg-${sub === 'Physics' ? 'indigo' : sub === 'Chemistry' ? 'pink' : 'green'}-500 rounded-full" style="width: ${acc}%"></div></div><p class="text-right text-sm mt-1">${acc}% accuracy</p></div>`).join('')}
-          </div>
-          <div class="glass-card p-6"><h3 class="text-xl font-bold mb-4">AI Recommendations</h3><div class="space-y-3">${userData.weakTopics.map(t => `<div class="flex justify-between items-center"><span>${t.name}</span><span class="text-red-400">${t.accuracy}% accuracy</span><button class="text-sm bg-indigo-600 px-3 py-1 rounded-full">Practice</button></div>`).join('')}</div></div>
-        </div>
-      `,
-      syllabus: () => `
-        <div><h1 class="text-3xl font-bold mb-6">Syllabus Tracker</h1><div class="grid md:grid-cols-3 gap-6">${generateSyllabusHTML()}</div></div>
-      `,
-      practice: () => `
-        <div><h1 class="text-3xl font-bold mb-6">Practice Zone</h1><div class="grid md:grid-cols-2 gap-6"><div class="glass-card p-8 text-center cursor-pointer" onclick="window.startQuickTest()"><i class="fas fa-bolt text-4xl text-indigo-400 mb-3"></i><h3 class="text-xl">Quick Test</h3><p>5 adaptive questions</p></div><div class="glass-card p-8 text-center cursor-pointer" onclick="window.startFullMock()"><i class="fas fa-chart-line text-4xl text-pink-400 mb-3"></i><h3 class="text-xl">Full Mock</h3><p>Real exam simulation</p></div></div><div id="test-container" class="glass-card p-6 mt-6"></div></div>
-      `,
-      analytics: () => `
-        <div><h1 class="text-3xl font-bold mb-6">Deep Analytics</h1><div class="grid md:grid-cols-2 gap-6"><div class="glass-card p-6"><h3>Subject-wise Accuracy</h3><canvas id="subject-chart" height="200"></canvas></div><div class="glass-card p-6"><h3>Weekly Study Pattern</h3><canvas id="hours-chart" height="200"></canvas></div></div><div class="glass-card p-6 mt-6"><h3 class="text-xl">AI Insights</h3><p class="mt-2">Focus on Rotational Motion: 42% accuracy. Recommended 20 min daily.</p></div></div>
-      `,
-      community: () => `
-        <div><h1 class="text-3xl font-bold mb-6">Community Nexus</h1><div class="grid md:grid-cols-2 gap-6"><div class="glass-card p-6"><h3>Trending Doubts</h3><div class="space-y-3 mt-3"><div class="border-b border-white/10 pb-2">Best books for Physics? <span class="text-indigo-400">12 replies</span></div><div>How to memorize reactions? <span class="text-indigo-400">8 replies</span></div></div></div><div class="glass-card p-6"><h3>Leaderboard</h3><ol class="list-decimal pl-5"><li>Ananya S. - 4210 XP</li><li>Riya K. - 3870 XP</li><li>Kunal V. - 3450 XP</li></ol></div></div><div class="glass-card p-6 mt-6"><textarea rows="3" class="w-full bg-black/50 rounded-xl p-3 border border-white/20" placeholder="Ask your doubt..."></textarea><button class="btn-primary mt-3">Post</button></div></div>
-      `,
-      profile: () => `
-        <div class="max-w-2xl mx-auto"><h1 class="text-3xl font-bold mb-6">Profile</h1><div class="glass-card p-8"><div class="flex items-center gap-6"><div class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-2xl font-bold">RK</div><div><h2 class="text-2xl">${userData.name}</h2><p>NEET 2026 Aspirant</p></div></div><div class="mt-6 space-y-4"><div><label>Name</label><input type="text" value="${userData.name}" class="w-full bg-black/50 rounded-xl p-3 border border-white/20"></div><div><label>Target Exam</label><select class="w-full bg-black/50 rounded-xl p-3 border border-white/20"><option>NEET 2026</option><option>JEE Main 2026</option></select></div><button class="btn-primary w-full">Save Changes</button></div></div></div>
-      `
-    };
-    
-    function generateSyllabusHTML() {
-      const subjects = {
-        Physics: ["Kinematics","Laws of Motion","Work Energy","Rotational Motion","Thermodynamics","Waves","Optics","Electrostatics"],
-        Chemistry: ["Mole Concept","Atomic Structure","Chemical Bonding","Thermodynamics","Equilibrium","Organic Basics","Hydrocarbons","Polymers"],
-        Biology: ["Cell Biology","Genetics","Ecology","Human Physiology","Plant Physiology","Biotechnology","Evolution","Reproduction"]
-      };
-      let html = '';
-      for (const [sub, chapters] of Object.entries(subjects)) {
-        let completedCount = chapters.filter(ch => userData.completedTopics.includes(ch)).length;
-        html += `<div class="glass-card p-5"><h3 class="text-xl font-bold mb-3">${sub}</h3>`;
-        chapters.forEach(ch => {
-          let isDone = userData.completedTopics.includes(ch);
-          html += `<div class="flex justify-between items-center py-2 border-b border-white/10"><span>${ch}</span><button data-chapter="${ch}" class="chapter-toggle text-xs px-3 py-1 rounded-full ${isDone ? 'bg-indigo-500' : 'bg-white/10'}">${isDone ? '✓ Done' : 'Mark'}</button></div>`;
-        });
-        html += `<div class="mt-3 text-sm">Progress: ${completedCount}/${chapters.length}</div></div>`;
-      }
-      return html;
-    }
-    
-    // Chart & event handlers
-    function initCharts() {
-      const testCanvas = document.getElementById('test-chart');
-      if (testCanvas) new Chart(testCanvas, { type: 'line', data: { labels: userData.recentTests.map(t=>t.name), datasets: [{ label: 'Score %', data: userData.recentTests.map(t=>t.score), borderColor: '#a78bfa', tension: 0.3, fill: true, backgroundColor: 'rgba(167,139,250,0.1)' }] } });
-      const subjCanvas = document.getElementById('subject-chart');
-      if (subjCanvas) new Chart(subjCanvas, { type: 'bar', data: { labels: Object.keys(userData.subjectAccuracy), datasets: [{ label: 'Accuracy %', data: Object.values(userData.subjectAccuracy), backgroundColor: ['#6366f1','#ec489a','#10b981'] }] } });
-      const hoursCanvas = document.getElementById('hours-chart');
-      if (hoursCanvas) new Chart(hoursCanvas, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Hours', data: userData.weeklyHours, borderColor: '#f472b6', fill: false }] } });
-    }
-    
-    function attachChapterListeners() {
-      document.querySelectorAll('.chapter-toggle').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          let chap = btn.dataset.chapter;
-          if (userData.completedTopics.includes(chap)) userData.completedTopics = userData.completedTopics.filter(c=>c!==chap);
-          else userData.completedTopics.push(chap);
-          saveUserData();
-          renderPage('syllabus');
-        });
-      });
-    }
-    
-    window.startQuickTest = function() {
-      const container = document.getElementById('test-container');
-      container.innerHTML = `<div class="text-center py-8"><div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p>Generating AI test...</p></div>`;
-      setTimeout(() => {
-        container.innerHTML = `<h3 class="text-xl mb-4">Quick Test</h3><div class="space-y-4"><div class="p-4 bg-black/30 rounded-xl"><p>1. A particle moves with v=3t². Find acceleration at t=2s.</p><div class="grid grid-cols-2 gap-2 mt-2"><label><input type="radio" name="q1"> 6 m/s²</label><label><input type="radio" name="q1"> 12 m/s²</label><label><input type="radio" name="q1"> 3 m/s²</label><label><input type="radio" name="q1"> 24 m/s²</label></div></div><button class="btn-primary">Submit</button></div>`;
-      }, 1000);
-    };
-    window.startFullMock = () => alert("Full Mock coming soon with 3D exam environment!");
-    
-    let currentPage = 'home';
-    function renderPage(page) {
-      currentPage = page;
-      const appDiv = document.getElementById('app');
-      if (pages[page]) appDiv.innerHTML = pages[page]();
-      else appDiv.innerHTML = '<div>Page not found</div>';
-      if (page === 'dashboard') initCharts();
-      if (page === 'analytics') initCharts();
-      if (page === 'syllabus') attachChapterListeners();
-      if (page === 'practice') document.getElementById('test-container').innerHTML = '<p class="text-center">Select a test above</p>';
-      // GSAP entrance animation for cards
-      gsap.fromTo('.glass-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: 'back.out' });
-    }
-    
-    // Navigation & theme
-    document.querySelectorAll('.nav-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        renderPage(btn.dataset.page);
-        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      // Additional theme changes handled by CSS
-    });
-    // Initial render
-    renderPage('home');
-    
-    // Add smooth scroll with GSAP ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.fromTo('.glass-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.8, scrollTrigger: { trigger: '.glass-card', start: 'top 90%' } });
-  </script>
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true; // enable shadows for depth
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap; // soft shadows
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        // CSS2DRenderer for a little floating label
+        const labelRenderer = new CSS2DRenderer();
+        labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        labelRenderer.domElement.style.position = 'absolute';
+        labelRenderer.domElement.style.top = '0px';
+        labelRenderer.domElement.style.left = '0px';
+        labelRenderer.domElement.style.pointerEvents = 'none';
+        document.body.appendChild(labelRenderer.domElement);
+
+        // --- Controls ---
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = false;
+        controls.enableZoom = true;
+        controls.zoomSpeed = 1.2;
+        controls.rotateSpeed = 1.0;
+        controls.target.set(0, 1.2, 0);
+        
+        // --- Lighting System (Cinematic) ---
+        // Ambient fill
+        const ambientLight = new THREE.AmbientLight(0x404060, 0.55);
+        scene.add(ambientLight);
+        
+        // Key light (warm directional sunlight)
+        const mainLight = new THREE.DirectionalLight(0xffcc88, 1.2);
+        mainLight.position.set(4, 8, 3);
+        mainLight.castShadow = true;
+        mainLight.receiveShadow = true;
+        mainLight.shadow.mapSize.width = 1024;
+        mainLight.shadow.mapSize.height = 1024;
+        mainLight.shadow.camera.near = 0.5;
+        mainLight.shadow.camera.far = 12;
+        mainLight.shadow.camera.left = -5;
+        mainLight.shadow.camera.right = 5;
+        mainLight.shadow.camera.top = 5;
+        mainLight.shadow.camera.bottom = -5;
+        scene.add(mainLight);
+        
+        // Fill light from below (rim/warm bounce)
+        const fillLight = new THREE.PointLight(0xcc9966, 0.5);
+        fillLight.position.set(0, -1, 0);
+        scene.add(fillLight);
+        
+        // Cool back rim light
+        const backLight = new THREE.PointLight(0x88aaff, 0.6);
+        backLight.position.set(-2, 2, -3);
+        scene.add(backLight);
+        
+        // Additional accent light for eyes
+        const eyeLight = new THREE.PointLight(0xffaa66, 0.4);
+        eyeLight.position.set(0.5, 1.6, 1.2);
+        scene.add(eyeLight);
+        
+        // Small moving dust/specks lighting? will be handled by particles
+        
+        // --- Environment: Ground with sand texture and debris ---
+        const groundPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(12, 12),
+            new THREE.MeshStandardMaterial({ color: 0xbc9a6c, roughness: 0.85, metalness: 0.1 })
+        );
+        groundPlane.rotation.x = -Math.PI / 2;
+        groundPlane.position.y = -0.4;
+        groundPlane.receiveShadow = true;
+        scene.add(groundPlane);
+        
+        // Add a simple sand-like detail using a grid of tiny rocks
+        const rockMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.9 });
+        for (let i = 0; i < 280; i++) {
+            const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.05), rockMat);
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 2 + Math.random() * 4;
+            rock.position.x = Math.cos(angle) * radius * (Math.random() - 0.5) * 2;
+            rock.position.z = Math.sin(angle) * radius * (Math.random() - 0.5) * 2;
+            rock.position.y = -0.38 + Math.random() * 0.1;
+            rock.scale.setScalar(0.5 + Math.random() * 0.8);
+            rock.castShadow = true;
+            rock.receiveShadow = true;
+            scene.add(rock);
+        }
+        
+        // --- Starfield Particle System (distant stars) ---
+        const starGeometry = new THREE.BufferGeometry();
+        const starCount = 1800;
+        const starPositions = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            starPositions[i*3] = (Math.random() - 0.5) * 200;
+            starPositions[i*3+1] = (Math.random() - 0.5) * 80;
+            starPositions[i*3+2] = (Math.random() - 0.5) * 80 - 40;
+        }
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.08, transparent: true, opacity: 0.7 });
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+        
+        // --- Dust Particles (floating around WALL-E) ---
+        const dustCount = 600;
+        const dustGeometry = new THREE.BufferGeometry();
+        const dustPositions = new Float32Array(dustCount * 3);
+        for (let i = 0; i < dustCount; i++) {
+            dustPositions[i*3] = (Math.random() - 0.5) * 5;
+            dustPositions[i*3+1] = Math.random() * 2.5;
+            dustPositions[i*3+2] = (Math.random() - 0.5) * 4;
+        }
+        dustGeometry.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
+        const dustMaterial = new THREE.PointsMaterial({ color: 0xcca86a, size: 0.02, transparent: true, opacity: 0.4 });
+        const dustParticles = new THREE.Points(dustGeometry, dustMaterial);
+        scene.add(dustParticles);
+        
+        // --- Build WALL·E using primitive geometries (detailed & stylized) ---
+        const wallE = new THREE.Group();
+        
+        // Materials
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xc97e3a, roughness: 0.35, metalness: 0.75 });
+        const darkMetalMat = new THREE.MeshStandardMaterial({ color: 0x7a5a3a, roughness: 0.5, metalness: 0.7 });
+        const rustyMat = new THREE.MeshStandardMaterial({ color: 0xaa5a2a, roughness: 0.85, metalness: 0.4 });
+        const trackMat = new THREE.MeshStandardMaterial({ color: 0x4a3a2a, roughness: 0.9, metalness: 0.2 });
+        const eyeWhiteMat = new THREE.MeshStandardMaterial({ color: 0xe8eef2, roughness: 0.2, metalness: 0.1, emissive: 0x224455, emissiveIntensity: 0.15 });
+        const irisMat = new THREE.MeshStandardMaterial({ color: 0x2c3e50, roughness: 0.1, metalness: 0.05, emissive: 0x1a2a3a, emissiveIntensity: 0.3 });
+        const highlightMat = new THREE.MeshStandardMaterial({ color: 0xffaa66, metalness: 0.9, roughness: 0.2 });
+        
+        // 1. Body (main torso)
+        const bodyGeo = new THREE.BoxGeometry(1.4, 1.1, 1.3);
+        const body = new THREE.Mesh(bodyGeo, bodyMat);
+        body.position.y = 0.55;
+        body.castShadow = true;
+        body.receiveShadow = true;
+        wallE.add(body);
+        
+        // Chest details (yellow panel)
+        const chestPlate = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.4, 0.1), highlightMat);
+        chestPlate.position.set(0, 0.65, 0.68);
+        chestPlate.castShadow = true;
+        wallE.add(chestPlate);
+        
+        // Red 'heart' / logo decal
+        const heartGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.12, 16);
+        const heartMat = new THREE.MeshStandardMaterial({ color: 0xdd5533, metalness: 0.3, roughness: 0.4 });
+        const heart = new THREE.Mesh(heartGeo, heartMat);
+        heart.position.set(0, 0.55, 0.74);
+        heart.rotation.x = Math.PI / 2;
+        wallE.add(heart);
+        
+        // 2. Tracks assembly (left and right)
+        const trackBase = (xOffset) => {
+            const group = new THREE.Group();
+            const trackBody = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.35, 1.45), trackMat);
+            trackBody.position.set(xOffset, 0.15, 0);
+            trackBody.castShadow = true;
+            group.add(trackBody);
+            // Wheels (small cylinders)
+            const wheelMat = new THREE.MeshStandardMaterial({ color: 0x5a5a5a, metalness: 0.6, roughness: 0.5 });
+            for (let i = -0.6; i <= 0.6; i+=0.6) {
+                const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.12, 24), wheelMat);
+                wheel.rotation.z = Math.PI / 2;
+                wheel.position.set(xOffset, 0.12, i);
+                wheel.castShadow = true;
+                group.add(wheel);
+            }
+            return group;
+        };
+        const leftTrack = trackBase(-0.85);
+        const rightTrack = trackBase(0.85);
+        wallE.add(leftTrack);
+        wallE.add(rightTrack);
+        
+        // 3. Arms (simple mechanical arms with pincers)
+        const armMat = new THREE.MeshStandardMaterial({ color: 0xb87a3a, metalness: 0.7, roughness: 0.4 });
+        const pincerMat = new THREE.MeshStandardMaterial({ color: 0xcd7a32, metalness: 0.5 });
+        
+        const createArm = (side) => {
+            const group = new THREE.Group();
+            const upperArm = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.28, 0.9), armMat);
+            upperArm.position.set(side * 0.7, 0.75, 0);
+            upperArm.castShadow = true;
+            group.add(upperArm);
+            // Forearm/pincer part
+            const pincerBase = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.25, 0.5), pincerMat);
+            pincerBase.position.set(side * 1.0, 0.78, 0.25);
+            pincerBase.castShadow = true;
+            group.add(pincerBase);
+            // Claw details
+            const claw = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.25, 6), pincerMat);
+            claw.position.set(side * 1.18, 0.79, 0.48);
+            claw.rotation.x = 0.3;
+            claw.castShadow = true;
+            group.add(claw);
+            return group;
+        };
+        
+        const leftArm = createArm(-1);
+        const rightArm = createArm(1);
+        wallE.add(leftArm);
+        wallE.add(rightArm);
+        
+        // 4. Neck and Head
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.45, 0.3, 12), darkMetalMat);
+        neck.position.y = 1.08;
+        neck.castShadow = true;
+        wallE.add(neck);
+        
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.85, 0.9), bodyMat);
+        head.position.y = 1.48;
+        head.castShadow = true;
+        head.receiveShadow = true;
+        wallE.add(head);
+        
+        // Head details: top vent
+        const vent = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.08, 0.4), rustyMat);
+        vent.position.set(0, 1.92, 0.2);
+        vent.castShadow = true;
+        wallE.add(vent);
+        
+        // Antenna
+        const antennaRod = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.5, 6), rustyMat);
+        antennaRod.position.set(0.45, 1.98, 0.35);
+        antennaRod.castShadow = true;
+        wallE.add(antennaRod);
+        const antennaBall = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 8), new THREE.MeshStandardMaterial({ color: 0xdd9933, metalness: 0.8 }));
+        antennaBall.position.set(0.45, 2.22, 0.35);
+        wallE.add(antennaBall);
+        
+        // Eyes: iconic binocular style
+        const leftEyeBase = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 24), eyeWhiteMat);
+        leftEyeBase.position.set(-0.32, 1.65, 0.52);
+        leftEyeBase.rotation.x = 0.1;
+        leftEyeBase.castShadow = true;
+        wallE.add(leftEyeBase);
+        
+        const rightEyeBase = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 24), eyeWhiteMat);
+        rightEyeBase.position.set(0.32, 1.65, 0.52);
+        rightEyeBase.rotation.x = 0.1;
+        rightEyeBase.castShadow = true;
+        wallE.add(rightEyeBase);
+        
+        // Pupils (with glossy look)
+        const pupilMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.05, metalness: 0.2, emissive: 0x222222 });
+        const leftPupil = new THREE.Mesh(new THREE.SphereGeometry(0.19, 32, 32), pupilMat);
+        leftPupil.position.set(-0.32, 1.65, 0.75);
+        leftPupil.castShadow = true;
+        wallE.add(leftPupil);
+        
+        const rightPupil = new THREE.Mesh(new THREE.SphereGeometry(0.19, 32, 32), pupilMat);
+        rightPupil.position.set(0.32, 1.65, 0.75);
+        rightPupil.castShadow = true;
+        wallE.add(rightPupil);
+        
+        // Eye glare (tiny highlight)
+        const glareMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x88aaff, emissiveIntensity: 0.5 });
+        const leftGlare = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), glareMat);
+        leftGlare.position.set(-0.4, 1.73, 0.86);
+        wallE.add(leftGlare);
+        const rightGlare = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), glareMat);
+        rightGlare.position.set(0.24, 1.73, 0.86);
+        wallE.add(rightGlare);
+        
+        // Eyebrow / visor element
+        const brow = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.1, 0.08), rustyMat);
+        brow.position.set(0, 1.9, 0.68);
+        wallE.add(brow);
+        
+        // 5. Additional details: Rust patches & bolts
+        const rustPatchMat = new THREE.MeshStandardMaterial({ color: 0xaa5a2a, roughness: 0.9 });
+        const boltMat = new THREE.MeshStandardMaterial({ color: 0xcc8844, metalness: 0.85 });
+        for (let i = -0.5; i <= 0.5; i+=0.5) {
+            const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.05, 6), boltMat);
+            bolt.position.set(i, 0.35, 0.75);
+            wallE.add(bolt);
+        }
+        
+        // A small "plant in boot" prop (Easter egg)
+        const bootGroup = new THREE.Group();
+        const bootBody = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.25, 0.7), new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.8 }));
+        bootBody.position.set(1.5, -0.2, 1.2);
+        bootBody.castShadow = true;
+        bootGroup.add(bootBody);
+        const stemMat = new THREE.MeshStandardMaterial({ color: 0x55aa44 });
+        const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.35, 6), stemMat);
+        stem.position.set(1.5, 0.05, 1.55);
+        stem.castShadow = true;
+        bootGroup.add(stem);
+        const leafMat = new THREE.MeshStandardMaterial({ color: 0x66cc55 });
+        const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.2, 6), leafMat);
+        leaf.position.set(1.5, 0.22, 1.55);
+        leaf.castShadow = true;
+        bootGroup.add(leaf);
+        scene.add(bootGroup);
+        
+        scene.add(wallE);
+        
+        // --- Floating CSS2D Label for charm ---
+        const div = document.createElement('div');
+        div.textContent = '🤖 WALL·E 🤖';
+        div.style.color = '#f5cda0';
+        div.style.fontSize = '18px';
+        div.style.fontWeight = 'bold';
+        div.style.textShadow = '1px 1px 0px #000';
+        div.style.background = 'rgba(0,0,0,0.5)';
+        div.style.padding = '4px 12px';
+        div.style.borderRadius = '30px';
+        div.style.border = '1px solid #f5a623';
+        div.style.backdropFilter = 'blur(4px)';
+        div.style.fontFamily = 'monospace';
+        const labelObj = new CSS2DObject(div);
+        labelObj.position.set(0, 2.35, 0);
+        wallE.add(labelObj);
+        
+        // --- Animation Variables ---
+        let time = 0;
+        let blinkCounter = 0;
+        let leftPupilOrigScale = leftPupil.scale.clone();
+        let rightPupilOrigScale = rightPupil.scale.clone();
+        
+        // Store original positions for idle bounce
+        const origHeadY = head.position.y;
+        const origAntennaY = antennaBall.position.y;
+        
+        // --- Dust Particles movement data ---
+        const dustVelocities = [];
+        for (let i = 0; i < dustCount; i++) {
+            dustVelocities.push({
+                speedX: (Math.random() - 0.5) * 0.008,
+                speedY: Math.random() * 0.01,
+                speedZ: (Math.random() - 0.5) * 0.008
+            });
+        }
+        
+        // --- Simple rust particle system around tracks (optional floating dust motes) ---
+        const rustParticles = new THREE.Points(
+            new THREE.BufferGeometry(),
+            new THREE.PointsMaterial({ color: 0xcc8844, size: 0.018, transparent: true, opacity: 0.5 })
+        );
+        const rustPositions = [];
+        for (let i = 0; i < 300; i++) {
+            rustPositions.push((Math.random() - 0.5) * 2.2);
+            rustPositions.push(Math.random() * 1.2);
+            rustPositions.push((Math.random() - 0.5) * 1.8);
+        }
+        rustParticles.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(rustPositions), 3));
+        wallE.add(rustParticles);
+        
+        // --- Animate! ---
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.016; // approx delta, but use real delta? Simple increment is smooth
+            
+            // Idle bounce: slight vertical bob for whole robot
+            const bobY = Math.sin(time * 2.2) * 0.008;
+            wallE.position.y = bobY;
+            
+            // Head tilt/rotate (friendly looking around)
+            const headSway = Math.sin(time * 0.6) * 0.12;
+            head.rotation.y = headSway * 0.7;
+            // Eyes independent pupil micro movement (curious look)
+            const lookX = Math.sin(time * 0.4) * 0.05;
+            const lookY = Math.sin(time * 0.7) * 0.03;
+            leftPupil.position.x = -0.32 + lookX * 0.08;
+            leftPupil.position.y = 1.65 + lookY * 0.06;
+            rightPupil.position.x = 0.32 + lookX * 0.08;
+            rightPupil.position.y = 1.65 + lookY * 0.06;
+            // Glare follow pupils subtly
+            leftGlare.position.x = leftPupil.position.x - 0.06;
+            leftGlare.position.y = leftPupil.position.y + 0.08;
+            rightGlare.position.x = rightPupil.position.x + 0.02;
+            rightGlare.position.y = rightPupil.position.y + 0.08;
+            
+            // Blink effect (every 3 seconds)
+            blinkCounter += 0.016;
+            if (blinkCounter > 3.2) {
+                blinkCounter = 0;
+                // Scale pupils down quickly for blink
+                leftPupil.scale.set(0.05, 0.05, 0.05);
+                rightPupil.scale.set(0.05, 0.05, 0.05);
+                setTimeout(() => {
+                    leftPupil.scale.set(1, 1, 1);
+                    rightPupil.scale.set(1, 1, 1);
+                }, 100);
+            }
+            
+            // Arm gentle sway
+            leftArm.rotation.z = Math.sin(time * 1.1) * 0.12;
+            rightArm.rotation.z = Math.cos(time * 1.1) * 0.12;
+            leftArm.rotation.x = Math.sin(time * 0.9) * 0.07;
+            rightArm.rotation.x = Math.cos(time * 0.9) * 0.07;
+            
+            // Antenna subtle wiggle
+            antennaBall.position.x = 0.45 + Math.sin(time * 4) * 0.01;
+            antennaBall.position.z = 0.35 + Math.cos(time * 4.3) * 0.01;
+            
+            // Dust particles animation (floating around)
+            const positions = dustParticles.geometry.attributes.position.array;
+            for (let i = 0; i < dustCount; i++) {
+                positions[i*3] += dustVelocities[i].speedX;
+                positions[i*3+1] += dustVelocities[i].speedY;
+                positions[i*3+2] += dustVelocities[i].speedZ;
+                // Wrap around
+                if (positions[i*3] > 2.5) positions[i*3] = -2.5;
+                if (positions[i*3] < -2.5) positions[i*3] = 2.5;
+                if (positions[i*3+1] > 2.2) positions[i*3+1] = 0;
+                if (positions[i*3+1] < 0) positions[i*3+1] = 2.2;
+                if (positions[i*3+2] > 2.2) positions[i*3+2] = -2.2;
+                if (positions[i*3+2] < -2.2) positions[i*3+2] = 2.2;
+            }
+            dustParticles.geometry.attributes.position.needsUpdate = true;
+            
+            // Rotate stars slowly
+            stars.rotation.y += 0.0005;
+            stars.rotation.x += 0.0003;
+            
+            // Animate eye light intensity for dramatic effect
+            eyeLight.intensity = 0.45 + Math.sin(time * 5) * 0.08;
+            
+            // Move the floating rust particles within wallE group
+            const rustPosAttr = rustParticles.geometry.attributes.position.array;
+            for (let i = 0; i < 300; i++) {
+                rustPosAttr[i*3] += (Math.random() - 0.5) * 0.008;
+                rustPosAttr[i*3+1] += (Math.random() - 0.5) * 0.008;
+                rustPosAttr[i*3+2] += (Math.random() - 0.5) * 0.008;
+                // bound
+                if (Math.abs(rustPosAttr[i*3]) > 1.3) rustPosAttr[i*3] *= -0.9;
+                if (rustPosAttr[i*3+1] > 1.0) rustPosAttr[i*3+1] = 0;
+                if (rustPosAttr[i*3+1] < 0) rustPosAttr[i*3+1] = 1.0;
+                if (Math.abs(rustPosAttr[i*3+2]) > 1.2) rustPosAttr[i*3+2] *= -0.9;
+            }
+            rustParticles.geometry.attributes.position.needsUpdate = true;
+            
+            // Update controls and render
+            controls.update(); // only needed if damping or autoRotate, but we keep for smoothness
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // Small console greeting
+        console.log('✨ WALL·E CGI Scene Loaded | Interactive 3D Animation');
+    </script>
 </body>
-</html>
+</html> 
