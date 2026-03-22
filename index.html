@@ -878,7 +878,7 @@
             <p id="breathInstruction" style="margin-top:1rem;">Select a breath practice above to begin your cosmic journey.</p>
         </div>
 
-        <!-- AUDIO VIEW (Interstellar-inspired) -->
+        <!-- AUDIO VIEW -->
         <div id="audioView" class="hidden audio-section glass-card view-container">
             <h2>🎧 Cinematic Focus · Interstellar Soundscape</h2>
             <p style="margin-bottom:1rem;">Let the cosmic waves guide your meditation</p>
@@ -953,19 +953,19 @@
         const stars = new THREE.Points(starGeo, starMaterial);
         scene.add(stars);
         
-        // Black hole core (very dark)
+        // Black hole core
         const coreGeo = new THREE.SphereGeometry(1.18, 256, 256);
         const coreMat = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.15, metalness: 0.98, emissive: 0x110000, emissiveIntensity: 0.15 });
         const blackHole = new THREE.Mesh(coreGeo, coreMat);
         scene.add(blackHole);
         
-        // Inner photon ring (subtle)
+        // Inner ring (rotating)
         const innerRingGeo = new THREE.TorusGeometry(1.36, 0.065, 128, 320);
         const innerRingMat = new THREE.MeshStandardMaterial({ color: 0xaa6633, emissive: 0x442200, emissiveIntensity: 0.28, transparent: true, blending: THREE.AdditiveBlending });
         const innerRing = new THREE.Mesh(innerRingGeo, innerRingMat);
         scene.add(innerRing);
         
-        // Outer ring
+        // Outer ring (rotating)
         const outerRingGeo = new THREE.TorusGeometry(1.58, 0.048, 128, 360);
         const outerRingMat = new THREE.MeshStandardMaterial({ color: 0xaa8866, emissive: 0x331100, emissiveIntensity: 0.2, transparent: true, blending: THREE.AdditiveBlending });
         const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
@@ -1138,9 +1138,10 @@
             innerRingMat.emissiveIntensity = 0.22 + Math.sin(time * 2.8) * 0.08;
             outerRingMat.emissiveIntensity = 0.16 + Math.sin(time * 2.3) * 0.06;
             
-            innerRing.rotation.z += 0.004;
-            outerRing.rotation.z += 0.003;
-            farRing.rotation.z += 0.002;
+            // Rotate the rings
+            innerRing.rotation.z += 0.008;
+            outerRing.rotation.z += 0.006;
+            farRing.rotation.z += 0.004;
             glowRing.rotation.y += 0.0016;
             
             stars.rotation.y += 0.0001;
@@ -1409,7 +1410,7 @@
         document.getElementById('pauseTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; });
         document.getElementById('resetTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; timerSec=300; updateTimerDisplay(); document.getElementById('timerMsg').innerText=''; });
 
-        // Enhanced Audio
+        // Audio
         const audio = new Audio();
         const tracks = [
             'https://cdn.pixabay.com/download/audio/2022/05/27/audio_6c6e5b9e44.mp3?filename=cinematic-ambient-11454.mp3',
