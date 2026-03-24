@@ -948,18 +948,424 @@
         </div>
 
         <!-- TECHNIQUES VIEW -->
-        <div id="techniquesView" class="hidden view-container">
-            <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
-                <div style="display: flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-                    <button id="showArchetypeBtn" class="btn-primary">✨ Archetype Selection</button>
-                    <button id="showAllTechBtn" class="btn-outline">🌀 Browse All 112 Techniques</button>
-                </div>
-            </div>
-            <div id="professionSelectionView"><div class="glass-card" style="padding:1.5rem;"><h3>🌀 Choose Your Archetype</h3><p>Select your path, and cosmic wisdom reveals aligned techniques.</p><div class="profession-grid" id="professionGrid"></div></div></div>
-            <div id="allTechniquesView" class="hidden"><div class="glass-card" style="padding:1rem; margin-bottom:1rem;"><input type="text" id="techSearchInput" placeholder="🔍 search technique..." style="width:100%; padding:0.8rem; border-radius:40px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); color:white;"><div class="tech-grid" id="allTechniquesGrid"></div></div></div>
-            <div id="recommendedTechniquesView" class="hidden"><div class="glass-card" style="padding:1rem; display:flex; justify-content:space-between; align-items:center;"><h3 id="selectedProfessionTitle">Recommended Techniques</h3><button class="btn-outline" id="backToProfessionsBtn"><i class="fas fa-arrow-left"></i> Back</button></div><div class="tech-grid" id="techniquesGrid"></div></div>
+     <div id="techniquesView" class="hidden view-container">
+    <!-- Top buttons -->
+    <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
+        <div style="display: flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+            <button id="showArchetypeBtn" class="btn-primary">✨ Archetype Selection</button>
+            <button id="showAllTechBtn" class="btn-outline">🌀 Browse All 112 Techniques</button>
         </div>
+    </div>
 
+    <!-- Archetype Selection View -->
+    <div id="professionSelectionView">
+        <div class="glass-card" style="padding:1.5rem;">
+            <h3>🌀 Choose Your Archetype</h3>
+            <p>Select your path, and cosmic wisdom reveals aligned techniques.</p>
+            <div class="profession-grid" id="professionGrid"></div>
+        </div>
+    </div>
+
+    <!-- Recommended Techniques Carousel (appears after archetype selection) -->
+    <div id="recommendedTechniquesView" class="hidden">
+        <div class="glass-card" style="padding:1rem;">
+            <div class="recommended-header">
+                <h3 id="selectedProfessionTitle">Recommended Techniques</h3>
+                <div class="tech-counter" id="techCounter">1 / 12</div>
+            </div>
+            <div id="techCarouselContent" class="tech-carousel-content"></div>
+            <div class="tech-carousel-nav">
+                <button id="prevTechBtn" class="btn-outline"><i class="fas fa-chevron-left"></i> Previous</button>
+                <button id="nextTechBtn" class="btn-outline">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="tech-carousel-actions">
+                <button id="practiceTechBtn" class="btn-primary"><i class="fas fa-play"></i> Practice</button>
+                <button id="addToPlanTechBtn" class="btn-outline"><i class="fas fa-plus"></i> Add to My Plan</button>
+                <button id="favoriteTechBtn" class="btn-outline"><i class="far fa-heart"></i> Favorite</button>
+            </div>
+            <div class="back-to-archetype">
+                <button id="backToProfessionsBtn" class="btn-outline"><i class="fas fa-arrow-left"></i> Back to Archetypes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Techniques Grid View -->
+    <div id="allTechniquesView" class="hidden">
+        <div class="glass-card" style="padding:1rem; margin-bottom:1rem;">
+            <input type="text" id="techSearchInput" placeholder="🔍 search technique..." style="width:100%; padding:0.8rem; border-radius:40px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); color:white;">
+            <div class="tech-grid" id="allTechniquesGrid"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styles for the techniques carousel (similar to mudra carousel) */
+    .recommended-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+    .tech-counter {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+    .tech-carousel-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: left;
+        margin: 1rem 0;
+    }
+    .tech-carousel-nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    .tech-carousel-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+    }
+    .back-to-archetype {
+        text-align: center;
+        margin-top: 1rem;
+    }
+    /* Tech detail sections */
+    .tech-detail-section {
+        margin: 1rem 0;
+    }
+    .tech-detail-section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--accent-secondary);
+        margin-bottom: 0.3rem;
+        border-left: 3px solid var(--accent);
+        padding-left: 0.8rem;
+    }
+    .tech-detail-section p, .tech-detail-section ol {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--text-primary);
+        margin-left: 1rem;
+    }
+    .tech-detail-section ol {
+        padding-left: 1.2rem;
+    }
+    .tech-detail-section li {
+        margin-bottom: 0.3rem;
+    }
+    /* Grid styles (existing) */
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .tech-card {
+        background: linear-gradient(135deg, rgba(20, 16, 44, 0.85), rgba(8, 6, 20, 0.9));
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(157, 123, 255, 0.2);
+        border-radius: 24px;
+        padding: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .tech-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(157, 123, 255, 0.6);
+    }
+    .tech-card .tech-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+    }
+    .tech-card .tech-category {
+        font-size: 0.7rem;
+        color: var(--accent-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+    }
+    .tech-card .tech-essence {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+    .tech-card-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.8rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 0.8rem;
+    }
+    .tech-card-actions button {
+        background: none;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+        color: var(--accent-secondary);
+        transition: transform 0.2s;
+    }
+    .tech-card-actions button:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<script>
+    // This script runs when the DOM is ready. It overrides the techniques view's behavior.
+    // It uses existing global objects: techniques, professions, getRecommendedTechniques, user, saveAll, showToast, addPracticedTechnique, showModal, etc.
+    (function() {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTechniquesView);
+        } else {
+            initTechniquesView();
+        }
+
+        function initTechniquesView() {
+            // Check if the necessary global elements exist
+            const professionGrid = document.getElementById('professionGrid');
+            if (!professionGrid) return;
+
+            // ==================== Render Archetype Grid ====================
+            professionGrid.innerHTML = professions.map(p => `
+                <div class="prof-card glass-card" data-prof='${JSON.stringify(p)}'>
+                    <i class="fas ${p.icon}"></i>
+                    <span>${p.name}</span>
+                    <div class="prof-desc">${p.desc}</div>
+                    <div class="prof-full-desc">${p.fullDesc}</div>
+                </div>
+            `).join('');
+
+            // Attach archetype click handlers
+            document.querySelectorAll('.prof-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const prof = JSON.parse(card.dataset.prof);
+                    const recs = getRecommendedTechniques(prof);
+                    // Store recommended techniques for carousel
+                    window.currentTechList = recs;
+                    window.currentTechIndex = 0;
+                    renderTechCarousel(0);
+                    document.getElementById('professionSelectionView').classList.add('hidden');
+                    document.getElementById('recommendedTechniquesView').classList.remove('hidden');
+                    document.getElementById('allTechniquesView').classList.add('hidden');
+                    document.getElementById('selectedProfessionTitle').innerHTML = `🌀 ${prof.name} · Recommended Techniques`;
+                });
+            });
+
+            // ==================== Carousel Functions ====================
+            function renderTechCarousel(index) {
+                const tech = window.currentTechList[index];
+                if (!tech) return;
+                const container = document.getElementById('techCarouselContent');
+                if (!container) return;
+
+                // Build detailed content similar to mudra section
+                container.innerHTML = `
+                    <div class="tech-name" style="font-size: 1.6rem; font-weight:700; margin-bottom:0.2rem; background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); -webkit-background-clip: text; background-clip: text; color: transparent;">${tech.name}</div>
+                    <div style="font-size:0.9rem; font-style:italic; color:var(--accent-secondary); margin-bottom:1rem;">${tech.sanskrit} · ${tech.category}</div>
+                    <div class="tech-detail-section">
+                        <h4>✨ Essence</h4>
+                        <p>${tech.essence}</p>
+                    </div>
+                    <div class="tech-detail-section">
+                        <h4>💎 Wisdom</h4>
+                        <p>${tech.wisdom}</p>
+                    </div>
+                    <div class="tech-detail-section">
+                        <h4>🧘 Step-by-Step</h4>
+                        <ol>${tech.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+                    </div>
+                    <div class="tech-detail-section">
+                        <h4>🪷 Posture & Mudra</h4>
+                        <p>${tech.posture} · ${tech.mudra}</p>
+                    </div>
+                    <div class="tech-detail-section">
+                        <h4>🌬️ Breath</h4>
+                        <p>${tech.breath}</p>
+                    </div>
+                    <div class="tech-detail-section">
+                        <h4>⏱️ Duration</h4>
+                        <p>${tech.duration}</p>
+                    </div>
+                    <div class="tech-detail-section">
+                        <h4>🌟 Benefits</h4>
+                        <p>✨ Students: ${tech.benefits.student}<br>✨ Employees: ${tech.benefits.employee}<br>✨ Seekers: ${tech.benefits.seeker}</p>
+                    </div>
+                `;
+                document.getElementById('techCounter').innerText = `${index + 1} / ${window.currentTechList.length}`;
+
+                // Update favorite button state
+                const favBtn = document.getElementById('favoriteTechBtn');
+                const isFav = user.favorites.includes(tech.id);
+                favBtn.innerHTML = isFav ? '<i class="fas fa-heart"></i> Favorite' : '<i class="far fa-heart"></i> Favorite';
+                favBtn.dataset.id = tech.id;
+            }
+
+            function nextTech() {
+                if (!window.currentTechList) return;
+                window.currentTechIndex = (window.currentTechIndex + 1) % window.currentTechList.length;
+                renderTechCarousel(window.currentTechIndex);
+            }
+
+            function prevTech() {
+                if (!window.currentTechList) return;
+                window.currentTechIndex = (window.currentTechIndex - 1 + window.currentTechList.length) % window.currentTechList.length;
+                renderTechCarousel(window.currentTechIndex);
+            }
+
+            function practiceCurrentTech() {
+                const tech = window.currentTechList[window.currentTechIndex];
+                if (tech) addPracticedTechnique(tech.id, tech.name, 15);
+            }
+
+            function addCurrentTechToPlan() {
+                const tech = window.currentTechList[window.currentTechIndex];
+                if (tech && !user.plan.includes(tech.id)) {
+                    user.plan.push(tech.id);
+                    saveAll();
+                    renderPlan();
+                    showToast('Added to My Plan');
+                } else if (tech && user.plan.includes(tech.id)) {
+                    showToast('Already in your plan');
+                }
+            }
+
+            function toggleFavoriteCurrentTech() {
+                const tech = window.currentTechList[window.currentTechIndex];
+                if (!tech) return;
+                const id = tech.id;
+                if (user.favorites.includes(id)) {
+                    user.favorites = user.favorites.filter(f => f !== id);
+                    showToast('Removed from favorites');
+                } else {
+                    user.favorites.push(id);
+                    showToast('Added to favorites');
+                }
+                saveAll();
+                // Update button appearance
+                const favBtn = document.getElementById('favoriteTechBtn');
+                const isFav = user.favorites.includes(id);
+                favBtn.innerHTML = isFav ? '<i class="fas fa-heart"></i> Favorite' : '<i class="far fa-heart"></i> Favorite';
+            }
+
+            // Attach carousel event listeners
+            document.getElementById('prevTechBtn')?.addEventListener('click', prevTech);
+            document.getElementById('nextTechBtn')?.addEventListener('click', nextTech);
+            document.getElementById('practiceTechBtn')?.addEventListener('click', practiceCurrentTech);
+            document.getElementById('addToPlanTechBtn')?.addEventListener('click', addCurrentTechToPlan);
+            document.getElementById('favoriteTechBtn')?.addEventListener('click', toggleFavoriteCurrentTech);
+
+            // Back to archetypes
+            document.getElementById('backToProfessionsBtn')?.addEventListener('click', () => {
+                document.getElementById('professionSelectionView').classList.remove('hidden');
+                document.getElementById('recommendedTechniquesView').classList.add('hidden');
+                document.getElementById('allTechniquesView').classList.add('hidden');
+            });
+
+            // ==================== All Techniques Grid ====================
+            function renderAllTechniques() {
+                const grid = document.getElementById('allTechniquesGrid');
+                if (!grid) return;
+                grid.innerHTML = '';
+                Object.values(techniques).forEach(tech => {
+                    const card = document.createElement('div');
+                    card.className = 'tech-card';
+                    card.innerHTML = `
+                        <div class="tech-name">${tech.name}</div>
+                        <div class="tech-category">${tech.category}</div>
+                        <div class="tech-essence">“${tech.essence.substring(0, 100)}${tech.essence.length > 100 ? '…' : ''}”</div>
+                        <div class="tech-card-actions">
+                            <button class="practice-tech-btn" data-id="${tech.id}" data-name="${tech.name}"><i class="fas fa-play"></i> Practice</button>
+                            <button class="favorite-tech-btn" data-id="${tech.id}"><i class="fas ${user.favorites.includes(tech.id) ? 'fa-heart' : 'fa-heart-o'}"></i></button>
+                            <button class="add-plan-tech-btn" data-id="${tech.id}"><i class="fas fa-plus"></i></button>
+                        </div>
+                    `;
+                    // Practice button
+                    card.querySelector('.practice-tech-btn')?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        addPracticedTechnique(tech.id, tech.name, 15);
+                    });
+                    // Favorite button
+                    card.querySelector('.favorite-tech-btn')?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (user.favorites.includes(tech.id)) {
+                            user.favorites = user.favorites.filter(f => f !== tech.id);
+                            card.querySelector('.favorite-tech-btn i').className = 'fas fa-heart-o';
+                        } else {
+                            user.favorites.push(tech.id);
+                            card.querySelector('.favorite-tech-btn i').className = 'fas fa-heart';
+                        }
+                        saveAll();
+                        showToast(user.favorites.includes(tech.id) ? 'Added to favorites' : 'Removed from favorites');
+                    });
+                    // Add to plan button
+                    card.querySelector('.add-plan-tech-btn')?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!user.plan.includes(tech.id)) {
+                            user.plan.push(tech.id);
+                            saveAll();
+                            renderPlan();
+                            showToast('Added to My Plan');
+                        } else {
+                            showToast('Already in your plan');
+                        }
+                    });
+                    // Open modal on card click
+                    card.addEventListener('click', () => showModal(tech));
+                    grid.appendChild(card);
+                });
+            }
+
+            // Search filter
+            const searchInput = document.getElementById('techSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    const term = searchInput.value.toLowerCase();
+                    const grid = document.getElementById('allTechniquesGrid');
+                    if (!grid) return;
+                    const cards = grid.querySelectorAll('.tech-card');
+                    cards.forEach(card => {
+                        const name = card.querySelector('.tech-name').innerText.toLowerCase();
+                        const category = card.querySelector('.tech-category').innerText.toLowerCase();
+                        if (name.includes(term) || category.includes(term)) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Override the showAllTechBtn handler
+            const showAllBtn = document.getElementById('showAllTechBtn');
+            if (showAllBtn) {
+                showAllBtn.addEventListener('click', () => {
+                    document.getElementById('professionSelectionView').classList.add('hidden');
+                    document.getElementById('recommendedTechniquesView').classList.add('hidden');
+                    document.getElementById('allTechniquesView').classList.remove('hidden');
+                    renderAllTechniques();
+                });
+            }
+
+            // Ensure showArchetypeBtn shows the archetype grid
+            const showArchetypeBtn = document.getElementById('showArchetypeBtn');
+            if (showArchetypeBtn) {
+                showArchetypeBtn.addEventListener('click', () => {
+                    document.getElementById('professionSelectionView').classList.remove('hidden');
+                    document.getElementById('recommendedTechniquesView').classList.add('hidden');
+                    document.getElementById('allTechniquesView').classList.add('hidden');
+                });
+            }
+        }
+    })();
+    
         <!-- BREATHWORK VIEW -->
         <div id="breathworkView" class="hidden breathwork-section glass-card view-container">
             <h2>🌬️ Sacred Breath Alchemy</h2>
