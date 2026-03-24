@@ -288,19 +288,80 @@
         /* Profession and techniques grid */
         .profession-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
         .prof-card {
-            padding: 1.5rem 0.8rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.5rem;
             text-align: center;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .prof-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         .prof-card:hover {
             transform: translateY(-6px);
             border-color: var(--accent);
+            box-shadow: 0 20px 35px -12px rgba(157,123,255,0.4);
+        }
+        .prof-card:hover::before {
+            transform: scaleX(1);
+        }
+        .prof-card i {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.8rem;
+        }
+        .prof-card span {
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: block;
+            margin: 0.5rem 0 0.3rem;
+        }
+        .prof-card .prof-desc {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .prof-card .prof-full-desc {
+            font-size: 0.7rem;
+            color: var(--accent-secondary);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 0.5rem;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .prof-card:hover .prof-full-desc {
+            opacity: 1;
+            transform: translateY(0);
         }
         .tech-grid {
             display: grid;
@@ -1059,24 +1120,24 @@
         ];
         document.getElementById('mudraGrid').innerHTML = mudraGallery.map(m => `<div class="mudra-item"><div class="mudra-svg">${m.svg}</div><div class="mudra-name">${m.name}</div><div class="mudra-desc">${m.desc.substring(0,45)}${m.desc.length>45?'…':''}</div></div>`).join('');
         
-        // ==================== PROFESSIONS ====================
+        // ==================== PROFESSIONS (Enhanced with detailed descriptions) ====================
         const professions = [
-            { name:"Student", icon:"fa-graduation-cap", desc:"focus · exams", keywords:["focus","concentration","memory"] },
-            { name:"Employee", icon:"fa-briefcase", desc:"stress · work-life", keywords:["stress","work","balance"] },
-            { name:"CEO", icon:"fa-chart-line", desc:"clarity · decisions", keywords:["clarity","decision"] },
-            { name:"Seeker", icon:"fa-infinity", desc:"spiritual path", keywords:["spiritual","awareness"] },
-            { name:"Anxious", icon:"fa-heartbeat", desc:"calm · anxiety", keywords:["anxiety","calm"] },
-            { name:"Overthinker", icon:"fa-brain", desc:"still mind", keywords:["overthink","stillness"] },
-            { name:"Healthcare", icon:"fa-hospital-user", desc:"compassion", keywords:["compassion","healing"] },
-            { name:"Teacher", icon:"fa-chalkboard", desc:"patience", keywords:["patience"] },
-            { name:"Developer", icon:"fa-laptop-code", desc:"focus", keywords:["focus","clarity"] },
-            { name:"Artist", icon:"fa-paint-brush", desc:"flow", keywords:["creativity","flow"] },
-            { name:"Parent", icon:"fa-child", desc:"self-care", keywords:["care","balance"] },
-            { name:"Entrepreneur", icon:"fa-rocket", desc:"resilience", keywords:["resilience"] },
-            { name:"FirstResponder", icon:"fa-fire-extinguisher", desc:"grounding", keywords:["grounding"] },
-            { name:"Retiree", icon:"fa-umbrella-beach", desc:"peace", keywords:["peace"] },
-            { name:"Freelancer", icon:"fa-user-tie", desc:"balance", keywords:["balance"] },
-            { name:"Athlete", icon:"fa-running", desc:"performance", keywords:["performance","focus"] }
+            { name:"Student", icon:"fa-graduation-cap", desc:"focus · exams", fullDesc:"Ideal for students seeking improved concentration, memory retention, and exam performance.", keywords:["focus","concentration","memory","exam","study"] },
+            { name:"Employee", icon:"fa-briefcase", desc:"stress · work-life", fullDesc:"Helps manage workplace stress, improve work-life balance, and maintain calm under pressure.", keywords:["stress","work","balance","employee"] },
+            { name:"CEO", icon:"fa-chart-line", desc:"clarity · decisions", fullDesc:"Enhances clarity of thought, sharp decision-making, and leadership presence.", keywords:["clarity","decision","leadership"] },
+            { name:"Seeker", icon:"fa-infinity", desc:"spiritual path", fullDesc:"For those on a spiritual journey—deepens awareness, expands consciousness, and opens the heart.", keywords:["spiritual","awareness","consciousness"] },
+            { name:"Anxious", icon:"fa-heartbeat", desc:"calm · anxiety", fullDesc:"Soothes anxiety, calms the nervous system, and restores inner peace.", keywords:["anxiety","calm","fear","peace"] },
+            { name:"Overthinker", icon:"fa-brain", desc:"still mind", fullDesc:"Quiets mental chatter, stops overthinking, and brings stillness to the restless mind.", keywords:["overthink","mind","thoughts","stillness"] },
+            { name:"Healthcare", icon:"fa-hospital-user", desc:"compassion", fullDesc:"Nurtures compassion, emotional resilience, and healing presence for caregivers.", keywords:["compassion","healing","care"] },
+            { name:"Teacher", icon:"fa-chalkboard", desc:"patience", fullDesc:"Cultivates patience, empathy, and the ability to inspire others.", keywords:["patience","teach","guide"] },
+            { name:"Developer", icon:"fa-laptop-code", desc:"focus", fullDesc:"Sharpens mental focus, reduces burnout, and enhances problem-solving skills.", keywords:["focus","code","mental clarity"] },
+            { name:"Artist", icon:"fa-paint-brush", desc:"flow", fullDesc:"Unlocks creative flow, dissolves blocks, and connects with inspiration.", keywords:["creativity","flow","inspiration"] },
+            { name:"Parent", icon:"fa-child", desc:"self-care", fullDesc:"Balances nurturing others with self-care, reducing parental stress and increasing presence.", keywords:["parent","care","balance","self-care"] },
+            { name:"Entrepreneur", icon:"fa-rocket", desc:"resilience", fullDesc:"Builds resilience, mental toughness, and the ability to pivot under pressure.", keywords:["resilience","drive","stress"] },
+            { name:"FirstResponder", icon:"fa-fire-extinguisher", desc:"grounding", fullDesc:"Provides grounding techniques to process trauma and maintain stability in high-stress roles.", keywords:["grounding","trauma","calm"] },
+            { name:"Retiree", icon:"fa-umbrella-beach", desc:"peace", fullDesc:"Invites deep relaxation, contentment, and the wisdom of aging gracefully.", keywords:["peace","relaxation","wisdom"] },
+            { name:"Freelancer", icon:"fa-user-tie", desc:"balance", fullDesc:"Helps balance work deadlines with personal well-being, preventing burnout.", keywords:["balance","work-life","focus"] },
+            { name:"Athlete", icon:"fa-running", desc:"performance", fullDesc:"Optimizes focus, body awareness, and mental toughness for peak performance.", keywords:["performance","focus","body awareness"] }
         ];
         function getRecommendedTechniques(prof) {
             return Object.values(techniques).sort((a,b)=> {
@@ -1133,32 +1194,21 @@
             updateCharts();
         }
         function updateStats() {
-            // Calculate favorite category
             const categoryCount = {};
             user.practicedTechniques.forEach(p => {
                 const tech = techniques[p.id];
-                if(tech) {
-                    const cat = tech.category;
-                    categoryCount[cat] = (categoryCount[cat] || 0) + 1;
-                }
+                if(tech) categoryCount[tech.category] = (categoryCount[tech.category] || 0) + 1;
             });
             let favCat = Object.keys(categoryCount).reduce((a,b) => categoryCount[a] > categoryCount[b] ? a : b, 'None');
             document.getElementById('statFavoriteCategory').innerText = favCat !== 'None' ? favCat : '-';
-            
-            // Most practiced technique
             const techCount = {};
-            user.practicedTechniques.forEach(p => {
-                techCount[p.name] = (techCount[p.name] || 0) + 1;
-            });
+            user.practicedTechniques.forEach(p => { techCount[p.name] = (techCount[p.name] || 0) + 1; });
             let mostPracticed = Object.keys(techCount).reduce((a,b) => techCount[a] > techCount[b] ? a : b, 'None');
             document.getElementById('statMostPracticed').innerText = mostPracticed !== 'None' ? mostPracticed : '-';
-            
-            // Average session
             let avg = user.practicedTechniques.length ? Math.round(user.totalMinutes / user.practicedTechniques.length) : 0;
             document.getElementById('statAvgSession').innerText = avg;
         }
         function updateCharts() {
-            // Weekly chart
             const ctx = document.getElementById('progressChart')?.getContext('2d');
             if(ctx && window.progressChart) window.progressChart.destroy();
             if(ctx) {
@@ -1168,7 +1218,6 @@
                     options: { responsive: true, maintainAspectRatio: true }
                 });
             }
-            // Category breakdown
             const catCtx = document.getElementById('categoryChart')?.getContext('2d');
             if(catCtx && window.categoryChart) window.categoryChart.destroy();
             if(catCtx) {
@@ -1185,7 +1234,6 @@
             }
         }
         function getWeeklyMinutes() {
-            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
             const weekMinutes = [0,0,0,0,0,0,0];
             user.practicedTechniques.forEach(p => {
                 const date = new Date(p.date);
@@ -1381,7 +1429,14 @@
         
         // ==================== TECHNIQUES UI ====================
         const profGrid = document.getElementById('professionGrid');
-        profGrid.innerHTML = professions.map(p => `<div class="prof-card glass-card" data-prof='${JSON.stringify(p)}'><i class="fas ${p.icon}"></i><span>${p.name}</span><small>${p.desc}</small></div>`).join('');
+        profGrid.innerHTML = professions.map(p => `
+            <div class="prof-card glass-card" data-prof='${JSON.stringify(p)}'>
+                <i class="fas ${p.icon}"></i>
+                <span>${p.name}</span>
+                <div class="prof-desc">${p.desc}</div>
+                <div class="prof-full-desc">${p.fullDesc}</div>
+            </div>
+        `).join('');
         document.querySelectorAll('.prof-card').forEach(card => card.addEventListener('click', () => { const prof = JSON.parse(card.dataset.prof); const recs = getRecommendedTechniques(prof); const grid = document.getElementById('techniquesGrid'); grid.innerHTML = ''; recs.forEach(t => grid.appendChild(createTechCard(t, true))); document.getElementById('selectedProfessionTitle').innerHTML = `🌀 ${prof.name} · Recommended Techniques`; document.getElementById('professionSelectionView').classList.add('hidden'); document.getElementById('allTechniquesView').classList.add('hidden'); document.getElementById('recommendedTechniquesView').classList.remove('hidden'); }));
         document.getElementById('backToProfessionsBtn').addEventListener('click', () => { document.getElementById('professionSelectionView').classList.remove('hidden'); document.getElementById('recommendedTechniquesView').classList.add('hidden'); document.getElementById('allTechniquesView').classList.add('hidden'); });
         document.getElementById('showArchetypeBtn').addEventListener('click', () => { document.getElementById('professionSelectionView').classList.remove('hidden'); document.getElementById('recommendedTechniquesView').classList.add('hidden'); document.getElementById('allTechniquesView').classList.add('hidden'); });
