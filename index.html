@@ -982,11 +982,6 @@
                 <div class="breath-card glass-card" data-breath="box"><i class="fas fa-cube"></i><h3>4-4-6-4 Box</h3><p>Calm nervous system, enhance focus</p><button class="btn-outline start-breath" data-type="box">Activate</button></div>
                 <div class="breath-card glass-card" data-breath="478"><i class="fas fa-feather-alt"></i><h3>4-7-8 Relaxation</h3><p>Deep relaxation, prepare for sleep</p><button class="btn-outline start-breath" data-type="478">Activate</button></div>
                 <div class="breath-card glass-card" data-breath="nadi"><i class="fas fa-hand-peace"></i><h3>Alternate Nostril</h3><p>Balance hemispheres, calm mind</p><button class="btn-outline start-breath" data-type="nadi">Activate</button></div>
-                <div class="breath-card glass-card" data-breath="kapal"><i class="fas fa-fire"></i><h3>Kapalabhati</h3><p>Cleanse lungs, energize body</p><button class="btn-outline start-breath" data-type="kapal">Activate</button></div>
-                <div class="breath-card glass-card" data-breath="ujjayi"><i class="fas fa-water"></i><h3>Ujjayi Ocean</h3><p>Soothe mind, focus attention</p><button class="btn-outline start-breath" data-type="ujjayi">Activate</button></div>
-            </div>
-            <div id="breathInstructionPanel" class="breath-instruction-panel">✨ Select a breath technique to see detailed instructions and begin your practice.</div>
-        </div>
 
 <div id="quotesView" class="hidden quotes-section glass-card view-container">
     <h2>📚 Wisdom Library</h2>
@@ -1025,7 +1020,7 @@
 </style>
 
 <script>
-    // ==================== COMPLETE QUOTES LIBRARY (100+ quotes) ====================
+    // ==================== COMPLETE QUOTES LIBRARY (100+ quotes, no numbers) ====================
     const fullQuotesList = [
         // Gautama Buddha
         { text: "Three things cannot be long hidden: the sun, the moon, and the truth.", author: "Buddha" },
@@ -1176,6 +1171,58 @@
         { text: "Arise, awake, and stop not till the goal is reached.", author: "Swami Vivekananda" },
         { text: "You cannot believe in God until you believe in yourself.", author: "Swami Vivekananda" }
     ];
+
+    // Shuffle the array so the quotes appear in random order each time
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    let quotes = shuffleArray([...fullQuotesList]);
+    let currentIndex = 0;
+
+    function updateQuoteDisplay() {
+        const quote = quotes[currentIndex];
+        const quoteText = document.getElementById('quoteText');
+        const quoteAuthor = document.getElementById('quoteAuthor');
+        if (quoteText && quoteAuthor) {
+            quoteText.innerHTML = `“${quote.text}”`;
+            quoteAuthor.innerHTML = `— ${quote.author}`;
+        }
+    }
+
+    function nextQuote() {
+        currentIndex = (currentIndex + 1) % quotes.length;
+        updateQuoteDisplay();
+    }
+
+    function prevQuote() {
+        currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
+        updateQuoteDisplay();
+    }
+
+    function saveCurrentQuote() {
+        const quote = quotes[currentIndex];
+        if (typeof window.saveQuoteToBoth === 'function') {
+            window.saveQuoteToBoth(quote.text, quote.author);
+        } else {
+            alert("Save function not available – please ensure the main script is loaded.");
+        }
+    }
+
+    // Initialise when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        updateQuoteDisplay();
+        const prevBtn = document.getElementById('prevLibQuote');
+        const nextBtn = document.getElementById('nextLibQuote');
+        const saveBtn = document.getElementById('saveLibQuoteBtn');
+        if (prevBtn) prevBtn.addEventListener('click', prevQuote);
+        if (nextBtn) nextBtn.addEventListener('click', nextQuote);
+        if (saveBtn) saveBtn.addEventListener('click', saveCurrentQuote);
+    });
 
     // Shuffle the array (Fisher-Yates)
     function shuffleArray(arr) {
