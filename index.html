@@ -882,21 +882,71 @@
         
         <!-- PROFILE -->
         <div id="profileView" class="hidden profile-section glass-card view-container"><h2>your profile</h2><div class="profile-tabs"><button class="tab-btn active" data-profile-tab="practiced">🧘 Practiced Techniques</button><button class="tab-btn" data-profile-tab="quotes">💬 Saved Quotes</button><button class="tab-btn" data-profile-tab="notes">📓 Notes & Diaries</button></div><div id="profilePracticed" class="profile-section-container active-tab"><div id="practicedList"></div></div><div id="profileQuotes" class="profile-section-container"><div id="savedQuotesList"></div></div><div id="profileNotes" class="profile-section-container"><div id="profileDiaryList"></div></div><div style="margin-top:2rem; text-align:center;"><button id="exportDataBtn" class="btn-outline"><i class="fas fa-download"></i> Export My Data (JSON)</button></div></div>
-        
-        <!-- COSMIC ME (Enhanced Dashboard) -->
-        <div id="enhancedView" class="hidden profile-section glass-card view-container">
-            <h2>cosmic me · stellar insights</h2>
-            <div class="stats" style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-                <div class="stat-card glass-card" style="padding:1rem;"><span id="enhTotalPractices">0</span><div>practices</div></div>
-                <div class="stat-card glass-card" style="padding:1rem;"><span id="enhTotalMinutes">0</span><div>minutes</div></div>
-                <div class="stat-card glass-card" style="padding:1rem;"><span id="enhStreak">0</span><div>streak</div></div>
-            </div>
-            <h3>📅 Practice Tracker</h3>
-            <div id="calendarTracker" class="calendar-grid"></div>
-            <canvas id="progressChart" width="400" height="200" style="width:100%; max-width:500px; margin:1rem auto;"></canvas>
-            <h3>📊 Category Breakdown</h3>
-            <canvas id="categoryChart" width="400" height="200" style="width:100%; max-width:500px; margin:1rem auto;"></canvas>
-        </div>
+        /* Enhance stats cards on mobile */
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+.stat-card {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* Calendar tracker improvements */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 24px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+.calendar-day {
+    text-align: center;
+    padding: 0.75rem 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+.calendar-day.weekday {
+    font-weight: 600;
+    color: var(--accent-secondary);
+    cursor: default;
+}
+.calendar-day.practiced {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+.calendar-day.today {
+    border: 2px solid var(--accent-secondary);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+    .calendar-grid {
+        gap: 0.25rem;
+        padding: 0.75rem;
+    }
+    .calendar-day {
+        padding: 0.5rem 0.1rem;
+        font-size: 0.75rem;
+    }
+    .stat-card {
+        min-width: 80px;
+        padding: 0.75rem;
+    }
+    .stat-card span {
+        font-size: 1.2rem;
+    }
+}
         
         <!-- STATS VIEW (Detailed Analytics) -->
         <div id="statsView" class="hidden profile-section glass-card view-container">
