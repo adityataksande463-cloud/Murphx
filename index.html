@@ -982,303 +982,26 @@
                 <div class="breath-card glass-card" data-breath="box"><i class="fas fa-cube"></i><h3>4-4-6-4 Box</h3><p>Calm nervous system, enhance focus</p><button class="btn-outline start-breath" data-type="box">Activate</button></div>
                 <div class="breath-card glass-card" data-breath="478"><i class="fas fa-feather-alt"></i><h3>4-7-8 Relaxation</h3><p>Deep relaxation, prepare for sleep</p><button class="btn-outline start-breath" data-type="478">Activate</button></div>
                 <div class="breath-card glass-card" data-breath="nadi"><i class="fas fa-hand-peace"></i><h3>Alternate Nostril</h3><p>Balance hemispheres, calm mind</p><button class="btn-outline start-breath" data-type="nadi">Activate</button></div>
+                <div class="breath-card glass-card" data-breath="kapal"><i class="fas fa-fire"></i><h3>Kapalabhati</h3><p>Cleanse lungs, energize body</p><button class="btn-outline start-breath" data-type="kapal">Activate</button></div>
+                <div class="breath-card glass-card" data-breath="ujjayi"><i class="fas fa-water"></i><h3>Ujjayi Ocean</h3><p>Soothe mind, focus attention</p><button class="btn-outline start-breath" data-type="ujjayi">Activate</button></div>
+            </div>
+            <div id="breathInstructionPanel" class="breath-instruction-panel">✨ Select a breath technique to see detailed instructions and begin your practice.</div>
+        </div>
 
-<div id="quotesView" class="hidden quotes-section glass-card view-container">
-    <h2>📚 Wisdom Library</h2>
-    <div id="quoteContainer" class="quote-container">
-        <div class="quote-text-large" id="quoteText">Loading wisdom...</div>
-        <div class="quote-author" id="quoteAuthor"></div>
-    </div>
-    <div style="margin-top:1.5rem; display:flex; gap:1rem; justify-content:center;">
-        <button class="btn-outline" id="prevLibQuote"><i class="fas fa-chevron-left"></i> Previous</button>
-        <button class="btn-outline" id="nextLibQuote">Next <i class="fas fa-chevron-right"></i></button>
-        <button class="btn-outline" id="saveLibQuoteBtn"><i class="fas fa-bookmark"></i> Save to Diary</button>
-    </div>
-</div>
+        <!-- QUOTES LIBRARY -->
+        <div id="quotesView" class="hidden quotes-section glass-card view-container">
+            <h2>📚 Wisdom Library</h2>
+            <div id="quoteContainer" class="quote-container">
+                <div class="quote-text-large" id="quoteText">Loading wisdom...</div>
+                <div class="quote-author" id="quoteAuthor"></div>
+            </div>
+            <div style="margin-top:1.5rem; display:flex; gap:1rem; justify-content:center;">
+                <button class="btn-outline" id="prevLibQuote"><i class="fas fa-chevron-left"></i> Previous</button>
+                <button class="btn-outline" id="nextLibQuote">Next <i class="fas fa-chevron-right"></i></button>
+                <button class="btn-outline" id="saveLibQuoteBtn"><i class="fas fa-bookmark"></i> Save to Diary</button>
+            </div>
+        </div>
 
-<style>
-    .quote-container {
-        text-align: center;
-        padding: 1rem;
-    }
-    .quote-text-large {
-        font-size: 1.5rem;
-        font-style: italic;
-        line-height: 1.4;
-        margin: 1rem 0;
-        max-width: 90%;
-        margin-left: auto;
-        margin-right: auto;
-        word-wrap: break-word;
-    }
-    @media (max-width: 768px) {
-        .quote-text-large {
-            font-size: 1.2rem;
-            max-width: 95%;
-        }
-    }
-</style>
-
-<script>
-    // ==================== COMPLETE QUOTES LIBRARY (100+ quotes, no numbers) ====================
-    const fullQuotesList = [
-        // Gautama Buddha
-        { text: "Three things cannot be long hidden: the sun, the moon, and the truth.", author: "Buddha" },
-        { text: "Peace comes from within. Do not seek it without.", author: "Buddha" },
-        // Mahavira
-        { text: "All living beings long to live. None wishes to suffer; therefore do not harm any living being.", author: "Mahavira" },
-        { text: "A man is seated on top of a tree in the midst of a burning forest. He sees all living beings perish. But he does not realize that the same fate is soon to overtake him also.", author: "Mahavira" },
-        // Lao Tzu
-        { text: "The journey of a thousand miles begins with a single step.", author: "Lao Tzu" },
-        { text: "When I let go of what I am, I become what I might be.", author: "Lao Tzu" },
-        // Zhuangzi
-        { text: "Happiness is the absence of the striving for happiness.", author: "Zhuangzi" },
-        { text: "Flow with whatever may happen and let your mind be free.", author: "Zhuangzi" },
-        // Bodhidharma
-        { text: "The mind is the Buddha, and the Buddha is the mind.", author: "Bodhidharma" },
-        { text: "To find a Buddha, you must see your nature.", author: "Bodhidharma" },
-        // Kabir
-        { text: "Where do you search me? I am with you.", author: "Kabir" },
-        { text: "The river that flows in you also flows in me.", author: "Kabir" },
-        // Guru Nanak
-        { text: "There is no Hindu, there is no Muslim.", author: "Guru Nanak" },
-        { text: "Truth is high, but higher still is truthful living.", author: "Guru Nanak" },
-        // Meera Bai
-        { text: "I have found the one whom my soul loves.", author: "Meera Bai" },
-        { text: "Mine is the dark one, the flute player.", author: "Meera Bai" },
-        // Ramakrishna
-        { text: "As many faiths, so many paths.", author: "Ramakrishna" },
-        { text: "God can be realized through all religions.", author: "Ramakrishna" },
-        // Ramana Maharshi
-        { text: "Your own Self-realization is the greatest service you can render the world.", author: "Ramana Maharshi" },
-        { text: "Silence is the most powerful teaching.", author: "Ramana Maharshi" },
-        // Socrates
-        { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" },
-        { text: "An unexamined life is not worth living.", author: "Socrates" },
-        // Plato
-        { text: "The beginning is the most important part of the work.", author: "Plato" },
-        { text: "Wise men speak because they have something to say; fools because they have to say something.", author: "Plato" },
-        // Aristotle
-        { text: "Knowing yourself is the beginning of all wisdom.", author: "Aristotle" },
-        { text: "It is the mark of an educated mind to be able to entertain a thought without accepting it.", author: "Aristotle" },
-        // Heraclitus
-        { text: "No man ever steps in the same river twice.", author: "Heraclitus" },
-        { text: "The only constant in life is change.", author: "Heraclitus" },
-        // Friedrich Nietzsche
-        { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche" },
-        { text: "Become who you are.", author: "Friedrich Nietzsche" },
-        // Søren Kierkegaard
-        { text: "Life can only be understood backwards; but it must be lived forwards.", author: "Søren Kierkegaard" },
-        { text: "Anxiety is the dizziness of freedom.", author: "Søren Kierkegaard" },
-        // Jean-Paul Sartre
-        { text: "Man is condemned to be free.", author: "Jean-Paul Sartre" },
-        { text: "Freedom is what you do with what’s been done to you.", author: "Jean-Paul Sartre" },
-        // Martin Heidegger
-        { text: "The most thought-provoking thing in our thought-provoking time is that we are still not thinking.", author: "Martin Heidegger" },
-        { text: "Every man is born as many men and dies as a single one.", author: "Martin Heidegger" },
-        // Bertrand Russell
-        { text: "The whole problem with the world is that fools and fanatics are always so certain of themselves.", author: "Bertrand Russell" },
-        { text: "The good life is one inspired by love and guided by knowledge.", author: "Bertrand Russell" },
-        // Ludwig Wittgenstein
-        { text: "The limits of my language mean the limits of my world.", author: "Ludwig Wittgenstein" },
-        { text: "Whereof one cannot speak, thereof one must be silent.", author: "Ludwig Wittgenstein" },
-        // Jesus
-        { text: "The kingdom of God is within you.", author: "Jesus" },
-        { text: "Love your neighbor as yourself.", author: "Jesus" },
-        // Krishna (Bhagavad Gita)
-        { text: "You have the right to perform your duty, but not to the fruits of your actions.", author: "Krishna" },
-        { text: "Whenever righteousness declines and unrighteousness rises, I manifest myself.", author: "Krishna" },
-        // Patanjali
-        { text: "Yoga is the cessation of the fluctuations of the mind.", author: "Patanjali" },
-        { text: "When the mind becomes clear and calm, the Self reveals itself.", author: "Patanjali" },
-        // Adi Shankara
-        { text: "Brahman alone is real; the world is an appearance.", author: "Adi Shankara" },
-        { text: "The Self is not born, nor does it die.", author: "Adi Shankara" },
-        // Chaitanya Mahaprabhu
-        { text: "Chant the holy name of the Lord and be happy.", author: "Chaitanya Mahaprabhu" },
-        { text: "Humility, tolerance, and respect for all beings lead one closer to God.", author: "Chaitanya Mahaprabhu" },
-        // Rabindranath Tagore
-        { text: "Faith is the bird that feels the light when the dawn is still dark.", author: "Rabindranath Tagore" },
-        { text: "Let your life lightly dance on the edges of time like dew on the tip of a leaf.", author: "Rabindranath Tagore" },
-        // Kahlil Gibran
-        { text: "Your children are not your children; they are the sons and daughters of life’s longing for itself.", author: "Kahlil Gibran" },
-        { text: "Out of suffering have emerged the strongest souls.", author: "Kahlil Gibran" },
-        // Mahatma Gandhi
-        { text: "What you seek is seeking you.", author: "Mahatma Gandhi" },
-        { text: "Where there is love, there is life.", author: "Mahatma Gandhi" },
-        // William Blake
-        { text: "If the doors of perception were cleansed everything would appear to man as it is: infinite.", author: "William Blake" },
-        { text: "Exuberance is beauty.", author: "William Blake" },
-        // Fyodor Dostoevsky
-        { text: "The mystery of human existence lies not in just staying alive, but in finding something to live for.", author: "Fyodor Dostoevsky" },
-        { text: "The soul is healed by being with children.", author: "Fyodor Dostoevsky" },
-        // Leo Tolstoy
-        { text: "Everyone thinks of changing the world, but no one thinks of changing himself.", author: "Leo Tolstoy" },
-        { text: "The two most powerful warriors are patience and time.", author: "Leo Tolstoy" },
-        // G. I. Gurdjieff
-        { text: "Without self-knowledge, without understanding the working and functions of his machine, man cannot be free.", author: "G. I. Gurdjieff" },
-        { text: "Man is asleep. He lives in sleep and dies in sleep.", author: "G. I. Gurdjieff" },
-        { text: "Remember yourself always and everywhere.", author: "G. I. Gurdjieff" },
-        { text: "Man is given a limited quantity of energy.", author: "G. I. Gurdjieff" },
-        // P. D. Ouspensky
-        { text: "Man does not remember himself; he is always lost in what he is doing.", author: "P. D. Ouspensky" },
-        { text: "The greatest barrier to consciousness is the belief that one is already conscious.", author: "P. D. Ouspensky" },
-        // Albert Einstein
-        { text: "Imagination is more important than knowledge.", author: "Albert Einstein" },
-        { text: "The most beautiful thing we can experience is the mysterious.", author: "Albert Einstein" },
-        // Charles Darwin
-        { text: "It is not the strongest of the species that survives, nor the most intelligent, but the one most responsive to change.", author: "Charles Darwin" },
-        { text: "Ignorance more frequently begets confidence than does knowledge.", author: "Charles Darwin" },
-        // Sigmund Freud
-        { text: "Unexpressed emotions will never die; they are buried alive and will come forth later in uglier ways.", author: "Sigmund Freud" },
-        { text: "The mind is like an iceberg; it floats with one-seventh of its bulk above water.", author: "Sigmund Freud" },
-        // Carl Jung
-        { text: "Until you make the unconscious conscious, it will direct your life and you will call it fate.", author: "Carl Jung" },
-        { text: "Who looks outside, dreams; who looks inside, awakens.", author: "Carl Jung" },
-        // Jiddu Krishnamurti
-        { text: "It is no measure of health to be well adjusted to a profoundly sick society.", author: "Jiddu Krishnamurti" },
-        { text: "Truth is a pathless land.", author: "Jiddu Krishnamurti" },
-        { text: "The ability to observe without evaluating is the highest form of intelligence.", author: "Jiddu Krishnamurti" },
-        { text: "Freedom from the known is the beginning of intelligence.", author: "Jiddu Krishnamurti" },
-        // Pablo Picasso
-        { text: "Every child is an artist; the problem is how to remain an artist once we grow up.", author: "Pablo Picasso" },
-        { text: "Everything you can imagine is real.", author: "Pablo Picasso" },
-        // Vincent van Gogh
-        { text: "I dream my painting and then I paint my dream.", author: "Vincent van Gogh" },
-        { text: "Great things are done by a series of small things brought together.", author: "Vincent van Gogh" },
-        // Michelangelo
-        { text: "The greater danger for most of us lies not in setting our aim too high and falling short, but in setting it too low and achieving our mark.", author: "Michelangelo" },
-        { text: "I saw the angel in the marble and carved until I set him free.", author: "Michelangelo" },
-        // Leonardo da Vinci
-        { text: "Simplicity is the ultimate sophistication.", author: "Leonardo da Vinci" },
-        { text: "Learning never exhausts the mind.", author: "Leonardo da Vinci" },
-        // Karl Marx
-        { text: "The philosophers have only interpreted the world in various ways; the point, however, is to change it.", author: "Karl Marx" },
-        { text: "History repeats itself, first as tragedy, second as farce.", author: "Karl Marx" },
-        // Mikhail Bakunin
-        { text: "The urge to destroy is also a creative urge.", author: "Mikhail Bakunin" },
-        { text: "Freedom without socialism is privilege and injustice.", author: "Mikhail Bakunin" },
-        // Grigori Rasputin
-        { text: "It is necessary to sin in order to know forgiveness.", author: "Grigori Rasputin" },
-        { text: "Without suffering there is no understanding.", author: "Grigori Rasputin" },
-        // Meher Baba
-        { text: "Don’t worry, be happy.", author: "Meher Baba" },
-        { text: "Love God and find Him within yourself.", author: "Meher Baba" },
-        // Sri Aurobindo
-        { text: "All life is yoga.", author: "Sri Aurobindo" },
-        { text: "The evolution of consciousness is the real evolution.", author: "Sri Aurobindo" },
-        // Swami Vivekananda
-        { text: "Arise, awake, and stop not till the goal is reached.", author: "Swami Vivekananda" },
-        { text: "You cannot believe in God until you believe in yourself.", author: "Swami Vivekananda" }
-    ];
-
-    // Shuffle the array so the quotes appear in random order each time
-    function shuffleArray(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    let quotes = shuffleArray([...fullQuotesList]);
-    let currentIndex = 0;
-
-    function updateQuoteDisplay() {
-        const quote = quotes[currentIndex];
-        const quoteText = document.getElementById('quoteText');
-        const quoteAuthor = document.getElementById('quoteAuthor');
-        if (quoteText && quoteAuthor) {
-            quoteText.innerHTML = `“${quote.text}”`;
-            quoteAuthor.innerHTML = `— ${quote.author}`;
-        }
-    }
-
-    function nextQuote() {
-        currentIndex = (currentIndex + 1) % quotes.length;
-        updateQuoteDisplay();
-    }
-
-    function prevQuote() {
-        currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
-        updateQuoteDisplay();
-    }
-
-    function saveCurrentQuote() {
-        const quote = quotes[currentIndex];
-        if (typeof window.saveQuoteToBoth === 'function') {
-            window.saveQuoteToBoth(quote.text, quote.author);
-        } else {
-            alert("Save function not available – please ensure the main script is loaded.");
-        }
-    }
-
-    // Initialise when DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-        updateQuoteDisplay();
-        const prevBtn = document.getElementById('prevLibQuote');
-        const nextBtn = document.getElementById('nextLibQuote');
-        const saveBtn = document.getElementById('saveLibQuoteBtn');
-        if (prevBtn) prevBtn.addEventListener('click', prevQuote);
-        if (nextBtn) nextBtn.addEventListener('click', nextQuote);
-        if (saveBtn) saveBtn.addEventListener('click', saveCurrentQuote);
-    });
-
-    // Shuffle the array (Fisher-Yates)
-    function shuffleArray(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    // Randomly shuffled quotes
-    let quotes = shuffleArray([...fullQuotesList]);
-    let currentIndex = 0;
-
-    function updateQuoteDisplay() {
-        const quote = quotes[currentIndex];
-        const quoteText = document.getElementById('quoteText');
-        const quoteAuthor = document.getElementById('quoteAuthor');
-        if (quoteText && quoteAuthor) {
-            quoteText.innerHTML = `“${quote.text}”`;
-            quoteAuthor.innerHTML = `— ${quote.author}`;
-        }
-    }
-
-    function nextQuote() {
-        currentIndex = (currentIndex + 1) % quotes.length;
-        updateQuoteDisplay();
-    }
-
-    function prevQuote() {
-        currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
-        updateQuoteDisplay();
-    }
-
-    function saveCurrentQuote() {
-        const quote = quotes[currentIndex];
-        if (typeof window.saveQuoteToBoth === 'function') {
-            window.saveQuoteToBoth(quote.text, quote.author);
-        } else {
-            alert("Save function not available – please ensure the main script is loaded.");
-        }
-    }
-
-    // Initialise when DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-        updateQuoteDisplay();
-        const prevBtn = document.getElementById('prevLibQuote');
-        const nextBtn = document.getElementById('nextLibQuote');
-        const saveBtn = document.getElementById('saveLibQuoteBtn');
-        if (prevBtn) prevBtn.addEventListener('click', prevQuote);
-        if (nextBtn) nextBtn.addEventListener('click', nextQuote);
-        if (saveBtn) saveBtn.addEventListener('click', saveCurrentQuote);
-    });
-        </script>
-
-        
         <!-- DIARY, TIMER, PLAN, PROFILE, ENHANCED -->
         <div id="diaryView" class="hidden diary-section glass-card view-container"><h2>🌙 cosmic diary</h2><textarea id="diaryEntry" rows="3" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:28px; padding:1rem; margin:1rem 0;"></textarea><button class="btn-primary" id="saveDiary">save reflection</button><div id="diaryList" style="margin-top:2rem; text-align:left;"></div></div>
         
@@ -1926,28 +1649,229 @@
         document.getElementById('showArchetypeBtn').addEventListener('click', () => { document.getElementById('professionSelectionView').classList.remove('hidden'); document.getElementById('recommendedTechniquesView').classList.add('hidden'); document.getElementById('allTechniquesView').classList.add('hidden'); });
         document.getElementById('showAllTechBtn').addEventListener('click', () => { document.getElementById('professionSelectionView').classList.add('hidden'); document.getElementById('recommendedTechniquesView').classList.add('hidden'); document.getElementById('allTechniquesView').classList.remove('hidden'); const grid = document.getElementById('allTechniquesGrid'); grid.innerHTML = ''; Object.values(techniques).forEach(t => grid.appendChild(createTechCard(t, true))); const searchInput = document.getElementById('techSearchInput'); searchInput.oninput = () => { const term = searchInput.value.toLowerCase(); grid.innerHTML = ''; Object.values(techniques).filter(t => t.name.toLowerCase().includes(term) || t.category.includes(term)).forEach(t => grid.appendChild(createTechCard(t, true))); }; });
         
-        // ==================== QUOTES ====================
-        const quotesLibrary = [
-            { text: "The mind is everything. What you think you become.", author: "Buddha" },
-            { text: "Meditation is not a way to make your mind quiet. It is a way to enter into the quiet that is already there.", author: "Osho" },
-            { text: "The cosmos is within us. We are made of star-stuff.", author: "Carl Sagan" },
-            { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
-            { text: "The quieter you become, the more you can hear.", author: "Rumi" },
-            { text: "You are the sky. Everything else is just the weather.", author: "Pema Chödrön" },
-            { text: "Let go of the battle. Breathe quietly and let it be.", author: "Thich Nhat Hanh" },
-            { text: "The present moment is filled with joy and happiness.", author: "Thich Nhat Hanh" }
+        // ==================== QUOTES (RICH COLLECTION) ====================
+        const fullQuotesList = [
+            // Gautama Buddha
+            { text: "Three things cannot be long hidden: the sun, the moon, and the truth.", author: "Buddha" },
+            { text: "Peace comes from within. Do not seek it without.", author: "Buddha" },
+            // Mahavira
+            { text: "All living beings long to live. None wishes to suffer; therefore do not harm any living being.", author: "Mahavira" },
+            { text: "A man is seated on top of a tree in the midst of a burning forest. He sees all living beings perish. But he does not realize that the same fate is soon to overtake him also.", author: "Mahavira" },
+            // Lao Tzu
+            { text: "The journey of a thousand miles begins with a single step.", author: "Lao Tzu" },
+            { text: "When I let go of what I am, I become what I might be.", author: "Lao Tzu" },
+            // Zhuangzi
+            { text: "Happiness is the absence of the striving for happiness.", author: "Zhuangzi" },
+            { text: "Flow with whatever may happen and let your mind be free.", author: "Zhuangzi" },
+            // Bodhidharma
+            { text: "The mind is the Buddha, and the Buddha is the mind.", author: "Bodhidharma" },
+            { text: "To find a Buddha, you must see your nature.", author: "Bodhidharma" },
+            // Kabir
+            { text: "Where do you search me? I am with you.", author: "Kabir" },
+            { text: "The river that flows in you also flows in me.", author: "Kabir" },
+            // Guru Nanak
+            { text: "There is no Hindu, there is no Muslim.", author: "Guru Nanak" },
+            { text: "Truth is high, but higher still is truthful living.", author: "Guru Nanak" },
+            // Meera Bai
+            { text: "I have found the one whom my soul loves.", author: "Meera Bai" },
+            { text: "Mine is the dark one, the flute player.", author: "Meera Bai" },
+            // Ramakrishna
+            { text: "As many faiths, so many paths.", author: "Ramakrishna" },
+            { text: "God can be realized through all religions.", author: "Ramakrishna" },
+            // Ramana Maharshi
+            { text: "Your own Self-realization is the greatest service you can render the world.", author: "Ramana Maharshi" },
+            { text: "Silence is the most powerful teaching.", author: "Ramana Maharshi" },
+            // Socrates
+            { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" },
+            { text: "An unexamined life is not worth living.", author: "Socrates" },
+            // Plato
+            { text: "The beginning is the most important part of the work.", author: "Plato" },
+            { text: "Wise men speak because they have something to say; fools because they have to say something.", author: "Plato" },
+            // Aristotle
+            { text: "Knowing yourself is the beginning of all wisdom.", author: "Aristotle" },
+            { text: "It is the mark of an educated mind to be able to entertain a thought without accepting it.", author: "Aristotle" },
+            // Heraclitus
+            { text: "No man ever steps in the same river twice.", author: "Heraclitus" },
+            { text: "The only constant in life is change.", author: "Heraclitus" },
+            // Friedrich Nietzsche
+            { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche" },
+            { text: "Become who you are.", author: "Friedrich Nietzsche" },
+            // Søren Kierkegaard
+            { text: "Life can only be understood backwards; but it must be lived forwards.", author: "Søren Kierkegaard" },
+            { text: "Anxiety is the dizziness of freedom.", author: "Søren Kierkegaard" },
+            // Jean-Paul Sartre
+            { text: "Man is condemned to be free.", author: "Jean-Paul Sartre" },
+            { text: "Freedom is what you do with what’s been done to you.", author: "Jean-Paul Sartre" },
+            // Martin Heidegger
+            { text: "The most thought-provoking thing in our thought-provoking time is that we are still not thinking.", author: "Martin Heidegger" },
+            { text: "Every man is born as many men and dies as a single one.", author: "Martin Heidegger" },
+            // Bertrand Russell
+            { text: "The whole problem with the world is that fools and fanatics are always so certain of themselves.", author: "Bertrand Russell" },
+            { text: "The good life is one inspired by love and guided by knowledge.", author: "Bertrand Russell" },
+            // Ludwig Wittgenstein
+            { text: "The limits of my language mean the limits of my world.", author: "Ludwig Wittgenstein" },
+            { text: "Whereof one cannot speak, thereof one must be silent.", author: "Ludwig Wittgenstein" },
+            // Jesus
+            { text: "The kingdom of God is within you.", author: "Jesus" },
+            { text: "Love your neighbor as yourself.", author: "Jesus" },
+            // Krishna (Bhagavad Gita)
+            { text: "You have the right to perform your duty, but not to the fruits of your actions.", author: "Krishna" },
+            { text: "Whenever righteousness declines and unrighteousness rises, I manifest myself.", author: "Krishna" },
+            // Patanjali
+            { text: "Yoga is the cessation of the fluctuations of the mind.", author: "Patanjali" },
+            { text: "When the mind becomes clear and calm, the Self reveals itself.", author: "Patanjali" },
+            // Adi Shankara
+            { text: "Brahman alone is real; the world is an appearance.", author: "Adi Shankara" },
+            { text: "The Self is not born, nor does it die.", author: "Adi Shankara" },
+            // Chaitanya Mahaprabhu
+            { text: "Chant the holy name of the Lord and be happy.", author: "Chaitanya Mahaprabhu" },
+            { text: "Humility, tolerance, and respect for all beings lead one closer to God.", author: "Chaitanya Mahaprabhu" },
+            // Rabindranath Tagore
+            { text: "Faith is the bird that feels the light when the dawn is still dark.", author: "Rabindranath Tagore" },
+            { text: "Let your life lightly dance on the edges of time like dew on the tip of a leaf.", author: "Rabindranath Tagore" },
+            // Kahlil Gibran
+            { text: "Your children are not your children; they are the sons and daughters of life’s longing for itself.", author: "Kahlil Gibran" },
+            { text: "Out of suffering have emerged the strongest souls.", author: "Kahlil Gibran" },
+            // Mahatma Gandhi
+            { text: "What you seek is seeking you.", author: "Mahatma Gandhi" },
+            { text: "Where there is love, there is life.", author: "Mahatma Gandhi" },
+            // William Blake
+            { text: "If the doors of perception were cleansed everything would appear to man as it is: infinite.", author: "William Blake" },
+            { text: "Exuberance is beauty.", author: "William Blake" },
+            // Fyodor Dostoevsky
+            { text: "The mystery of human existence lies not in just staying alive, but in finding something to live for.", author: "Fyodor Dostoevsky" },
+            { text: "The soul is healed by being with children.", author: "Fyodor Dostoevsky" },
+            // Leo Tolstoy
+            { text: "Everyone thinks of changing the world, but no one thinks of changing himself.", author: "Leo Tolstoy" },
+            { text: "The two most powerful warriors are patience and time.", author: "Leo Tolstoy" },
+            // G. I. Gurdjieff
+            { text: "Without self-knowledge, without understanding the working and functions of his machine, man cannot be free.", author: "G. I. Gurdjieff" },
+            { text: "Man is asleep. He lives in sleep and dies in sleep.", author: "G. I. Gurdjieff" },
+            { text: "Remember yourself always and everywhere.", author: "G. I. Gurdjieff" },
+            { text: "Man is given a limited quantity of energy.", author: "G. I. Gurdjieff" },
+            // P. D. Ouspensky
+            { text: "Man does not remember himself; he is always lost in what he is doing.", author: "P. D. Ouspensky" },
+            { text: "The greatest barrier to consciousness is the belief that one is already conscious.", author: "P. D. Ouspensky" },
+            // Albert Einstein
+            { text: "Imagination is more important than knowledge.", author: "Albert Einstein" },
+            { text: "The most beautiful thing we can experience is the mysterious.", author: "Albert Einstein" },
+            // Charles Darwin
+            { text: "It is not the strongest of the species that survives, nor the most intelligent, but the one most responsive to change.", author: "Charles Darwin" },
+            { text: "Ignorance more frequently begets confidence than does knowledge.", author: "Charles Darwin" },
+            // Sigmund Freud
+            { text: "Unexpressed emotions will never die; they are buried alive and will come forth later in uglier ways.", author: "Sigmund Freud" },
+            { text: "The mind is like an iceberg; it floats with one-seventh of its bulk above water.", author: "Sigmund Freud" },
+            // Carl Jung
+            { text: "Until you make the unconscious conscious, it will direct your life and you will call it fate.", author: "Carl Jung" },
+            { text: "Who looks outside, dreams; who looks inside, awakens.", author: "Carl Jung" },
+            // Jiddu Krishnamurti
+            { text: "It is no measure of health to be well adjusted to a profoundly sick society.", author: "Jiddu Krishnamurti" },
+            { text: "Truth is a pathless land.", author: "Jiddu Krishnamurti" },
+            { text: "The ability to observe without evaluating is the highest form of intelligence.", author: "Jiddu Krishnamurti" },
+            { text: "Freedom from the known is the beginning of intelligence.", author: "Jiddu Krishnamurti" },
+            // Pablo Picasso
+            { text: "Every child is an artist; the problem is how to remain an artist once we grow up.", author: "Pablo Picasso" },
+            { text: "Everything you can imagine is real.", author: "Pablo Picasso" },
+            // Vincent van Gogh
+            { text: "I dream my painting and then I paint my dream.", author: "Vincent van Gogh" },
+            { text: "Great things are done by a series of small things brought together.", author: "Vincent van Gogh" },
+            // Michelangelo
+            { text: "The greater danger for most of us lies not in setting our aim too high and falling short, but in setting it too low and achieving our mark.", author: "Michelangelo" },
+            { text: "I saw the angel in the marble and carved until I set him free.", author: "Michelangelo" },
+            // Leonardo da Vinci
+            { text: "Simplicity is the ultimate sophistication.", author: "Leonardo da Vinci" },
+            { text: "Learning never exhausts the mind.", author: "Leonardo da Vinci" },
+            // Karl Marx
+            { text: "The philosophers have only interpreted the world in various ways; the point, however, is to change it.", author: "Karl Marx" },
+            { text: "History repeats itself, first as tragedy, second as farce.", author: "Karl Marx" },
+            // Mikhail Bakunin
+            { text: "The urge to destroy is also a creative urge.", author: "Mikhail Bakunin" },
+            { text: "Freedom without socialism is privilege and injustice.", author: "Mikhail Bakunin" },
+            // Grigori Rasputin
+            { text: "It is necessary to sin in order to know forgiveness.", author: "Grigori Rasputin" },
+            { text: "Without suffering there is no understanding.", author: "Grigori Rasputin" },
+            // Meher Baba
+            { text: "Don’t worry, be happy.", author: "Meher Baba" },
+            { text: "Love God and find Him within yourself.", author: "Meher Baba" },
+            // Sri Aurobindo
+            { text: "All life is yoga.", author: "Sri Aurobindo" },
+            { text: "The evolution of consciousness is the real evolution.", author: "Sri Aurobindo" },
+            // Swami Vivekananda
+            { text: "Arise, awake, and stop not till the goal is reached.", author: "Swami Vivekananda" },
+            { text: "You cannot believe in God until you believe in yourself.", author: "Swami Vivekananda" }
         ];
-        for (let i=0;i<50;i++) quotesLibrary.push({ text: `Wisdom ${i+9}: Awareness is the ultimate meditation.`, author: "Ancient Sage" });
-        let homeIdx=0, libIdx=0;
-        function updateHomeQuote() { const q = quotesLibrary[homeIdx]; document.getElementById('homeQuoteText').innerHTML = `“${q.text}”`; document.getElementById('homeQuoteAuthor').innerHTML = `— ${q.author}`; }
-        function updateLibQuote() { const q = quotesLibrary[libIdx]; document.getElementById('quoteContainer').innerHTML = `<div class="quote-text-large">“${q.text}”</div><div class="quote-author">— ${q.author}</div>`; }
-        document.getElementById('saveHomeQuoteBtn').addEventListener('click', () => { const q = quotesLibrary[homeIdx]; saveQuoteToBoth(q.text, q.author); });
-        document.getElementById('saveLibQuoteBtn').addEventListener('click', () => { const q = quotesLibrary[libIdx]; saveQuoteToBoth(q.text, q.author); });
-        document.getElementById('prevHomeQuote').addEventListener('click', () => { homeIdx = (homeIdx-1+quotesLibrary.length)%quotesLibrary.length; updateHomeQuote(); });
-        document.getElementById('nextHomeQuote').addEventListener('click', () => { homeIdx = (homeIdx+1)%quotesLibrary.length; updateHomeQuote(); });
-        document.getElementById('prevLibQuote').addEventListener('click', () => { libIdx = (libIdx-1+quotesLibrary.length)%quotesLibrary.length; updateLibQuote(); });
-        document.getElementById('nextLibQuote').addEventListener('click', () => { libIdx = (libIdx+1)%quotesLibrary.length; updateLibQuote(); });
-        updateHomeQuote(); updateLibQuote();
+
+        // Shuffle function
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Create a shuffled copy for the library
+        let shuffledQuotes = shuffleArray([...fullQuotesList]);
+        let currentLibIndex = 0;
+
+        // For the home view, we'll maintain a separate random index (or also use shuffled)
+        let homeQuotes = shuffleArray([...fullQuotesList]);
+        let currentHomeIndex = 0;
+
+        function updateHomeQuote() {
+            const q = homeQuotes[currentHomeIndex];
+            document.getElementById('homeQuoteText').innerHTML = `“${q.text}”`;
+            document.getElementById('homeQuoteAuthor').innerHTML = `— ${q.author}`;
+        }
+
+        function updateLibQuote() {
+            const q = shuffledQuotes[currentLibIndex];
+            document.getElementById('quoteText').innerHTML = `“${q.text}”`;
+            document.getElementById('quoteAuthor').innerHTML = `— ${q.author}`;
+        }
+
+        function nextHomeQuote() {
+            currentHomeIndex = (currentHomeIndex + 1) % homeQuotes.length;
+            updateHomeQuote();
+        }
+
+        function prevHomeQuote() {
+            currentHomeIndex = (currentHomeIndex - 1 + homeQuotes.length) % homeQuotes.length;
+            updateHomeQuote();
+        }
+
+        function nextLibQuote() {
+            currentLibIndex = (currentLibIndex + 1) % shuffledQuotes.length;
+            updateLibQuote();
+        }
+
+        function prevLibQuote() {
+            currentLibIndex = (currentLibIndex - 1 + shuffledQuotes.length) % shuffledQuotes.length;
+            updateLibQuote();
+        }
+
+        function saveCurrentHomeQuote() {
+            const q = homeQuotes[currentHomeIndex];
+            saveQuoteToBoth(q.text, q.author);
+        }
+
+        function saveCurrentLibQuote() {
+            const q = shuffledQuotes[currentLibIndex];
+            saveQuoteToBoth(q.text, q.author);
+        }
+
+        // Attach events
+        document.getElementById('prevHomeQuote').addEventListener('click', prevHomeQuote);
+        document.getElementById('nextHomeQuote').addEventListener('click', nextHomeQuote);
+        document.getElementById('saveHomeQuoteBtn').addEventListener('click', saveCurrentHomeQuote);
+
+        document.getElementById('prevLibQuote').addEventListener('click', prevLibQuote);
+        document.getElementById('nextLibQuote').addEventListener('click', nextLibQuote);
+        document.getElementById('saveLibQuoteBtn').addEventListener('click', saveCurrentLibQuote);
+
+        // Initial display
+        updateHomeQuote();
+        updateLibQuote();
         
         // ==================== DIARY ====================
         document.getElementById('saveDiary').addEventListener('click',()=>{ const txt = document.getElementById('diaryEntry').value.trim(); if(txt){ user.diary.unshift({ date: new Date(), text: txt }); saveAll(); renderDiary(); renderProfileSections(); document.getElementById('diaryEntry').value=''; showToast('saved'); } });
