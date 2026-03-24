@@ -267,22 +267,69 @@
             margin-right: auto;
             word-wrap: break-word;
         }
-        @media (min-width: 768px) {
-            .quote-text-large { font-size: 1.8rem; max-width: 80%; }
-        }
-        .quote-author {
-            color: var(--accent-secondary);
-            font-size: 1.1rem;
-            margin-top: 0.5rem;
-        }
-        .quote-save {
-            margin-top: 1rem;
-        }
-        .quote-nav {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
+        @media (max-width: 640px) {
+    .app-container {
+        padding: 1rem;
+    }
+    .glass-card {
+        padding: 1rem;
+    }
+    .quotes-home, .quote-card {
+        padding: 1rem;
+    }
+    .quote-text-large {
+        font-size: 1.2rem;
+        margin: 0.5rem 0;
+        padding: 0 0.5rem;
+    }
+    .profession-grid {
+        gap: 1rem;
+    }
+    .prof-card {
+        padding: 1rem 0.5rem;
+    }
+    .tech-card {
+        padding: 1rem;
+    }
+    .breath-card {
+        padding: 1rem;
+    }
+    .breath-ring {
+        width: 200px;
+        height: 200px;
+    }
+    .breath-inner-ring {
+        width: 120px;
+        height: 120px;
+    }
+    .breath-phase {
+        font-size: 1.8rem;
+    }
+    .breath-timer {
+        font-size: 1.5rem;
+    }
+    .timer-circle {
+        width: 160px;
+        height: 160px;
+    }
+    .timer-text {
+        font-size: 1.5rem;
+    }
+    .btn-primary, .btn-outline {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    .mudra-item {
+        padding: 0.2rem;
+    }
+    .mudra-svg svg {
+        width: 50px;
+        height: 50px;
+    }
+    .profile-list-item {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
         }
 
         /* Profession and techniques grid */
