@@ -882,71 +882,138 @@
         
         <!-- PROFILE -->
         <div id="profileView" class="hidden profile-section glass-card view-container"><h2>your profile</h2><div class="profile-tabs"><button class="tab-btn active" data-profile-tab="practiced">🧘 Practiced Techniques</button><button class="tab-btn" data-profile-tab="quotes">💬 Saved Quotes</button><button class="tab-btn" data-profile-tab="notes">📓 Notes & Diaries</button></div><div id="profilePracticed" class="profile-section-container active-tab"><div id="practicedList"></div></div><div id="profileQuotes" class="profile-section-container"><div id="savedQuotesList"></div></div><div id="profileNotes" class="profile-section-container"><div id="profileDiaryList"></div></div><div style="margin-top:2rem; text-align:center;"><button id="exportDataBtn" class="btn-outline"><i class="fas fa-download"></i> Export My Data (JSON)</button></div></div>
-        /* Enhance stats cards on mobile */
-.stats {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-}
-.stat-card {
-    flex: 1;
-    min-width: 100px;
-    text-align: center;
-    padding: 1rem;
-}
+       
+<!-- COSMIC ME DASHBOARD -->
 
-/* Calendar tracker improvements */
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
-    background: rgba(0,0,0,0.2);
-    border-radius: 24px;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-.calendar-day {
-    text-align: center;
-    padding: 0.75rem 0.25rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    border-radius: 12px;
-    transition: background 0.2s;
-    cursor: pointer;
-}
-.calendar-day.weekday {
-    font-weight: 600;
-    color: var(--accent-secondary);
-    cursor: default;
-}
-.calendar-day.practiced {
-    background: var(--accent);
-    color: white;
-    box-shadow: 0 0 8px var(--accent-glow);
-}
-.calendar-day.today {
-    border: 2px solid var(--accent-secondary);
-}
+<div id="enhancedView" class="hidden profile-section glass-card view-container">
+    <h2>🌌 cosmic me · stellar insights</h2>
+    <div class="stats-grid">
+        <div class="stat-card glass-card">
+            <div class="stat-value" id="enhTotalPractices">0</div>
+            <div class="stat-label">practices</div>
+        </div>
+        <div class="stat-card glass-card">
+            <div class="stat-value" id="enhTotalMinutes">0</div>
+            <div class="stat-label">minutes</div>
+        </div>
+        <div class="stat-card glass-card">
+            <div class="stat-value" id="enhStreak">0</div>
+            <div class="stat-label">streak</div>
+        </div>
+    </div>
 
-/* Mobile adjustments */
-@media (max-width: 640px) {
-    .calendar-grid {
-        gap: 0.25rem;
-        padding: 0.75rem;
-    }
-    .calendar-day {
-        padding: 0.5rem 0.1rem;
-        font-size: 0.75rem;
+    <div class="calendar-section">
+        <h3>📅 Practice Tracker</h3>
+        <div id="calendarTracker" class="calendar-grid"></div>
+    </div>
+
+    <div class="chart-section">
+        <h3>📊 Weekly Activity</h3>
+        <canvas id="progressChart" width="400" height="200" style="width:100%; max-width:500px; margin:1rem auto;"></canvas>
+    </div>
+
+    <div class="chart-section">
+        <h3>📈 Category Breakdown</h3>
+        <canvas id="categoryChart" width="400" height="200" style="width:100%; max-width:500px; margin:1rem auto;"></canvas>
+    </div>
+</div>
+
+<style>
+    /* Additional styling for the enhanced view */
+    .stats-grid {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 1.5rem 0;
     }
     .stat-card {
-        min-width: 80px;
-        padding: 0.75rem;
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+        padding: 1rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        transition: transform 0.2s;
     }
-    .stat-card span {
+    .stat-card:hover {
+        transform: translateY(-4px);
+    }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        line-height: 1.2;
+    }
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .calendar-section, .chart-section {
+        margin: 2rem 0;
+    }
+    .calendar-section h3, .chart-section h3 {
+        margin-bottom: 1rem;
         font-size: 1.2rem;
+        text-align: center;
     }
-}
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+        background: rgba(0,0,0,0.3);
+        border-radius: 24px;
+        padding: 1rem;
+        overflow-x: auto;
+    }
+    .calendar-day {
+        text-align: center;
+        padding: 0.5rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.2s;
+    }
+    .calendar-day.weekday {
+        font-weight: 600;
+        color: var(--accent-secondary);
+    }
+    .calendar-day.practiced {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 0 8px var(--accent-glow);
+    }
+    .calendar-day.today {
+        border: 2px solid var(--accent-secondary);
+    }
+    @media (max-width: 640px) {
+        .stats-grid {
+            gap: 0.8rem;
+        }
+        .stat-card {
+            padding: 0.8rem;
+            min-width: 80px;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+        }
+        .calendar-grid {
+            gap: 0.3rem;
+            padding: 0.8rem;
+        }
+        .calendar-day {
+            padding: 0.3rem;
+            font-size: 0.7rem;
+        }
+    }
+</style>
         
         <!-- STATS VIEW (Detailed Analytics) -->
         <div id="statsView" class="hidden profile-section glass-card view-container">
