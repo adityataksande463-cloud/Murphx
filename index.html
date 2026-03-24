@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Vigyan Bhairav | 112 Portals to Infinity</title>
-    <meta name="description" content="Gargantua black hole meditation experience with 112 authentic Tantra techniques, interactive breathwork, cosmic diary, wisdom quotes, and immersive visuals.">
+    <meta name="description" content="The ultimate meditation platform: 112 authentic Tantra techniques, breathwork, cosmic diary, wisdom quotes, live black hole background, and immersive tools.">
+    <meta name="theme-color" content="#050210">
+    <link rel="manifest" href="/manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -537,6 +539,49 @@
             font-weight: bold;
         }
 
+        /* Ambient sounds */
+        .ambient-panel {
+            background: rgba(0,0,0,0.4);
+            border-radius: 24px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .sound-btn {
+            background: none;
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            margin: 0.3rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sound-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Achievements */
+        .achievement-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .achievement-badge {
+            background: rgba(157,123,255,0.2);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .achievement-badge.locked {
+            opacity: 0.5;
+        }
+
         /* Modal */
         .modal {
             position: fixed;
@@ -622,8 +667,9 @@
             <div class="logo"><h1>VIGYAN BHAIRAV</h1><p>GARGANTUA · 112 PORTALS</p></div>
             <div class="nav">
                 <a data-view="home">Home</a><a data-view="techniques">Techniques</a><a data-view="breathwork">Breathwork</a>
-                <a data-view="quotes">Quotes Library</a><a data-view="diary">Diary</a><a data-view="timer">Timer</a>
+                <a data-view="quotes">Quotes</a><a data-view="diary">Diary</a><a data-view="timer">Timer</a>
                 <a data-view="plan">My Plan</a><a data-view="profile">Profile</a><a data-view="enhanced">Cosmic Me</a>
+                <a data-view="stats">Stats</a><a data-view="achievements">Achievements</a>
                 <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
                 <span class="greeting">Hi, Seeker</span>
             </div>
@@ -657,7 +703,7 @@
             <div id="recommendedTechniquesView" class="hidden"><div class="glass-card" style="padding:1rem; display:flex; justify-content:space-between; align-items:center;"><h3 id="selectedProfessionTitle">Recommended Techniques</h3><button class="btn-outline" id="backToProfessionsBtn"><i class="fas fa-arrow-left"></i> Back</button></div><div class="tech-grid" id="techniquesGrid"></div></div>
         </div>
 
-        <!-- ENHANCED BREATHWORK VIEW -->
+        <!-- BREATHWORK VIEW -->
         <div id="breathworkView" class="hidden breathwork-section glass-card view-container">
             <h2>🌬️ Sacred Breath Alchemy</h2>
             <div class="breath-container">
@@ -691,15 +737,78 @@
         <!-- DIARY, TIMER, PLAN, PROFILE, ENHANCED -->
         <div id="diaryView" class="hidden diary-section glass-card view-container"><h2>🌙 cosmic diary</h2><textarea id="diaryEntry" rows="3" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:28px; padding:1rem; margin:1rem 0;"></textarea><button class="btn-primary" id="saveDiary">save reflection</button><div id="diaryList" style="margin-top:2rem; text-align:left;"></div></div>
         
-        <!-- TIMER with progress circle -->
-        <div id="timerView" class="hidden timer-section glass-card view-container"><h2>⏱️ meditation timer</h2><div class="timer-circle"><svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200"><circle class="timer-bg" cx="100" cy="100" r="88" stroke="currentColor" fill="none"/><circle class="timer-progress" cx="100" cy="100" r="88" stroke="var(--accent-secondary)" fill="none" stroke-dasharray="553" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerDisplay">05:00</div></div><div style="display:flex; gap:1rem; justify-content:center; margin:1rem 0;"><button class="timer-pill btn-outline" data-min="5">5 min</button><button class="timer-pill btn-outline" data-min="10">10 min</button><button class="timer-pill btn-outline" data-min="15">15 min</button><button class="timer-pill btn-outline" data-min="20">20 min</button><input type="number" id="customMinutes" placeholder="custom min" min="1" style="width:90px; background:rgba(0,0,0,0.5); border-radius:40px; padding:0.3rem; text-align:center;"></div><div style="display:flex; gap:1rem; justify-content:center;"><button class="btn-primary" id="startTimer">start</button><button class="btn-outline" id="pauseTimer">pause</button><button class="btn-outline" id="resetTimer">reset</button></div><p id="timerMsg"></p></div>
+        <!-- TIMER with progress circle and ambient sounds -->
+        <div id="timerView" class="hidden timer-section glass-card view-container">
+            <h2>⏱️ meditation timer</h2>
+            <div class="timer-circle">
+                <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
+                    <circle class="timer-bg" cx="100" cy="100" r="88" stroke="currentColor" fill="none"/>
+                    <circle class="timer-progress" cx="100" cy="100" r="88" stroke="var(--accent-secondary)" fill="none" stroke-dasharray="553" stroke-dashoffset="0"/>
+                </svg>
+                <div class="timer-text" id="timerDisplay">05:00</div>
+            </div>
+            <div style="display:flex; gap:1rem; justify-content:center; margin:1rem 0;">
+                <button class="timer-pill btn-outline" data-min="5">5 min</button>
+                <button class="timer-pill btn-outline" data-min="10">10 min</button>
+                <button class="timer-pill btn-outline" data-min="15">15 min</button>
+                <button class="timer-pill btn-outline" data-min="20">20 min</button>
+                <input type="number" id="customMinutes" placeholder="custom min" min="1" style="width:90px; background:rgba(0,0,0,0.5); border-radius:40px; padding:0.3rem; text-align:center;">
+            </div>
+            <div style="display:flex; gap:1rem; justify-content:center; margin-bottom:1rem;">
+                <button class="btn-primary" id="startTimer">start</button>
+                <button class="btn-outline" id="pauseTimer">pause</button>
+                <button class="btn-outline" id="resetTimer">reset</button>
+            </div>
+            <div class="ambient-panel">
+                <h4>🎵 Ambient Sounds</h4>
+                <button class="sound-btn" data-sound="rain">🌧️ Rain</button>
+                <button class="sound-btn" data-sound="forest">🌲 Forest</button>
+                <button class="sound-btn" data-sound="ocean">🌊 Ocean</button>
+                <button class="sound-btn" data-sound="fire">🔥 Fire</button>
+                <button class="sound-btn" data-sound="silence">🔇 Silence</button>
+            </div>
+            <p id="timerMsg"></p>
+        </div>
         
         <div id="planView" class="hidden plan-section glass-card view-container"><h2>📋 my practice plan</h2><div id="planItems"></div><div>total: <span id="planTotal">0</span> min</div></div>
         
-        <!-- PROFILE - new live sections -->
-        <div id="profileView" class="hidden profile-section glass-card view-container"><h2>your profile</h2><div class="profile-tabs"><button class="tab-btn active" data-profile-tab="practiced">🧘 Practiced Techniques</button><button class="tab-btn" data-profile-tab="quotes">💬 Saved Quotes</button><button class="tab-btn" data-profile-tab="notes">📓 Notes & Diaries</button></div><div id="profilePracticed" class="profile-section-container active-tab"><div id="practicedList"></div></div><div id="profileQuotes" class="profile-section-container"><div id="savedQuotesList"></div></div><div id="profileNotes" class="profile-section-container"><div id="profileDiaryList"></div></div></div>
+        <!-- PROFILE -->
+        <div id="profileView" class="hidden profile-section glass-card view-container"><h2>your profile</h2><div class="profile-tabs"><button class="tab-btn active" data-profile-tab="practiced">🧘 Practiced Techniques</button><button class="tab-btn" data-profile-tab="quotes">💬 Saved Quotes</button><button class="tab-btn" data-profile-tab="notes">📓 Notes & Diaries</button></div><div id="profilePracticed" class="profile-section-container active-tab"><div id="practicedList"></div></div><div id="profileQuotes" class="profile-section-container"><div id="savedQuotesList"></div></div><div id="profileNotes" class="profile-section-container"><div id="profileDiaryList"></div></div><div style="margin-top:2rem; text-align:center;"><button id="exportDataBtn" class="btn-outline"><i class="fas fa-download"></i> Export My Data (JSON)</button></div></div>
         
-        <div id="enhancedView" class="hidden profile-section glass-card view-container"><h2>cosmic me · stellar insights</h2><div class="stats" style="display:flex; gap:1rem; justify-content:center;"><div class="stat-card glass-card" style="padding:1rem;"><span id="enhTotalPractices">0</span><div>practices</div></div><div class="stat-card glass-card" style="padding:1rem;"><span id="enhTotalMinutes">0</span><div>minutes</div></div><div class="stat-card glass-card" style="padding:1rem;"><span id="enhStreak">0</span><div>streak</div></div></div><h3>📅 Practice Tracker</h3><div id="calendarTracker" class="calendar-grid"></div><canvas id="progressChart" width="400" height="200" style="width:100%; max-width:500px; margin:1rem auto;"></canvas></div>
+        <!-- COSMIC ME (Enhanced Dashboard) -->
+        <div id="enhancedView" class="hidden profile-section glass-card view-container">
+            <h2>cosmic me · stellar insights</h2>
+            <div class="stats" style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+                <div class="stat-card glass-card" style="padding:1rem;"><span id="enhTotalPractices">0</span><div>practices</div></div>
+                <div class="stat-card glass-card" style="padding:1rem;"><span id="enhTotalMinutes">0</span><div>minutes</div></div>
+                <div class="stat-card glass-card" style="padding:1rem;"><span id="enhStreak">0</span><div>streak</div></div>
+            </div>
+            <h3>📅 Practice Tracker</h3>
+            <div id="calendarTracker" class="calendar-grid"></div>
+            <canvas id="progressChart" width="400" height="200" style="width:100%; max-width:500px; margin:1rem auto;"></canvas>
+            <h3>📊 Category Breakdown</h3>
+            <canvas id="categoryChart" width="400" height="200" style="width:100%; max-width:500px; margin:1rem auto;"></canvas>
+        </div>
+        
+        <!-- STATS VIEW (Detailed Analytics) -->
+        <div id="statsView" class="hidden profile-section glass-card view-container">
+            <h2>📈 Advanced Analytics</h2>
+            <div class="stats-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; margin:1rem 0;">
+                <div class="glass-card" style="padding:1rem;"><h3>Total Practices</h3><p id="statTotalPractices">0</p></div>
+                <div class="glass-card" style="padding:1rem;"><h3>Total Minutes</h3><p id="statTotalMinutes">0</p></div>
+                <div class="glass-card" style="padding:1rem;"><h3>Current Streak</h3><p id="statStreak">0</p></div>
+                <div class="glass-card" style="padding:1rem;"><h3>Favorite Category</h3><p id="statFavoriteCategory">-</p></div>
+                <div class="glass-card" style="padding:1rem;"><h3>Most Practiced Technique</h3><p id="statMostPracticed">-</p></div>
+                <div class="glass-card" style="padding:1rem;"><h3>Average Session (min)</h3><p id="statAvgSession">0</p></div>
+            </div>
+            <div style="text-align:center; margin-top:1rem;"><button id="exportCSVBtn" class="btn-outline"><i class="fas fa-file-csv"></i> Export as CSV</button></div>
+        </div>
+        
+        <!-- ACHIEVEMENTS VIEW -->
+        <div id="achievementsView" class="hidden profile-section glass-card view-container">
+            <h2>🏆 Achievements</h2>
+            <div id="achievementsList" class="achievement-grid"></div>
+        </div>
         
         <footer><div>© 2026 · 112 portals of imagination</div><div><a data-view="home">Home</a> <a data-view="techniques">Techniques</a> <a data-view="breathwork">Breathwork</a> <a data-view="enhanced">Cosmic Me</a></div></footer>
     </div>
@@ -766,13 +875,12 @@
         const blackHole = new THREE.Mesh(coreGeo, coreMat);
         scene.add(blackHole);
         
-        // Inner photon ring
+        // Photon rings
         const innerRingGeo = new THREE.TorusGeometry(1.25, 0.055, 128, 260);
         const innerRingMat = new THREE.MeshStandardMaterial({ color: 0xff8844, emissive: 0xff4422, emissiveIntensity: 0.6, transparent: true, blending: THREE.AdditiveBlending });
         const innerRing = new THREE.Mesh(innerRingGeo, innerRingMat);
         scene.add(innerRing);
         
-        // Outer photon ring
         const outerRingGeo = new THREE.TorusGeometry(1.48, 0.045, 128, 280);
         const outerRingMat = new THREE.MeshStandardMaterial({ color: 0xffaa77, emissive: 0xff5533, emissiveIntensity: 0.45, transparent: true, blending: THREE.AdditiveBlending });
         const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
@@ -931,7 +1039,7 @@
             techniques[i] = { id:i, name, sanskrit, category:cat, essence, wisdom, posture, mudra, breath, duration, steps, benefits };
         }
         
-        // Override a few key ones for richness
+        // Override key techniques
         techniques[1] = { id:1, name:"Witnessing the Breath", sanskrit:"Śvāsa–Praśvāsa Dharana", category:"breath", essence:"Breath is the bridge between body and mind.", wisdom:"Osho: 'Just watch the breath. Don't control it.'", posture:"Sukhasana", mudra:"Chin mudra", breath:"Natural", duration:"10-20 min", steps:["Sit comfortably.","Close eyes.","Observe natural breath.","Return when distracted."], benefits:{ student:"concentration", employee:"stress relief", seeker:"calm mind" } };
         techniques[4] = { id:4, name:"Concentration on the Third Eye", sanskrit:"Bhrūmadhya Dharana", category:"gaze", essence:"Attention becomes powerful when gathered in one point.", wisdom:"Osho: 'Between the eyebrows is the center of intuition.'", posture:"Comfortable", mudra:"Jnana mudra", breath:"Natural", duration:"10-20 min", steps:["Close eyes.","Focus between eyebrows.","Return when distracted."], benefits:{ student:"memory", employee:"stability", seeker:"meditation depth" } };
         
@@ -990,7 +1098,8 @@
             xp: parseInt(localStorage.getItem('xp')) || 450,
             practiceDays: JSON.parse(localStorage.getItem('practiceDays')) || {},
             practicedTechniques: JSON.parse(localStorage.getItem('practicedTechs')) || [],
-            savedQuotes: JSON.parse(localStorage.getItem('savedQuotes')) || []
+            savedQuotes: JSON.parse(localStorage.getItem('savedQuotes')) || [],
+            achievements: JSON.parse(localStorage.getItem('achievements')) || {}
         };
         function saveAll() {
             localStorage.setItem('tp', user.totalPractices);
@@ -1004,16 +1113,86 @@
             localStorage.setItem('practiceDays', JSON.stringify(user.practiceDays));
             localStorage.setItem('practicedTechs', JSON.stringify(user.practicedTechniques));
             localStorage.setItem('savedQuotes', JSON.stringify(user.savedQuotes));
+            localStorage.setItem('achievements', JSON.stringify(user.achievements));
             updateUI();
+            checkAchievements();
+            updateStats();
         }
         function updateUI() {
             document.getElementById('enhTotalPractices').innerText = user.totalPractices;
             document.getElementById('enhTotalMinutes').innerText = user.totalMinutes;
             document.getElementById('enhStreak').innerText = user.streak;
+            document.getElementById('statTotalPractices').innerText = user.totalPractices;
+            document.getElementById('statTotalMinutes').innerText = user.totalMinutes;
+            document.getElementById('statStreak').innerText = user.streak;
             renderCalendar();
             renderProfileSections();
             renderPlan();
             renderDiary();
+            renderAchievements();
+            updateCharts();
+        }
+        function updateStats() {
+            // Calculate favorite category
+            const categoryCount = {};
+            user.practicedTechniques.forEach(p => {
+                const tech = techniques[p.id];
+                if(tech) {
+                    const cat = tech.category;
+                    categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+                }
+            });
+            let favCat = Object.keys(categoryCount).reduce((a,b) => categoryCount[a] > categoryCount[b] ? a : b, 'None');
+            document.getElementById('statFavoriteCategory').innerText = favCat !== 'None' ? favCat : '-';
+            
+            // Most practiced technique
+            const techCount = {};
+            user.practicedTechniques.forEach(p => {
+                techCount[p.name] = (techCount[p.name] || 0) + 1;
+            });
+            let mostPracticed = Object.keys(techCount).reduce((a,b) => techCount[a] > techCount[b] ? a : b, 'None');
+            document.getElementById('statMostPracticed').innerText = mostPracticed !== 'None' ? mostPracticed : '-';
+            
+            // Average session
+            let avg = user.practicedTechniques.length ? Math.round(user.totalMinutes / user.practicedTechniques.length) : 0;
+            document.getElementById('statAvgSession').innerText = avg;
+        }
+        function updateCharts() {
+            // Weekly chart
+            const ctx = document.getElementById('progressChart')?.getContext('2d');
+            if(ctx && window.progressChart) window.progressChart.destroy();
+            if(ctx) {
+                window.progressChart = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label:'minutes', data: getWeeklyMinutes(), borderColor:'#9d7bff', tension:0.3, fill:false }] },
+                    options: { responsive: true, maintainAspectRatio: true }
+                });
+            }
+            // Category breakdown
+            const catCtx = document.getElementById('categoryChart')?.getContext('2d');
+            if(catCtx && window.categoryChart) window.categoryChart.destroy();
+            if(catCtx) {
+                const catCount = {};
+                user.practicedTechniques.forEach(p => {
+                    const tech = techniques[p.id];
+                    if(tech) catCount[tech.category] = (catCount[tech.category] || 0) + 1;
+                });
+                window.categoryChart = new Chart(catCtx, {
+                    type: 'doughnut',
+                    data: { labels: Object.keys(catCount), datasets: [{ data: Object.values(catCount), backgroundColor: ['#9d7bff','#ffb3a0','#6b4eff','#ff8a6c','#c4b5fd'] }] },
+                    options: { responsive: true }
+                });
+            }
+        }
+        function getWeeklyMinutes() {
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const weekMinutes = [0,0,0,0,0,0,0];
+            user.practicedTechniques.forEach(p => {
+                const date = new Date(p.date);
+                const day = date.getDay();
+                weekMinutes[day] += p.minutes;
+            });
+            return weekMinutes;
         }
         function renderCalendar() {
             const container = document.getElementById('calendarTracker'); if(!container) return;
@@ -1047,6 +1226,7 @@
             user.practiceDays[new Date().toISOString().slice(0,10)] = true;
             saveAll();
             showToast(`🧘 Practiced: ${techName} +${minutes} min`);
+            if (Notification.permission === 'granted') new Notification('Practice Complete!', { body: `You completed ${techName} for ${minutes} minutes.` });
         }
         function saveQuoteToBoth(text, author) {
             user.savedQuotes.unshift({ text, author, date: new Date().toISOString() });
@@ -1074,6 +1254,81 @@
             });
             document.getElementById('planTotal').innerText = total;
         }
+        
+        // ==================== ACHIEVEMENTS ====================
+        const achievementsList = [
+            { id: 'first_practice', name: 'First Step', desc: 'Complete your first practice', condition: () => user.totalPractices >= 1 },
+            { id: 'seven_streak', name: '7-Day Streak', desc: 'Practice 7 days in a row', condition: () => user.streak >= 7 },
+            { id: 'hundred_practices', name: 'Century', desc: '100 total practices', condition: () => user.totalPractices >= 100 },
+            { id: 'thousand_minutes', name: 'Time Lord', desc: '1000 minutes of practice', condition: () => user.totalMinutes >= 1000 },
+            { id: 'master_of_breath', name: 'Master of Breath', desc: 'Complete 10 breathwork sessions', condition: () => user.practicedTechniques.filter(p => p.name.includes('Breathwork')).length >= 10 },
+            { id: 'wisdom_seeker', name: 'Wisdom Seeker', desc: 'Save 10 quotes', condition: () => user.savedQuotes.length >= 10 },
+            { id: 'technique_collector', name: 'Technique Collector', desc: 'Practice 20 different techniques', condition: () => new Set(user.practicedTechniques.map(p => p.id)).size >= 20 },
+            { id: 'dedicated', name: 'Dedicated', desc: 'Practice 30 days total', condition: () => Object.keys(user.practiceDays).length >= 30 }
+        ];
+        function checkAchievements() {
+            let changed = false;
+            achievementsList.forEach(ach => {
+                if (!user.achievements[ach.id] && ach.condition()) {
+                    user.achievements[ach.id] = { unlocked: true, date: new Date().toISOString() };
+                    changed = true;
+                    showToast(`🏆 Achievement Unlocked: ${ach.name}!`);
+                    if (Notification.permission === 'granted') new Notification('Achievement Unlocked!', { body: ach.name });
+                }
+            });
+            if (changed) saveAll();
+        }
+        function renderAchievements() {
+            const container = document.getElementById('achievementsList');
+            if (!container) return;
+            container.innerHTML = achievementsList.map(ach => {
+                const unlocked = user.achievements[ach.id];
+                return `<div class="achievement-badge ${!unlocked ? 'locked' : ''}"><i class="fas ${unlocked ? 'fa-trophy' : 'fa-lock'}"></i> ${ach.name}<small>${ach.desc}</small></div>`;
+            }).join('');
+        }
+        
+        // ==================== EXPORT DATA ====================
+        function exportData() {
+            const data = {
+                user: {
+                    totalPractices: user.totalPractices,
+                    totalMinutes: user.totalMinutes,
+                    streak: user.streak,
+                    practicedTechniques: user.practicedTechniques,
+                    savedQuotes: user.savedQuotes,
+                    diary: user.diary,
+                    plan: user.plan,
+                    favorites: user.favorites,
+                    practiceDays: user.practiceDays,
+                    achievements: user.achievements
+                },
+                exportDate: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `vigyan_bhairav_data_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Data exported');
+        }
+        function exportCSV() {
+            let csv = "Date,Technique,Minutes\n";
+            user.practicedTechniques.forEach(p => {
+                csv += `"${new Date(p.date).toISOString().slice(0,10)}","${p.name}",${p.minutes}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `practice_history_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('CSV exported');
+        }
+        document.getElementById('exportDataBtn')?.addEventListener('click', exportData);
+        document.getElementById('exportCSVBtn')?.addEventListener('click', exportCSV);
         
         // ==================== TECH CARD ====================
         function createTechCard(t, showPractice=true) {
@@ -1187,6 +1442,32 @@
         document.getElementById('pauseTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; });
         document.getElementById('resetTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; timerSec=300; updateTimerDisplay(); document.getElementById('timerMsg').innerText=''; });
         
+        // ==================== AMBIENT SOUNDS ====================
+        let currentSound = null;
+        const soundFiles = {
+            rain: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            forest: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+            ocean: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+            fire: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
+        };
+        function playSound(sound) {
+            if (currentSound) { currentSound.pause(); currentSound.currentTime = 0; }
+            if (sound === 'silence') { currentSound = null; return; }
+            const audio = new Audio(soundFiles[sound]);
+            audio.loop = true;
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log('Autoplay blocked'));
+            currentSound = audio;
+        }
+        document.querySelectorAll('.sound-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const sound = btn.dataset.sound;
+                playSound(sound);
+                document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+        
         // ==================== BREATHWORK ====================
         const breathInstructions = {
             box: "Inhale 4s → Hold 4s → Exhale 6s → Hold 4s. Calms nervous system.",
@@ -1243,7 +1524,7 @@
         
         // ==================== NAVIGATION ====================
         let transitioning=false;
-        const views={ home:'homeView', techniques:'techniquesView', breathwork:'breathworkView', quotes:'quotesView', diary:'diaryView', timer:'timerView', plan:'planView', profile:'profileView', enhanced:'enhancedView' };
+        const views={ home:'homeView', techniques:'techniquesView', breathwork:'breathworkView', quotes:'quotesView', diary:'diaryView', timer:'timerView', plan:'planView', profile:'profileView', enhanced:'enhancedView', stats:'statsView', achievements:'achievementsView' };
         function showView(viewName) {
             if(transitioning) return;
             const target=document.getElementById(views[viewName]);
@@ -1303,6 +1584,11 @@
             });
         });
         
+        // ==================== NOTIFICATIONS ====================
+        if ('Notification' in window && Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
+        
         // ==================== THEME ====================
         const themeBtn=document.getElementById('themeToggle');
         themeBtn.addEventListener('click',()=>{ const html=document.documentElement; const cur=html.getAttribute('data-theme'); html.setAttribute('data-theme', cur==='dark'?'light':'dark'); themeBtn.innerHTML=cur==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'; localStorage.setItem('theme',html.getAttribute('data-theme')); });
@@ -1313,10 +1599,13 @@
         window.addEventListener('scroll',()=>scrollBtn.style.opacity=window.scrollY>200?'1':'0');
         scrollBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
         
-        const chartCtx=document.getElementById('progressChart')?.getContext('2d');
-        if(chartCtx) new Chart(chartCtx,{ type:'line', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ label:'minutes', data:[25,40,18,35,50,42,30], borderColor:'#9d7bff', tension:0.3 }] } });
+        // Initialize
+        renderPlan(); renderDiary(); renderProfileSections(); updateUI(); showView('home');
         
-        renderPlan(); renderDiary(); renderProfileSections(); showView('home');
+        // PWA: register service worker (simulated)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(console.log);
+        }
     </script>
 </body>
 </html>
