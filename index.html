@@ -585,37 +585,249 @@
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-        // (Three.js setup as original - kept for black hole effect)
+        
         const canvas = document.getElementById('blackhole-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
-        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x010008);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 1.0;
+        
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x010008);
+        scene.fog = new THREE.FogExp2(0x010008, 0.0001);
+        
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(4.8, 2.5, 6.5);
+        
         const composer = new EffectComposer(renderer);
         composer.addPass(new RenderPass(scene, camera));
         const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.8, 0.4, 0.5);
+        bloomPass.threshold = 0.1;
+        bloomPass.strength = 0.6;
+        bloomPass.radius = 0.5;
         composer.addPass(bloomPass);
-        // Stars, black hole, particles etc - condensed for brevity but fully functional as original.
-        // (Actual implementation truncated for output length but will work)
-        function animate(){ requestAnimationFrame(animate); composer.render(); }
-        animate(); window.addEventListener('resize',()=>{ camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); composer.setSize(window.innerWidth,window.innerHeight); });
+        
+        // Stars
+        const starCount = 15000;
+        const starGeo = new THREE.BufferGeometry();
+        const starPositions = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            starPositions[i*3] = (Math.random() - 0.5) * 900;
+            starPositions[i*3+1] = (Math.random() - 0.5) * 600;
+            starPositions[i*3+2] = (Math.random() - 0.5) * 700 - 200;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.18, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+        const stars = new THREE.Points(starGeo, starMaterial);
+        scene.add(stars);
+        
+        // Bright stars
+        const brightStarCount = 3000;
+        const brightStarGeo = new THREE.BufferGeometry();
+        const brightPos = new Float32Array(brightStarCount * 3);
+        for (let i = 0; i < brightStarCount; i++) {
+            brightPos[i*3] = (Math.random() - 0.5) * 700;
+            brightPos[i*3+1] = (Math.random() - 0.5) * 500;
+            brightPos[i*3+2] = (Math.random() - 0.5) * 550 - 120;
+        }
+        brightStarGeo.setAttribute('position', new THREE.BufferAttribute(brightPos, 3));
+        const brightStars = new THREE.Points(brightStarGeo, new THREE.PointsMaterial({ color: 0xffeedd, size: 0.26, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.7 }));
+        scene.add(brightStars);
+        
+        // Black hole core
+        const coreGeo = new THREE.SphereGeometry(1.08, 128, 128);
+        const coreMat = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.25, metalness: 0.92, emissive: 0x331100, emissiveIntensity: 0.3 });
+        const blackHole = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(blackHole);
+        
+        // Inner photon ring
+        const innerRingGeo = new THREE.TorusGeometry(1.25, 0.055, 128, 260);
+        const innerRingMat = new THREE.MeshStandardMaterial({ color: 0xff8844, emissive: 0xff4422, emissiveIntensity: 0.6, transparent: true, blending: THREE.AdditiveBlending });
+        const innerRing = new THREE.Mesh(innerRingGeo, innerRingMat);
+        scene.add(innerRing);
+        
+        // Outer photon ring
+        const outerRingGeo = new THREE.TorusGeometry(1.48, 0.045, 128, 280);
+        const outerRingMat = new THREE.MeshStandardMaterial({ color: 0xffaa77, emissive: 0xff5533, emissiveIntensity: 0.45, transparent: true, blending: THREE.AdditiveBlending });
+        const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
+        scene.add(outerRing);
+        
+        // Accretion disk particles
+        const particleCount = 28000;
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+        const particleSpeeds = new Float32Array(particleCount);
+        const innerDiskR = 1.32;
+        const outerDiskR = 6.0;
+        for (let i = 0; i < particleCount; i++) {
+            const r = innerDiskR + Math.pow(Math.random(), 1.4) * (outerDiskR - innerDiskR);
+            const angle = Math.random() * Math.PI * 2;
+            const thickness = 0.12 * (r / outerDiskR) * 1.5;
+            const y = (Math.random() - 0.5) * thickness;
+            particlePositions[i*3] = Math.cos(angle) * r;
+            particlePositions[i*3+1] = y;
+            particlePositions[i*3+2] = Math.sin(angle) * r;
+            const t = (r - innerDiskR) / (outerDiskR - innerDiskR);
+            particleColors[i*3] = 0.9 - t * 0.3;
+            particleColors[i*3+1] = 0.5 + Math.random() * 0.3 - t * 0.2;
+            particleColors[i*3+2] = 0.3 + t * 0.5;
+            particleSpeeds[i] = 0.022 * Math.pow(r, -1.45);
+        }
+        const particleGeo = new THREE.BufferGeometry();
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+        const particleMat = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, opacity: 0.75 });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        scene.add(particles);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x221133, 0.55);
+        scene.add(ambientLight);
+        const mainLight = new THREE.DirectionalLight(0xffccaa, 0.8);
+        mainLight.position.set(2, 3, 4);
+        scene.add(mainLight);
+        const fillLight = new THREE.PointLight(0x8866ff, 0.6);
+        fillLight.position.set(-1, 1.5, 2);
+        scene.add(fillLight);
+        const coreLight = new THREE.PointLight(0xff5533, 0.9, 12);
+        coreLight.position.set(0, 0.1, 0);
+        scene.add(coreLight);
+        
+        // Animation
+        let time = 0;
+        let lastTimestamp = performance.now();
+        let cameraAngle = 0;
+        const cameraRadius = 5.8;
+        const cameraHeight = 2.3;
+        
+        function animate() {
+            const now = performance.now();
+            let dt = Math.min(0.033, (now - lastTimestamp) / 1000);
+            lastTimestamp = now;
+            time += dt;
+            
+            // Update particles rotation
+            for (let i = 0; i < particleCount; i++) {
+                let angle = Math.atan2(particlePositions[i*3+2], particlePositions[i*3]);
+                angle += particleSpeeds[i] * dt * 30;
+                const r = Math.hypot(particlePositions[i*3], particlePositions[i*3+2]);
+                particlePositions[i*3] = Math.cos(angle) * r;
+                particlePositions[i*3+2] = Math.sin(angle) * r;
+            }
+            particleGeo.attributes.position.needsUpdate = true;
+            
+            // Gentle pulsations
+            const pulse = 0.8 + Math.sin(time * 2.5) * 0.2;
+            coreLight.intensity = 0.7 + Math.sin(time * 2.2) * 0.2;
+            innerRingMat.emissiveIntensity = 0.45 + Math.sin(time * 3) * 0.15;
+            outerRingMat.emissiveIntensity = 0.35 + Math.sin(time * 2.5) * 0.1;
+            
+            innerRing.rotation.z += 0.004;
+            outerRing.rotation.z += 0.003;
+            stars.rotation.y += 0.00012;
+            brightStars.rotation.x += 0.0001;
+            
+            // Slow camera orbit
+            cameraAngle += 0.0009;
+            const targetX = Math.cos(cameraAngle) * cameraRadius;
+            const targetZ = Math.sin(cameraAngle) * cameraRadius;
+            camera.position.x = targetX;
+            camera.position.z = targetZ;
+            camera.position.y = cameraHeight + Math.sin(cameraAngle * 1.2) * 0.15;
+            camera.lookAt(0, 0, 0);
+            
+            composer.render();
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            composer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        animate();
     </script>
 
     <script type="text/javascript">
-        // ---------- Data & Techniques (full 112) ----------
+        // ==================== 112 TECHNIQUES ====================
         const techniques = {};
-        const techniqueNames = ["Witnessing the Breath","Awareness of the Gap","Breath Through Spine","Third Eye Concentration","Witnessing Thoughts","Inner Sound","Gazing Into Darkness","Mantra with Breath","Heart Center","Body Sensation","Slow Breath","Walking Awareness","Observation of Emotions","Listening to Silence","Whole-Body Awareness","Expansion of Awareness","Spine Awareness","Total Relaxation","Edge of Sleep","Momentary Suspension"];
+        const techniqueNames = [
+            "Witnessing the Breath","Awareness of the Gap Between Breaths","Breath Traveling Through the Spine","Concentration on the Third Eye","Witnessing Thoughts",
+            "Listening to External Sounds Without Labeling","Inner Sound Meditation","Gazing Into Darkness","Sudden Awareness Technique","Mantra with Breath",
+            "Sky Awareness Meditation","Candle Flame Concentration","Heart Center Meditation","Body Sensation Awareness","Slow Breath Meditation",
+            "Walking Awareness Meditation","Observation of Emotions","Listening to Silence","Whole-Body Awareness","Breath Touch Awareness",
+            "Expansion of Awareness","Spine Awareness Meditation","Total Relaxation Meditation","Awareness at the Edge of Sleep","Momentary Breath Suspension"
+        ];
+        const categoriesList = ['breath','body','heart','sound','gaze','void','energy','light','sleep','emotion'];
         for (let i = 1; i <= 112; i++) {
-            const cat = ['breath','body','heart','sound','gaze'][i%5];
-            const name = techniqueNames[(i-1)%techniqueNames.length] + ` (Portal ${i})`;
-            techniques[i] = { id:i, name, sanskrit:`Sūtra ${i}`, category:cat, essence:`A profound ${cat} practice that opens inner awareness.`, wisdom:"Osho: Witness without judgment.", posture:"Sukhasana", mudra:"Chin mudra", duration:"15 min", steps:["Sit comfortably.","Close eyes.","Observe.","Return gently."], benefits:{ student:"focus", employee:"calm", seeker:"awareness" } };
+            const cat = categoriesList[i % categoriesList.length];
+            const name = techniqueNames[(i-1) % techniqueNames.length] || `Portal ${i}: ${cat} practice`;
+            techniques[i] = {
+                id: i, name, sanskrit: `Sūtra ${i}`, category: cat,
+                essence: `A profound ${cat} practice that opens the door to inner awareness.`,
+                wisdom: `Osho says: "Let go of control. Allow the experience to unfold naturally."`,
+                posture: ['Sukhasana','Padmasana','Vajrasana','Shavasana'][i%4],
+                mudra: ['Chin mudra','Jnana mudra','Dhyana mudra'][i%3],
+                breath: 'Natural', duration: '15-20 min',
+                steps: ['Find a comfortable seated posture.', 'Close your eyes.', `Bring awareness to the ${cat} aspect.`, 'Observe without judgment.', 'Return gently when distracted.'],
+                benefits: { student: 'focus', employee: 'calm', seeker: 'awareness' }
+            };
         }
-        // Override first few for richness
-        techniques[1] = { id:1, name:"Witnessing the Breath", sanskrit:"Śvāsa–Praśvāsa Dharana", category:"breath", essence:"Breath is the bridge between body and mind.", wisdom:"Osho: 'Just watch the breath. Don't control it.'", posture:"Sukhasana", mudra:"Chin mudra", duration:"10-20 min", steps:["Sit comfortably.","Close eyes.","Observe natural breath.","Return when distracted."], benefits:{ student:"concentration", employee:"stress relief", seeker:"calm mind" } };
+        techniques[1] = { id:1, name:"Witnessing the Breath", sanskrit:"Śvāsa–Praśvāsa Dharana", category:"breath", essence:"Breath is the bridge between body and mind.", wisdom:"Osho: 'Just watch the breath. Don't control it. Simply be a witness.'", posture:"Sukhasana", mudra:"Chin mudra", breath:"Natural observation", duration:"10-20 min", steps:["Sit comfortably.","Close eyes.","Observe natural breath.","Return when distracted."], benefits:{ student:"concentration", employee:"stress relief", seeker:"calm mind" } };
+        techniques[2] = { id:2, name:"Awareness of the Gap Between Breaths", sanskrit:"Madhya Dharana", category:"breath", essence:"Between inhale and exhale there is a tiny moment of stillness.", wisdom:"Osho: 'The pause is the most precious.'", posture:"Any", mudra:"Dhyana mudra", breath:"Observing pauses", duration:"15 min", steps:["Inhale slowly.","Notice the pause at the top.","Exhale.","Notice the pause at the bottom."], benefits:{ student:"deep silence", employee:"meditation depth", seeker:"sharp awareness" } };
+        techniques[3] = { id:3, name:"Breath Traveling Through the Spine", sanskrit:"Sushumna Dharana", category:"energy", essence:"Breath carries awareness through the body's central channel.", wisdom:"Osho: 'When breath moves through the spine, the energy becomes centered.'", posture:"Spine straight", mudra:"Chin mudra", breath:"Visualized flow", duration:"10-15 min", steps:["Sit straight.","Imagine energy moving from base to head on inhale, back down on exhale."], benefits:{ student:"focus", employee:"vitality", seeker:"body awareness" } };
+        techniques[4] = { id:4, name:"Concentration on the Third Eye", sanskrit:"Bhrūmadhya Dharana", category:"gaze", essence:"Attention becomes powerful when gathered in one point.", wisdom:"Osho: 'Between the eyebrows is the center of intuition.'", posture:"Comfortable", mudra:"Jnana mudra", breath:"Natural", duration:"10-20 min", steps:["Close eyes.","Focus between eyebrows.","Return when distracted."], benefits:{ student:"memory", employee:"stability", seeker:"meditation depth" } };
+        techniques[5] = { id:5, name:"Witnessing Thoughts", sanskrit:"Sākṣī Bhāva", category:"mind", essence:"You are the observer, not the thinker.", wisdom:"Osho: 'Watch thoughts as clouds passing in the sky.'", posture:"Comfortable", mudra:"Dhyana mudra", breath:"Natural", duration:"15 min", steps:["Watch thoughts appear.","Observe without reacting.","Let them dissolve."], benefits:{ student:"freedom from overthinking", employee:"emotional stability", seeker:"self-awareness" } };
 
-        // User state with new fields
+        // Mudra Gallery
+        const mudras = [
+            { name:"Bhumisparsa", desc:"The Buddha touched the ground to call the earth goddess to bear witness to his awakening.", fullDesc:"The Buddha touched the ground to call the earth goddess, Sthavara, to bear witness to his awakening.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M50,70 L50,30 M30,50 L70,50 M40,60 L60,40 M40,40 L60,60"/><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor"/><path d="M35,45 L45,55 M55,45 L65,55" stroke="currentColor"/></svg>` },
+            { name:"Dhyana", desc:"Gesture of absolute balance & meditative poise. Hands relaxed in lap, thumbs and fingers touching.", fullDesc:"Gesture of absolute balance & meditative poise.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M35,65 L65,65 M40,55 L60,55 M45,45 L55,45"/><circle cx="50" cy="50" r="30" fill="none" stroke="currentColor"/><circle cx="50" cy="50" r="15" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Abhaya", desc:"Gesture of reassurance, blessing, and protection.", fullDesc:"Gesture of reassurance, blessing, and protection.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M40,60 L60,60 M50,70 L50,40"/><path d="M35,50 L45,50 M55,50 L65,50"/><circle cx="50" cy="50" r="28" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Dharmachakra", desc:"Gesture of teaching, turning the Wheel of Law.", fullDesc:"The gesture of teaching interpreted as turning the Wheel of Law.", svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="none" stroke="currentColor"/><circle cx="50" cy="50" r="10" fill="none"/><path d="M40,35 L60,65 M60,35 L40,65" stroke="currentColor"/></svg>` },
+            { name:"Vitarka", desc:"Intellectual argument, discussion.", fullDesc:"Intellectual argument, discussion. Circle formed by thumb and index finger.", svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="none" stroke="currentColor"/><path d="M38,45 L62,55 M38,55 L62,45"/><circle cx="50" cy="50" r="8" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Tarjani", desc:"Threat, warning.", fullDesc:"Extended index finger pointed at ignorance; antidote is wakefulness.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M50,65 L50,30 M40,45 L60,45"/><circle cx="50" cy="30" r="4" fill="none"/><circle cx="50" cy="50" r="22" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Namaskara", desc:"Gesture of greeting, prayer, and respect.", fullDesc:"Gesture of greeting, prayer, and respect made by those devoted to the path.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M30,60 L70,60 M50,40 L50,70 M40,45 L60,55 M40,55 L60,45"/><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Jnana", desc:"Teaching.", fullDesc:"Teaching. Hand at chest level, thumb and index finger form the Wheel of Law.", svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="none" stroke="currentColor"/><path d="M42,42 L58,58 M42,58 L58,42"/><circle cx="50" cy="50" r="8" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Karana", desc:"Gesture with which demons are expelled.", fullDesc:"Gesture with which demons are expelled.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M35,55 L65,45 M35,45 L65,55 M50,65 L50,35"/><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Kesapana", desc:"Gesture of 'sprinkling' the nectar of immortality.", fullDesc:"Two hands together in the gesture of 'sprinkling' the nectar of immortality.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M35,55 L65,45 M35,45 L65,55 M45,65 L55,35 M45,35 L55,65"/><circle cx="50" cy="50" r="28" fill="none" stroke="currentColor"/></svg>` },
+            { name:"Uttarabodhi", desc:"Gesture of supreme enlightenment.", fullDesc:"Two hands placed together above the head with index fingers together, other fingers intertwined.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M30,55 L70,55 M50,30 L50,70 M40,40 L60,60 M40,60 L60,40"/><circle cx="50" cy="50" r="28" fill="none" stroke="currentColor"/></svg>` }
+        ];
+        document.getElementById('mudraGrid').innerHTML = mudras.map(m => `<div class="mudra-item"><div class="mudra-svg">${m.svg}</div><div class="mudra-name">${m.name}</div><div class="mudra-desc">${m.desc.substring(0,45)}${m.desc.length>45?'…':''}</div><div class="full-desc" style="display:none;">${m.fullDesc}</div></div>`).join('');
+
+        // Professions & recommendation logic
+        const professions = [
+            { name:"Student", icon:"fa-graduation-cap", desc:"focus · exams", keywords:["focus","concentration","memory","exam","study"] },
+            { name:"Employee", icon:"fa-briefcase", desc:"stress · work-life", keywords:["stress","work","balance","employee"] },
+            { name:"CEO", icon:"fa-chart-line", desc:"clarity · decisions", keywords:["clarity","decision","leadership"] },
+            { name:"Seeker", icon:"fa-infinity", desc:"spiritual path", keywords:["spiritual","awareness","consciousness"] },
+            { name:"Anxious", icon:"fa-heartbeat", desc:"calm · anxiety", keywords:["anxiety","calm","fear","peace"] },
+            { name:"Overthinker", icon:"fa-brain", desc:"still mind", keywords:["overthink","mind","thoughts","stillness"] },
+            { name:"Healthcare", icon:"fa-hospital-user", desc:"compassion", keywords:["compassion","healing","care"] },
+            { name:"Teacher", icon:"fa-chalkboard", desc:"patience", keywords:["patience","teach","guide"] },
+            { name:"Developer", icon:"fa-laptop-code", desc:"focus", keywords:["focus","code","mental clarity"] },
+            { name:"Artist", icon:"fa-paint-brush", desc:"flow", keywords:["creativity","flow","inspiration"] },
+            { name:"Parent", icon:"fa-child", desc:"self-care", keywords:["parent","care","balance","self-care"] },
+            { name:"Entrepreneur", icon:"fa-rocket", desc:"resilience", keywords:["resilience","drive","stress"] },
+            { name:"FirstResponder", icon:"fa-fire-extinguisher", desc:"grounding", keywords:["grounding","trauma","calm"] },
+            { name:"Retiree", icon:"fa-umbrella-beach", desc:"peace", keywords:["peace","relaxation","wisdom"] },
+            { name:"Freelancer", icon:"fa-user-tie", desc:"balance", keywords:["balance","work-life","focus"] },
+            { name:"Athlete", icon:"fa-running", desc:"performance", keywords:["performance","focus","body awareness"] }
+        ];
+
+        function getRecommendedTechniques(prof) {
+            const allTechs = Object.values(techniques);
+            return allTechs.sort((a,b)=> {
+                const aScore = prof.keywords.reduce((s,k)=> s + (a.name.toLowerCase().includes(k) ? 5 : (a.category.includes(k) ? 3 : 0)),0);
+                const bScore = prof.keywords.reduce((s,k)=> s + (b.name.toLowerCase().includes(k) ? 5 : (b.category.includes(k) ? 3 : 0)),0);
+                return bScore - aScore;
+            }).slice(0,12);
+        }
+
+        // User state
         let user = {
             totalPractices: parseInt(localStorage.getItem('tp')) || 1248,
             totalMinutes: parseInt(localStorage.getItem('tm')) || 6304,
@@ -624,114 +836,398 @@
             favorites: JSON.parse(localStorage.getItem('favs')) || [],
             diary: JSON.parse(localStorage.getItem('diary')) || [],
             plan: JSON.parse(localStorage.getItem('plan')) || [],
+            xp: parseInt(localStorage.getItem('xp')) || 450,
+            practiceDays: JSON.parse(localStorage.getItem('practiceDays')) || {},
             practicedTechniques: JSON.parse(localStorage.getItem('practicedTechs')) || [],
-            savedQuotes: JSON.parse(localStorage.getItem('savedQuotes')) || [],
-            practiceDays: JSON.parse(localStorage.getItem('practiceDays')) || {}
+            savedQuotes: JSON.parse(localStorage.getItem('savedQuotes')) || []
         };
         function saveAll() {
-            localStorage.setItem('tp', user.totalPractices); localStorage.setItem('tm', user.totalMinutes); localStorage.setItem('streak', user.streak);
-            localStorage.setItem('lastDate', user.lastDate); localStorage.setItem('favs', JSON.stringify(user.favorites));
-            localStorage.setItem('diary', JSON.stringify(user.diary)); localStorage.setItem('plan', JSON.stringify(user.plan));
+            localStorage.setItem('tp', user.totalPractices);
+            localStorage.setItem('tm', user.totalMinutes);
+            localStorage.setItem('streak', user.streak);
+            localStorage.setItem('lastDate', user.lastDate);
+            localStorage.setItem('favs', JSON.stringify(user.favorites));
+            localStorage.setItem('diary', JSON.stringify(user.diary));
+            localStorage.setItem('plan', JSON.stringify(user.plan));
+            localStorage.setItem('xp', user.xp);
+            localStorage.setItem('practiceDays', JSON.stringify(user.practiceDays));
             localStorage.setItem('practicedTechs', JSON.stringify(user.practicedTechniques));
             localStorage.setItem('savedQuotes', JSON.stringify(user.savedQuotes));
-            localStorage.setItem('practiceDays', JSON.stringify(user.practiceDays));
             updateUI();
-        }
-        function addPracticedTechnique(techId, techName, minutes=15) {
-            user.practicedTechniques.unshift({ id:techId, name:techName, date:new Date().toISOString(), minutes });
-            user.totalPractices++; user.totalMinutes += minutes; user.xp = (user.xp||0) + 10;
-            const today = new Date().toDateString();
-            if(user.lastDate !== today){ const yesterday = new Date(Date.now()-86400000).toDateString(); user.streak = user.lastDate===yesterday ? user.streak+1 : 1; user.lastDate=today; }
-            user.practiceDays[new Date().toISOString().slice(0,10)] = true;
-            saveAll(); showToast(`🧘 Practiced: ${techName} +${minutes} min`);
-        }
-        function saveQuoteToBoth(text, author) {
-            const quoteObj = { text, author, date: new Date().toISOString() };
-            user.savedQuotes.unshift(quoteObj);
-            user.diary.unshift({ date: new Date(), text: `📖 Saved Quote: "${text}" — ${author}` });
-            saveAll(); renderProfileSections(); renderDiary(); showToast("Quote saved to profile & diary");
         }
         function updateUI() {
             document.getElementById('profStreak')?.setAttribute?.('data-val',user.streak);
             document.getElementById('enhTotalPractices').innerText = user.totalPractices;
             document.getElementById('enhTotalMinutes').innerText = user.totalMinutes;
             document.getElementById('enhStreak').innerText = user.streak;
-            renderCalendar(); renderProfileSections(); renderPlan(); renderDiary();
+            document.getElementById('xpFill').style.width = (user.xp % 100) + '%';
+            renderCalendar();
+            renderProfileSections();
+            renderPlan();
+            renderDiary();
+        }
+        function markPracticeDay() { const today = new Date().toISOString().slice(0,10); if(!user.practiceDays[today]) user.practiceDays[today]=true; saveAll(); }
+        function renderCalendar() {
+            const container = document.getElementById('calendarTracker'); if(!container) return;
+            const today = new Date(), year = today.getFullYear(), month = today.getMonth(), firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month+1, 0).getDate();
+            container.innerHTML = '';
+            ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(day => { const d = document.createElement('div'); d.className='calendar-day weekday'; d.innerText=day; container.appendChild(d); });
+            for(let i=0;i<firstDay;i++) { const blank = document.createElement('div'); blank.className='calendar-day'; container.appendChild(blank); }
+            for(let d=1; d<=daysInMonth; d++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const isPracticed = user.practiceDays[dateStr], isToday = d===today.getDate() && month===today.getMonth() && year===today.getFullYear();
+                const dayDiv = document.createElement('div'); dayDiv.className = `calendar-day ${isPracticed ? 'practiced' : ''} ${isToday ? 'today' : ''}`; dayDiv.innerText = d;
+                dayDiv.addEventListener('click',()=>{ if(!user.practiceDays[dateStr]) { user.practiceDays[dateStr]=true; saveAll(); showToast(`Marked practice on ${dateStr}`); } else if(confirm('Remove practice mark?')){ delete user.practiceDays[dateStr]; saveAll(); } });
+                container.appendChild(dayDiv);
+            }
         }
         function renderProfileSections() {
-            const practicedDiv = document.getElementById('practicedList'); if(practicedDiv) practicedDiv.innerHTML = user.practicedTechniques.slice(0,30).map(p => `<div class="profile-list-item">🧘 ${p.name} · ${new Date(p.date).toLocaleDateString()} (${p.minutes} min)</div>`).join('') || "<em>No practices recorded yet. Complete a meditation or breathwork!</em>";
-            const quotesDiv = document.getElementById('savedQuotesList'); if(quotesDiv) quotesDiv.innerHTML = user.savedQuotes.slice(0,30).map(q => `<div class="profile-list-item">“${q.text.substring(0,120)}”<br>— ${q.author} <small>${new Date(q.date).toLocaleDateString()}</small></div>`).join('') || "<em>No saved quotes. Save from Wisdom Library.</em>";
-            const notesDiv = document.getElementById('profileDiaryList'); if(notesDiv) notesDiv.innerHTML = user.diary.slice().reverse().slice(0,30).map(e => `<div class="profile-list-item"><small>${new Date(e.date).toLocaleString()}</small><p>${e.text}</p></div>`).join('') || "<em>No diary entries yet.</em>";
+            const practicedDiv = document.getElementById('practicedList');
+            if(practicedDiv) practicedDiv.innerHTML = user.practicedTechniques.slice(0,50).map(p => `<div class="profile-list-item">🧘 ${p.name} · ${new Date(p.date).toLocaleDateString()} (${p.minutes} min)</div>`).join('') || "<em>No practices recorded yet. Complete a meditation or breathwork!</em>";
+            const quotesDiv = document.getElementById('savedQuotesList');
+            if(quotesDiv) quotesDiv.innerHTML = user.savedQuotes.slice(0,50).map(q => `<div class="profile-list-item">“${q.text.substring(0,120)}”<br>— ${q.author} <small>${new Date(q.date).toLocaleDateString()}</small></div>`).join('') || "<em>No saved quotes. Save from Wisdom Library.</em>";
+            const notesDiv = document.getElementById('profileDiaryList');
+            if(notesDiv) notesDiv.innerHTML = user.diary.slice().reverse().slice(0,50).map(e => `<div class="profile-list-item"><small>${new Date(e.date).toLocaleString()}</small><p>${e.text}</p></div>`).join('') || "<em>No diary entries yet.</em>";
         }
-        function renderDiary(){ const list = document.getElementById('diaryList'); if(list) list.innerHTML = user.diary.slice().reverse().map(e=>`<div class="glass-card" style="margin-bottom:0.5rem;padding:0.5rem;"><small>${new Date(e.date).toLocaleString()}</small><p>${e.text}</p></div>`).join(''); }
-        function renderPlan(){ const container = document.getElementById('planItems'); if(!container) return; container.innerHTML = ''; let total=0; user.plan.forEach(id => { if(techniques[id]) { total += 15; const div = document.createElement('div'); div.className = 'plan-item glass-card'; div.style.marginBottom='0.8rem'; div.innerHTML = `<div><strong>${techniques[id].name}</strong> (15 min)</div><button class="remove-plan" data-id="${id}" style="background:none; border:none; color:var(--accent-secondary);"><i class="fas fa-trash"></i></button>`; div.querySelector('.remove-plan').addEventListener('click', () => { user.plan = user.plan.filter(i=>i!==id); saveAll(); renderPlan(); }); container.appendChild(div); } }); document.getElementById('planTotal').innerText = total; }
-        function renderCalendar() { /* same as before */ const container = document.getElementById('calendarTracker'); if(!container) return; const today = new Date(), year=today.getFullYear(), month=today.getMonth(), firstDay=new Date(year,month,1).getDay(), daysInMonth=new Date(year,month+1,0).getDate(); container.innerHTML = ''; ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(day=>{ const d=document.createElement('div'); d.className='calendar-day weekday'; d.innerText=day; container.appendChild(d); }); for(let i=0;i<firstDay;i++) container.appendChild(document.createElement('div')); for(let d=1;d<=daysInMonth;d++){ const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const isPracticed=user.practiceDays[dateStr], isToday=d===today.getDate()&&month===today.getMonth(); const dayDiv=document.createElement('div'); dayDiv.className=`calendar-day ${isPracticed?'practiced':''} ${isToday?'today':''}`; dayDiv.innerText=d; dayDiv.addEventListener('click',()=>{ if(!user.practiceDays[dateStr]){ user.practiceDays[dateStr]=true; saveAll(); showToast(`Marked practice on ${dateStr}`); } else if(confirm('Remove?')){ delete user.practiceDays[dateStr]; saveAll(); } }); container.appendChild(dayDiv); } }
+        function addPracticedTechnique(techId, techName, minutes=15) {
+            user.practicedTechniques.unshift({ id:techId, name:techName, date:new Date().toISOString(), minutes });
+            user.totalPractices++;
+            user.totalMinutes += minutes;
+            user.xp += 10;
+            const today = new Date().toDateString();
+            if(user.lastDate !== today){ const yesterday = new Date(Date.now()-86400000).toDateString(); user.streak = user.lastDate===yesterday ? user.streak+1 : 1; user.lastDate=today; }
+            user.practiceDays[new Date().toISOString().slice(0,10)] = true;
+            saveAll();
+            showToast(`🧘 Practiced: ${techName} +${minutes} min`);
+        }
+        function saveQuoteToBoth(text, author) {
+            const quoteObj = { text, author, date: new Date().toISOString() };
+            user.savedQuotes.unshift(quoteObj);
+            user.diary.unshift({ date: new Date(), text: `📖 Saved Quote: "${text}" — ${author}` });
+            saveAll();
+            renderProfileSections();
+            renderDiary();
+            showToast("Quote saved to profile & diary");
+        }
+        function renderDiary() {
+            const list = document.getElementById('diaryList');
+            if(list) list.innerHTML = user.diary.slice().reverse().map(e=>`<div class="glass-card" style="margin-bottom:0.5rem;padding:0.5rem;"><small>${new Date(e.date).toLocaleString()}</small><p>${e.text}</p></div>`).join('');
+        }
+        function renderPlan() {
+            const container = document.getElementById('planItems'); if(!container) return;
+            container.innerHTML = ''; let total=0;
+            user.plan.forEach(id => {
+                if(techniques[id]) {
+                    total += 15;
+                    const div = document.createElement('div'); div.className = 'plan-item glass-card'; div.style.marginBottom='0.8rem'; div.style.padding='0.8rem';
+                    div.innerHTML = `<div><strong>${techniques[id].name}</strong> (15 min)</div><button class="remove-plan" data-id="${id}" style="background:none; border:none; color:var(--accent-secondary); cursor:pointer;"><i class="fas fa-trash"></i></button>`;
+                    div.querySelector('.remove-plan').addEventListener('click', () => { user.plan = user.plan.filter(i=>i!==id); saveAll(); renderPlan(); showToast('removed'); });
+                    container.appendChild(div);
+                }
+            });
+            document.getElementById('planTotal').innerText = total;
+        }
 
-        // Techniques UI
-        const professions = [{ name:"Student", icon:"fa-graduation-cap", desc:"focus", keywords:["focus"] },{ name:"Seeker", icon:"fa-infinity", desc:"spiritual", keywords:["awareness"] },{ name:"Anxious", icon:"fa-heartbeat", desc:"calm", keywords:["calm"] }];
-        function getRecommendedTechniques(prof) { return Object.values(techniques).slice(0,12); }
+        // TECH CARD creation
         function createTechCard(t, showPractice=true) {
-            const div = document.createElement('div'); div.className='tech-card';
-            div.innerHTML = `<div class="tech-name">${t.name}</div><div class="tech-category">${t.category}</div><div class="tech-essence">“${t.essence.substring(0,80)}”</div><div class="tech-footer"><span><i class="far fa-clock"></i> ${t.duration}</span><div><button class="favorite-btn ${user.favorites.includes(t.id)?'fas':'far'} fa-heart" data-id="${t.id}"></button>${showPractice?'<button class="practice-btn" data-id="'+t.id+'" data-name="'+t.name+'"><i class="fas fa-play"></i> Practice</button>':''}</div></div>`;
-            div.querySelector('.favorite-btn')?.addEventListener('click',(e)=>{ e.stopPropagation(); const id=t.id; if(user.favorites.includes(id)) user.favorites=user.favorites.filter(f=>f!==id); else user.favorites.push(id); saveAll(); e.target.classList.toggle('fas'); e.target.classList.toggle('far'); showToast(user.favorites.includes(id)?'Added':'Removed'); });
-            if(showPractice) div.querySelector('.practice-btn')?.addEventListener('click',(e)=>{ e.stopPropagation(); addPracticedTechnique(t.id, t.name, 15); });
-            div.addEventListener('click',()=>showModal(t));
+            const div = document.createElement('div'); div.className = 'tech-card';
+            const isFav = user.favorites.includes(t.id);
+            div.innerHTML = `
+                <div class="tech-header"><span class="tech-number">#${t.id}</span><span class="tech-sanskrit">${t.sanskrit}</span></div>
+                <div class="tech-name">${t.name}</div>
+                <div class="tech-category">${t.category}</div>
+                <div class="tech-essence">“${t.essence.substring(0,80)}”</div>
+                <div class="tech-footer"><span><i class="far fa-clock"></i> ${t.duration}</span><div><button class="favorite-btn ${isFav ? 'fas' : 'far'} fa-heart" data-id="${t.id}"></button>${showPractice ? `<button class="practice-btn" data-id="${t.id}" data-name="${t.name}"><i class="fas fa-play"></i> Practice</button>` : ''}</div></div>
+            `;
+            div.querySelector('.favorite-btn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = t.id;
+                if (user.favorites.includes(id)) user.favorites = user.favorites.filter(f => f !== id);
+                else user.favorites.push(id);
+                saveAll();
+                e.target.classList.toggle('fas'); e.target.classList.toggle('far');
+                showToast(user.favorites.includes(id) ? 'Added to favorites' : 'Removed from favorites');
+            });
+            if(showPractice) {
+                div.querySelector('.practice-btn')?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addPracticedTechnique(t.id, t.name, 15);
+                });
+            }
+            div.addEventListener('click', () => showModal(t));
             return div;
         }
-        function showModal(t){ /* modal implementation same as original */ alert(`Details: ${t.name}\n${t.wisdom}\nSteps: ${t.steps.join(', ')}`); }
-        function showAllTechniques(){ document.getElementById('professionSelectionView').classList.add('hidden'); document.getElementById('recommendedTechniquesView').classList.add('hidden'); document.getElementById('allTechniquesView').classList.remove('hidden'); const grid=document.getElementById('allTechniquesGrid'); grid.innerHTML=''; Object.values(techniques).forEach(t=>grid.appendChild(createTechCard(t,true))); document.getElementById('techSearchInput').addEventListener('input',(e)=>{ const term=e.target.value.toLowerCase(); grid.innerHTML=''; Object.values(techniques).filter(t=>t.name.toLowerCase().includes(term)).forEach(t=>grid.appendChild(createTechCard(t,true))); }); }
-        function showArchetype(){ document.getElementById('allTechniquesView').classList.add('hidden'); document.getElementById('recommendedTechniquesView').classList.add('hidden'); document.getElementById('professionSelectionView').classList.remove('hidden'); }
-        document.getElementById('showArchetypeBtn').addEventListener('click',showArchetype);
-        document.getElementById('showAllTechBtn').addEventListener('click',showAllTechniques);
-        const profGrid=document.getElementById('professionGrid'); profGrid.innerHTML=professions.map(p=>`<div class="prof-card glass-card" data-prof='${JSON.stringify(p)}'><i class="fas ${p.icon}"></i><span>${p.name}</span><small>${p.desc}</small></div>`).join('');
-        document.querySelectorAll('.prof-card').forEach(c=>c.addEventListener('click',()=>{ const prof=JSON.parse(c.dataset.prof); const recs=getRecommendedTechniques(prof); const grid=document.getElementById('techniquesGrid'); grid.innerHTML=''; recs.forEach(t=>grid.appendChild(createTechCard(t,true))); document.getElementById('professionSelectionView').classList.add('hidden'); document.getElementById('allTechniquesView').classList.add('hidden'); document.getElementById('recommendedTechniquesView').classList.remove('hidden'); document.getElementById('selectedProfessionTitle').innerHTML=`🌀 ${prof.name} · Recommended`; }));
-        document.getElementById('backToProfessionsBtn').addEventListener('click',showArchetype);
+
+        function showModal(t) {
+            const modal = document.getElementById('detailModal') || (() => { const m = document.createElement('div'); m.id='detailModal'; m.className='modal'; document.body.appendChild(m); return m; })();
+            const content = document.createElement('div'); content.className='modal-content glass-card';
+            content.innerHTML = `
+                <h2>${t.name}</h2>
+                <p><em>${t.sanskrit}</em> · ${t.category}</p>
+                <div style="background: rgba(157,123,255,0.2); padding:1rem; border-radius:20px; margin:1rem 0;"><i class="fas fa-quote-left"></i> ${t.wisdom}</div>
+                <h3>🧘 Step-by-Step</h3><ol>${t.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+                <h3>🪷 Posture & Mudra</h3><p>${t.posture} · ${t.mudra}</p>
+                <h3>🌟 Benefits</h3><p>✨ Students: ${t.benefits.student}<br>✨ Employees: ${t.benefits.employee}<br>✨ Seekers: ${t.benefits.seeker}</p>
+                <button class="btn-primary addPlanBtn">➕ Add to My Plan</button>
+                <button class="btn-outline closeModal">Close</button>
+            `;
+            modal.innerHTML = ''; modal.appendChild(content);
+            modal.classList.add('active');
+            content.querySelector('.addPlanBtn').addEventListener('click', () => { if(!user.plan.includes(t.id)) { user.plan.push(t.id); saveAll(); renderPlan(); showToast('added to plan'); } });
+            content.querySelector('.closeModal').addEventListener('click', () => modal.classList.remove('active'));
+            modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+        }
+
+        let currentProfession = null;
+        function renderRecommendedTechniques(prof) {
+            currentProfession = prof;
+            const recs = getRecommendedTechniques(prof);
+            const grid = document.getElementById('techniquesGrid');
+            grid.innerHTML = '';
+            recs.forEach(t => grid.appendChild(createTechCard(t, true)));
+            document.getElementById('selectedProfessionTitle').innerHTML = `🌀 ${prof.name} · Recommended Techniques`;
+            document.getElementById('professionSelectionView').classList.add('hidden');
+            document.getElementById('allTechniquesView').classList.add('hidden');
+            document.getElementById('recommendedTechniquesView').classList.remove('hidden');
+        }
+        function showProfessionSelection() {
+            document.getElementById('professionSelectionView').classList.remove('hidden');
+            document.getElementById('recommendedTechniquesView').classList.add('hidden');
+            document.getElementById('allTechniquesView').classList.add('hidden');
+        }
+        function showAllTechniques() {
+            document.getElementById('professionSelectionView').classList.add('hidden');
+            document.getElementById('recommendedTechniquesView').classList.add('hidden');
+            document.getElementById('allTechniquesView').classList.remove('hidden');
+            const grid = document.getElementById('allTechniquesGrid');
+            grid.innerHTML = '';
+            Object.values(techniques).forEach(t => grid.appendChild(createTechCard(t, true)));
+            const searchInput = document.getElementById('techSearchInput');
+            searchInput.oninput = () => {
+                const term = searchInput.value.toLowerCase();
+                grid.innerHTML = '';
+                Object.values(techniques).filter(t => t.name.toLowerCase().includes(term) || t.category.toLowerCase().includes(term)).forEach(t => grid.appendChild(createTechCard(t, true)));
+            };
+        }
+
+        const profGrid = document.getElementById('professionGrid');
+        profGrid.innerHTML = professions.map(p => `<div class="prof-card glass-card" data-prof='${JSON.stringify(p)}'><i class="fas ${p.icon}"></i><span>${p.name}</span><small>${p.desc}</small></div>`).join('');
+        document.querySelectorAll('.prof-card').forEach(card => card.addEventListener('click', () => { const prof = JSON.parse(card.dataset.prof); renderRecommendedTechniques(prof); }));
+        document.getElementById('backToProfessionsBtn').addEventListener('click', showProfessionSelection);
+        document.getElementById('showArchetypeBtn').addEventListener('click', showProfessionSelection);
+        document.getElementById('showAllTechBtn').addEventListener('click', showAllTechniques);
 
         // Quotes library
-        const quotesLibrary = [{ text:"The mind is everything. What you think you become.", author:"Buddha" },{ text:"Meditation is not a way to make your mind quiet. It is a way to enter into the quiet that is already there.", author:"Osho" },{ text:"The cosmos is within us. We are made of star-stuff.", author:"Carl Sagan" }];
-        let homeIdx=0, libIdx=0;
-        function updateHomeQuote(){ const q=quotesLibrary[homeIdx]; document.getElementById('homeQuoteText').innerHTML=`“${q.text}”`; document.getElementById('homeQuoteAuthor').innerHTML=`— ${q.author}`; }
-        function updateLibQuote(){ const q=quotesLibrary[libIdx]; document.getElementById('quoteContainer').innerHTML=`<div class="quote-text-large">“${q.text}”</div><div class="quote-author">— ${q.author}</div>`; }
-        document.getElementById('saveHomeQuoteBtn').addEventListener('click',()=>{ const q=quotesLibrary[homeIdx]; saveQuoteToBoth(q.text,q.author); });
-        document.getElementById('saveLibQuoteBtn').addEventListener('click',()=>{ const q=quotesLibrary[libIdx]; saveQuoteToBoth(q.text,q.author); });
-        document.getElementById('prevHomeQuote').addEventListener('click',()=>{ homeIdx=(homeIdx-1+quotesLibrary.length)%quotesLibrary.length; updateHomeQuote(); });
-        document.getElementById('nextHomeQuote').addEventListener('click',()=>{ homeIdx=(homeIdx+1)%quotesLibrary.length; updateHomeQuote(); });
-        document.getElementById('prevLibQuote').addEventListener('click',()=>{ libIdx=(libIdx-1+quotesLibrary.length)%quotesLibrary.length; updateLibQuote(); });
-        document.getElementById('nextLibQuote').addEventListener('click',()=>{ libIdx=(libIdx+1)%quotesLibrary.length; updateLibQuote(); });
+        const quotesLibrary = [
+            { text: "The mind is everything. What you think you become.", author: "Buddha" },
+            { text: "Meditation is not a way to make your mind quiet. It is a way to enter into the quiet that is already there.", author: "Osho" },
+            { text: "The cosmos is within us. We are made of star-stuff.", author: "Carl Sagan" },
+            { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+            { text: "The quieter you become, the more you can hear.", author: "Rumi" },
+            { text: "You are the sky. Everything else is just the weather.", author: "Pema Chödrön" },
+            { text: "Let go of the battle. Breathe quietly and let it be.", author: "Thich Nhat Hanh" },
+            { text: "The present moment is filled with joy and happiness. If you are attentive, you will see it.", author: "Thich Nhat Hanh" }
+        ];
+        for (let i=0;i<50;i++) quotesLibrary.push({ text: `Wisdom ${i+9}: Awareness is the ultimate meditation.`, author: "Ancient Sage" });
+        let currentHomeQuoteIdx = 0, currentLibQuoteIdx = 0;
+        function updateHomeQuote() { const q = quotesLibrary[currentHomeQuoteIdx]; document.getElementById('homeQuoteText').innerHTML = `“${q.text}”`; document.getElementById('homeQuoteAuthor').innerHTML = `— ${q.author}`; }
+        function updateLibQuote() { const q = quotesLibrary[currentLibQuoteIdx]; document.getElementById('quoteContainer').innerHTML = `<div class="quote-text-large">“${q.text}”</div><div class="quote-author">— ${q.author}</div>`; }
+        function saveQuoteToDiary(quoteText, author) { saveQuoteToBoth(quoteText, author); }
+        document.getElementById('saveHomeQuoteBtn').addEventListener('click', () => { const q = quotesLibrary[currentHomeQuoteIdx]; saveQuoteToBoth(q.text, q.author); });
+        document.getElementById('saveLibQuoteBtn').addEventListener('click', () => { const q = quotesLibrary[currentLibQuoteIdx]; saveQuoteToBoth(q.text, q.author); });
+        document.getElementById('prevHomeQuote').addEventListener('click', () => { currentHomeQuoteIdx = (currentHomeQuoteIdx-1+quotesLibrary.length)%quotesLibrary.length; updateHomeQuote(); });
+        document.getElementById('nextHomeQuote').addEventListener('click', () => { currentHomeQuoteIdx = (currentHomeQuoteIdx+1)%quotesLibrary.length; updateHomeQuote(); });
+        document.getElementById('prevLibQuote').addEventListener('click', () => { currentLibQuoteIdx = (currentLibQuoteIdx-1+quotesLibrary.length)%quotesLibrary.length; updateLibQuote(); });
+        document.getElementById('nextLibQuote').addEventListener('click', () => { currentLibQuoteIdx = (currentLibQuoteIdx+1)%quotesLibrary.length; updateLibQuote(); });
         updateHomeQuote(); updateLibQuote();
 
-        // Timer with progress circle
-        let timerSec=300, timerInt=null, running=false;
-        const timerDisplay=document.getElementById('timerDisplay'), timerCircle=document.querySelector('.timer-progress');
-        function updateTimerUI(){ const mins=Math.floor(timerSec/60), secs=timerSec%60; timerDisplay.innerText=`${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`; const total= (timerSec<=0?0: (300-timerSec)/300 * 553); if(timerCircle) timerCircle.style.strokeDashoffset=Math.min(553, Math.max(0, total)); }
-        document.querySelectorAll('.timer-pill').forEach(btn=>btn.addEventListener('click',(e)=>{ timerSec=parseInt(e.target.dataset.min)*60; updateTimerUI(); }));
-        document.getElementById('customMinutes')?.addEventListener('change',(e)=>{ if(e.target.value>0) timerSec=parseInt(e.target.value)*60; updateTimerUI(); });
-        document.getElementById('startTimer').addEventListener('click',()=>{ if(running) return; running=true; timerInt=setInterval(()=>{ if(timerSec<=0){ clearInterval(timerInt); running=false; addPracticedTechnique(0,"Focused Meditation", Math.floor((300-timerSec)/60)||5); document.getElementById('timerMsg').innerText='✨ Complete! +xp ✨'; updateTimerUI(); } else { timerSec--; updateTimerUI(); } },1000); });
-        document.getElementById('pauseTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; });
-        document.getElementById('resetTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; timerSec=300; updateTimerUI(); document.getElementById('timerMsg').innerText=''; });
+        // Diary
+        document.getElementById('saveDiary').addEventListener('click',()=>{ const txt = document.getElementById('diaryEntry').value.trim(); if(txt){ user.diary.unshift({ date: new Date(), text: txt }); saveAll(); renderDiary(); renderProfileSections(); document.getElementById('diaryEntry').value=''; showToast('saved'); } });
 
-        // Breathwork with explanations
-        const breathInstructions = { box:"Inhale 4 sec → Hold 4 sec → Exhale 6 sec → Hold 4 sec. Calms the nervous system.", "478":"Inhale 4 sec, hold 7 sec, exhale 8 sec. Deep relaxation.", nadi:"Alternate nostril breathing. Close right nostril, inhale left; close left, exhale right. Balances hemispheres.", kapal:"Rapid forceful exhales, passive inhales. Cleanses lungs and energizes.", ujjayi:"Ocean breath: slight throat constriction, audible hiss. Soothes mind." };
-        document.querySelectorAll('.start-breath').forEach(btn=>{ btn.addEventListener('click',(e)=>{ const type=btn.closest('.breath-card').dataset.breath; document.getElementById('breathInstructionPanel').innerHTML=`<strong>📖 How to practice:</strong> ${breathInstructions[type] || 'Follow the guided rhythm.'}<br><br>🧘 Begin your session.`; startBreathPractice(type); }); });
-        function startBreathPractice(type){ /* simplified but functional */ showToast(`Started ${type} breathwork`); setTimeout(()=>{ addPracticedTechnique(0,`${type.toUpperCase()} Breathwork`,5); resetBreathUI(); }, 120000); }
-        function resetBreathUI(){ document.getElementById('stopBreathBtn').style.display='none'; document.getElementById('breathPhaseText').innerHTML='Ready'; document.getElementById('breathTimerDisplay').innerHTML='0'; }
-        document.getElementById('stopBreathBtn').addEventListener('click',resetBreathUI);
+        // Timer
+        let timerSec = 300, timerInt, running=false;
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerCircle = document.querySelector('.timer-progress');
+        const circumference = 553;
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSec / 60);
+            const secs = timerSec % 60;
+            timerDisplay.innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            const progress = (timerSec <= 0 ? 0 : (300 - timerSec) / 300);
+            const offset = circumference - (progress * circumference);
+            if(timerCircle) timerCircle.style.strokeDashoffset = Math.min(circumference, Math.max(0, offset));
+        }
+        document.querySelectorAll('.timer-pill').forEach(btn=>btn.addEventListener('click',(e)=>{ timerSec = parseInt(e.target.dataset.min)*60; updateTimerDisplay(); }));
+        document.getElementById('customMinutes')?.addEventListener('change',(e)=>{ if(e.target.value>0) timerSec = parseInt(e.target.value)*60; updateTimerDisplay(); });
+        document.getElementById('startTimer').addEventListener('click',()=>{
+            if(running) return;
+            running=true;
+            timerInt = setInterval(()=>{
+                if(timerSec<=0){
+                    clearInterval(timerInt); running=false;
+                    addPracticedTechnique(0, "Focused Meditation", Math.floor((300 - timerSec)/60) || 5);
+                    document.getElementById('timerMsg').innerText = '✨ Complete! +xp ✨';
+                    showToast('Meditation completed!');
+                    updateTimerDisplay();
+                } else { timerSec--; updateTimerDisplay(); }
+            },1000);
+        });
+        document.getElementById('pauseTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; });
+        document.getElementById('resetTimer').addEventListener('click',()=>{ clearInterval(timerInt); running=false; timerSec=300; updateTimerDisplay(); document.getElementById('timerMsg').innerText=''; });
+
+        // Breathwork with instructions
+        const breathInstructions = {
+            box: "Inhale for 4 seconds, hold for 4 seconds, exhale for 6 seconds, hold for 4 seconds. This box breathing calms the nervous system and enhances focus.",
+            "478": "Inhale for 4 seconds, hold for 7 seconds, exhale for 8 seconds. This technique promotes deep relaxation and helps with sleep.",
+            nadi: "Alternate nostril breathing: Close right nostril, inhale left; close left, exhale right. Repeat, switching sides. Balances hemispheres and calms the mind.",
+            kapal: "Kapalabhati: Rapid, forceful exhales with passive inhales. Do 30 rapid breaths, then rest. Cleanses lungs and energizes.",
+            ujjayi: "Ujjayi breath: Slight constriction at the back of the throat, creating an ocean-like sound. Inhale and exhale through nose, maintaining the sound. Soothes and focuses the mind."
+        };
+        let breathActive = false, breathInterval = null;
+        function startBreathPractice(type) {
+            if(breathInterval) clearInterval(breathInterval);
+            breathActive = true;
+            document.getElementById('stopBreathBtn').style.display = 'inline-block';
+            document.getElementById('breathInstructionPanel').innerHTML = `<strong>📖 How to practice:</strong> ${breathInstructions[type]}<br><br>🧘 Starting guided session...`;
+            let phases = [], timings = [];
+            if(type === 'box') { phases = ['inhale','hold','exhale','hold']; timings = [4,4,6,4]; }
+            else if(type === '478') { phases = ['inhale','hold','exhale']; timings = [4,7,8]; }
+            else if(type === 'nadi') { phases = ['inhale left','hold','exhale right','inhale right','hold','exhale left']; timings = [4,4,4,4,4,4]; }
+            else if(type === 'kapal') { phases = ['rapid exhale','rest']; timings = [20,10]; }
+            else if(type === 'ujjayi') { phases = ['ujjayi inhale','ujjayi exhale']; timings = [5,5]; }
+            let phaseIndex = 0, cycle = 0, maxCycles = 4;
+            const runPhase = () => {
+                if(!breathActive) return;
+                if(phaseIndex >= phases.length) { phaseIndex = 0; cycle++; if(cycle >= maxCycles) { resetBreathUI(); addPracticedTechnique(0, `${type.toUpperCase()} Breathwork`, 5); showToast('Practice complete'); return; } }
+                let timer = timings[phaseIndex];
+                const phase = phases[phaseIndex];
+                document.getElementById('breathPhaseLabel').innerHTML = phase.includes('inhale') ? '🌬️' : (phase.includes('hold') ? '🌀' : '💨');
+                document.getElementById('breathPhaseText').innerHTML = phase.toUpperCase();
+                let step = 0;
+                const interval = setInterval(() => {
+                    if(!breathActive) { clearInterval(interval); return; }
+                    step++;
+                    document.getElementById('breathTimerDisplay').innerHTML = timer - step;
+                    const progress = (step/timer)*100;
+                    document.querySelector('.progress-circle').style.strokeDashoffset = 860 - (progress/100)*860;
+                    if(step >= timer) {
+                        clearInterval(interval);
+                        phaseIndex++;
+                        runPhase();
+                    }
+                }, 1000);
+                breathInterval = interval;
+            };
+            runPhase();
+        }
+        function resetBreathUI() {
+            if(breathInterval) clearInterval(breathInterval);
+            breathActive = false;
+            document.getElementById('stopBreathBtn').style.display = 'none';
+            document.getElementById('breathInstructionPanel').innerHTML = "✨ Select a breath technique to see detailed instructions and begin your practice.";
+            document.getElementById('breathPhaseLabel').innerHTML = '🌀';
+            document.getElementById('breathPhaseText').innerHTML = 'Ready';
+            document.getElementById('breathTimerDisplay').innerHTML = '0';
+            document.querySelector('.progress-circle').style.strokeDashoffset = 860;
+        }
+        document.querySelectorAll('.start-breath').forEach(btn => btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const type = btn.closest('.breath-card').dataset.breath;
+            startBreathPractice(type);
+        }));
+        document.getElementById('stopBreathBtn').addEventListener('click', resetBreathUI);
+
+        // Navigation with transition
+        let isTransitioning = false;
+        const viewsMap = { home:'homeView', techniques:'techniquesView', breathwork:'breathworkView', quotes:'quotesView', diary:'diaryView', timer:'timerView', plan:'planView', profile:'profileView', enhanced:'enhancedView' };
+        function showViewWithTransition(viewName) {
+            if (isTransitioning) return;
+            const targetViewId = viewsMap[viewName];
+            if (!targetViewId) return;
+            const currentView = document.querySelector('.view-container:not(.hidden)');
+            const targetView = document.getElementById(targetViewId);
+            if (currentView === targetView) return;
+            isTransitioning = true;
+            document.body.classList.add('transitioning');
+            if (currentView) {
+                currentView.classList.add('view-exit');
+                currentView.addEventListener('transitionend', function onExit(e) {
+                    if (e.target !== currentView) return;
+                    currentView.removeEventListener('transitionend', onExit);
+                    currentView.classList.remove('view-exit');
+                    currentView.classList.add('hidden');
+                    targetView.classList.remove('hidden');
+                    targetView.classList.add('view-enter');
+                    void targetView.offsetWidth;
+                    targetView.classList.add('view-enter-active');
+                    targetView.addEventListener('transitionend', function onEnter(e) {
+                        if (e.target !== targetView) return;
+                        targetView.removeEventListener('transitionend', onEnter);
+                        targetView.classList.remove('view-enter', 'view-enter-active');
+                        isTransitioning = false;
+                        document.body.classList.remove('transitioning');
+                    });
+                });
+            } else {
+                targetView.classList.remove('hidden');
+                targetView.classList.add('view-enter');
+                void targetView.offsetWidth;
+                targetView.classList.add('view-enter-active');
+                targetView.addEventListener('transitionend', function onEnter(e) {
+                    if (e.target !== targetView) return;
+                    targetView.removeEventListener('transitionend', onEnter);
+                    targetView.classList.remove('view-enter', 'view-enter-active');
+                    isTransitioning = false;
+                    document.body.classList.remove('transitioning');
+                });
+            }
+            document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+            const activeNav = document.querySelector(`.nav a[data-view="${viewName}"]`);
+            if (activeNav) activeNav.classList.add('active');
+        }
+        document.querySelectorAll('[data-view]').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const view = el.dataset.view;
+                if (view) showViewWithTransition(view);
+            });
+        });
+        document.getElementById('exploreBtn').addEventListener('click', () => showViewWithTransition('techniques'));
+        document.getElementById('dailyBtn').addEventListener('click', () => {
+            const ids = Object.keys(techniques);
+            alert(`Today's technique: ${techniques[ids[Math.floor(Math.random()*ids.length)]].name}`);
+        });
 
         // Profile tabs
-        document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ const tab=btn.dataset.profileTab; document.querySelectorAll('.profile-section-container').forEach(sec=>sec.classList.remove('active-tab')); document.getElementById(`profile${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('active-tab'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }); });
-        
-        // Navigation, theme, scroll, etc.
-        const viewsMap = { home:'homeView', techniques:'techniquesView', breathwork:'breathworkView', quotes:'quotesView', diary:'diaryView', timer:'timerView', plan:'planView', profile:'profileView', enhanced:'enhancedView' };
-        function showViewWithTransition(view){ const target=document.getElementById(viewsMap[view]); if(!target) return; document.querySelectorAll('.view-container').forEach(v=>v.classList.add('hidden')); target.classList.remove('hidden'); document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active')); const activeNav=document.querySelector(`.nav a[data-view="${view}"]`); if(activeNav) activeNav.classList.add('active'); window.scrollTo(0,0); }
-        document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',(e)=>{ e.preventDefault(); showViewWithTransition(el.dataset.view); }));
-        document.getElementById('exploreBtn').addEventListener('click',()=>showViewWithTransition('techniques'));
-        document.getElementById('dailyBtn').addEventListener('click',()=>alert("Today's technique: Witnessing the Breath"));
-        document.getElementById('saveDiary').addEventListener('click',()=>{ const txt=document.getElementById('diaryEntry').value.trim(); if(txt){ user.diary.unshift({ date: new Date(), text: txt }); saveAll(); renderDiary(); document.getElementById('diaryEntry').value=''; showToast('Diary saved'); } });
-        const themeBtn=document.getElementById('themeToggle'); themeBtn.addEventListener('click',()=>{ const html=document.documentElement; const cur=html.getAttribute('data-theme'); html.setAttribute('data-theme',cur==='dark'?'light':'dark'); themeBtn.innerHTML=cur==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'; localStorage.setItem('theme',html.getAttribute('data-theme')); });
-        const savedTheme=localStorage.getItem('theme')||'dark'; document.documentElement.setAttribute('data-theme',savedTheme); themeBtn.innerHTML=savedTheme==='dark'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
-        function showToast(msg){ const t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
-        const scrollBtn=document.getElementById('scrollTop'); window.addEventListener('scroll',()=>scrollBtn.style.opacity=window.scrollY>200?'1':'0'); scrollBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-        renderCalendar(); renderProfileSections(); renderPlan(); renderDiary(); showViewWithTransition('home');
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.profileTab;
+                document.querySelectorAll('.profile-section-container').forEach(sec => sec.classList.remove('active-tab'));
+                document.getElementById(`profile${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('active-tab');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Theme toggle
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click',()=>{ const html = document.documentElement; const cur = html.getAttribute('data-theme'); html.setAttribute('data-theme', cur==='dark'?'light':'dark'); themeBtn.innerHTML = cur==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'; localStorage.setItem('theme', html.getAttribute('data-theme')); });
+        const savedTheme = localStorage.getItem('theme')||'dark'; document.documentElement.setAttribute('data-theme', savedTheme); themeBtn.innerHTML = savedTheme==='dark'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
+
+        function showToast(msg) { const t = document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll',()=>scrollBtn.style.opacity = window.scrollY>200?'1':'0');
+        scrollBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+        // Chart
+        const chartCtx = document.getElementById('progressChart')?.getContext('2d');
+        if(chartCtx) new Chart(chartCtx, { type:'line', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ label:'minutes', data:[25,40,18,35,50,42,30], borderColor:'#9d7bff', tension:0.3 }] } });
+
+        // Initial calls
+        renderPlan();
+        renderDiary();
+        renderProfileSections();
+        showViewWithTransition('home');
     </script>
 </body>
 </html>
