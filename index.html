@@ -133,10 +133,11 @@
         /* Hero section */
         .hero {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 2rem;
             margin-bottom: 3rem;
             align-items: center;
+            text-align: center;
         }
         .hero-badge {
             display: inline-block;
@@ -173,6 +174,7 @@
         .btn-group {
             display: flex;
             gap: 1rem;
+            justify-content: center;
             flex-wrap: wrap;
         }
         .btn-primary, .btn-outline {
@@ -197,18 +199,6 @@
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
             backdrop-filter: blur(4px);
-        }
-        .hero-illustration svg {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            filter: drop-shadow(0 0 20px rgba(157,123,255,0.3));
-            animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
         }
 
         /* Mudra gallery */
@@ -493,7 +483,6 @@
             border-top: 1px solid var(--glass-border);
         }
         @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; text-align: center; }
             .hero h2 { font-size: 2.5rem; }
         }
         @media (max-width: 640px) {
@@ -526,7 +515,6 @@
                     <p class="hero-sub">112 authentic Tantra meditations, breathwork, cosmic diary, wisdom quotes, and a living black hole.</p>
                     <div class="btn-group"><button class="btn-primary" id="exploreBtn">Begin Voyage →</button><button class="btn-outline" id="dailyBtn">Daily Technique</button></div>
                 </div>
-                <div class="hero-illustration"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" stroke="url(#grad)" stroke-width="1.5" fill="none"/><circle cx="100" cy="100" r="60" stroke="url(#grad)" stroke-width="1.2" fill="none"/><circle cx="100" cy="100" r="40" stroke="url(#grad)" stroke-width="1" fill="none"/><circle cx="100" cy="100" r="12" fill="var(--accent)" opacity="0.6"><animate attributeName="r" values="12;15;12" dur="3s" repeatCount="indefinite"/></circle><defs><radialGradient id="grad"><stop offset="0%" stop-color="#9d7bff"/><stop offset="100%" stop-color="#ffb3a0"/></radialGradient></defs></svg></div>
             </div>
             <div class="mudra-gallery"><h3>🌀 Sacred Mudras · Gestures of Awakening</h3><div class="mudra-grid" id="mudraGrid"></div></div>
             <div class="quotes-home glass-card"><h2>🌠 Wisdom of the Ages</h2><div id="homeQuoteContainer"><div class="quote-text-large" id="homeQuoteText">Loading wisdom...</div><div class="quote-author" id="homeQuoteAuthor"></div></div><div class="quote-save"><button class="btn-outline" id="saveHomeQuoteBtn"><i class="fas fa-bookmark"></i> Save to Diary & Quotes</button></div><div class="quote-nav"><button class="btn-outline" id="prevHomeQuote"><i class="fas fa-chevron-left"></i></button><button class="btn-outline" id="nextHomeQuote"><i class="fas fa-chevron-right"></i></button></div></div>
@@ -718,7 +706,6 @@
             particleGeo.attributes.position.needsUpdate = true;
             
             // Gentle pulsations
-            const pulse = 0.8 + Math.sin(time * 2.5) * 0.2;
             coreLight.intensity = 0.7 + Math.sin(time * 2.2) * 0.2;
             innerRingMat.emissiveIntensity = 0.45 + Math.sin(time * 3) * 0.15;
             outerRingMat.emissiveIntensity = 0.35 + Math.sin(time * 2.5) * 0.1;
@@ -856,7 +843,6 @@
             updateUI();
         }
         function updateUI() {
-            document.getElementById('profStreak')?.setAttribute?.('data-val',user.streak);
             document.getElementById('enhTotalPractices').innerText = user.totalPractices;
             document.getElementById('enhTotalMinutes').innerText = user.totalMinutes;
             document.getElementById('enhStreak').innerText = user.streak;
@@ -866,7 +852,6 @@
             renderPlan();
             renderDiary();
         }
-        function markPracticeDay() { const today = new Date().toISOString().slice(0,10); if(!user.practiceDays[today]) user.practiceDays[today]=true; saveAll(); }
         function renderCalendar() {
             const container = document.getElementById('calendarTracker'); if(!container) return;
             const today = new Date(), year = today.getFullYear(), month = today.getMonth(), firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month+1, 0).getDate();
@@ -1032,7 +1017,6 @@
         let currentHomeQuoteIdx = 0, currentLibQuoteIdx = 0;
         function updateHomeQuote() { const q = quotesLibrary[currentHomeQuoteIdx]; document.getElementById('homeQuoteText').innerHTML = `“${q.text}”`; document.getElementById('homeQuoteAuthor').innerHTML = `— ${q.author}`; }
         function updateLibQuote() { const q = quotesLibrary[currentLibQuoteIdx]; document.getElementById('quoteContainer').innerHTML = `<div class="quote-text-large">“${q.text}”</div><div class="quote-author">— ${q.author}</div>`; }
-        function saveQuoteToDiary(quoteText, author) { saveQuoteToBoth(quoteText, author); }
         document.getElementById('saveHomeQuoteBtn').addEventListener('click', () => { const q = quotesLibrary[currentHomeQuoteIdx]; saveQuoteToBoth(q.text, q.author); });
         document.getElementById('saveLibQuoteBtn').addEventListener('click', () => { const q = quotesLibrary[currentLibQuoteIdx]; saveQuoteToBoth(q.text, q.author); });
         document.getElementById('prevHomeQuote').addEventListener('click', () => { currentHomeQuoteIdx = (currentHomeQuoteIdx-1+quotesLibrary.length)%quotesLibrary.length; updateHomeQuote(); });
