@@ -83,6 +83,15 @@
             transition: var(--transition);
         }
 
+        /* Spacing between stacked glass cards in any view */
+        .view-container > .glass-card {
+            margin-bottom: 1.5rem;
+        }
+
+        .view-container > .glass-card:last-child {
+            margin-bottom: 0;
+        }
+
         .header {
             display: flex;
             flex-wrap: wrap;
@@ -367,6 +376,19 @@
             .profile-list-item {
                 padding: 0.6rem;
                 font-size: 0.9rem;
+            }
+            /* improved spacing for grid containers on mobile */
+            .profession-grid,
+            .tech-grid,
+            .breath-grid {
+                gap: 1rem;
+            }
+            /* ensure consistent vertical spacing */
+            .view-container > .glass-card {
+                margin-bottom: 1rem;
+            }
+            .hero h2 {
+                font-size: 2rem;
             }
         }
 
@@ -797,12 +819,6 @@
         }
         @media (max-width: 900px) {
             .hero h2 { font-size: 2.5rem; }
-        }
-        @media (max-width: 640px) {
-            .app-container { padding: 1rem; }
-            .nav a { font-size: 0.8rem; }
-            .breath-ring { width: 220px; height: 220px; }
-            .breath-inner-ring { width: 140px; height: 140px; }
         }
 
         /* Additional styles for enhanced view */
@@ -2393,134 +2409,4 @@
         
         // ==================== MUDRA CAROUSEL ====================
         const mudrasData = [
-            { name:"Bhumisparsa", sanskrit:"Bhūmisparśa Mudrā", meaning:"Earth-Touching Gesture", how:"Sit in meditation posture. Left hand rests in lap. Right hand reaches down and touches the earth.", essence:"When the mind disappears, the whole existence becomes your witness. Buddha touched the earth not to ask for testimony, but to declare his unity with existence. You are not separate from the earth; your body is dust of the same soil. The gesture says: 'I belong to existence. Existence supports my awakening.'", meditation:"Sit silently. Touch the ground. Feel that the whole universe supports your consciousness. A deep grounding meditation.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M50,70 L50,30 M30,50 L70,50 M40,60 L60,40 M40,40 L60,60"/><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor"/><path d="M35,45 L45,55 M55,45 L65,55" stroke="currentColor"/></svg>` },
-            { name:"Dhyana", sanskrit:"Dhyāna Mudrā", meaning:"Meditation Gesture", how:"Sit in lotus or any meditation posture. Both hands rest in lap, right hand over left. Thumbs lightly touching, forming a triangle.", essence:"This mudra represents perfect equilibrium. Meditation is not concentration; it is relaxation into your own being. The triangle formed by the thumbs represents body, mind, and consciousness. When these three become balanced, awareness blooms naturally.", meditation:"Hold the mudra, breathe slowly, observe thoughts. Don't control anything. Slowly you will notice a gap between thoughts. That gap is the doorway to inner silence.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M35,65 L65,65 M40,55 L60,55 M45,45 L55,45"/><circle cx="50" cy="50" r="30" fill="none" stroke="currentColor"/><circle cx="50" cy="50" r="15" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Abhaya", sanskrit:"Abhaya Mudrā", meaning:"Fearlessness Gesture", how:"Raise the right hand. Palm faces outward, fingers pointing upward.", essence:"Fear exists because the ego exists. The ego fears death, rejection, loss, uncertainty. When you realize your true consciousness, fear begins to dissolve. The gesture silently says: 'Do not be afraid.' Not because danger does not exist—but because your awareness is deeper than fear.", meditation:"Raise the hand in Abhaya Mudra and feel life flowing through you, existence supporting you. It creates deep psychological courage.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M40,60 L60,60 M50,70 L50,40"/><path d="M35,50 L45,50 M55,50 L65,50"/><circle cx="50" cy="50" r="28" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Dharmachakra", sanskrit:"Dharmacakra Mudrā", meaning:"Turning the Wheel of Dharma", how:"Both hands near the chest. Thumb and index finger of both hands form circles. Hands face outward.", essence:"Truth cannot be taught directly; it can only be shared through presence. When Buddha began teaching after enlightenment, it was called 'Turning the Wheel of Dharma.' The mudra symbolizes knowledge moving, awareness spreading, consciousness awakening in others.", meditation:"Sit calmly. Feel wisdom flowing from your heart outward. Not preaching—simply radiating awareness.", svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="none" stroke="currentColor"/><circle cx="50" cy="50" r="10" fill="none"/><path d="M40,35 L60,65 M60,35 L40,65" stroke="currentColor"/></svg>` },
-            { name:"Jnana", sanskrit:"Jñāna Mudrā", meaning:"Gesture of Knowledge", how:"Touch the tip of thumb and index finger. Other fingers remain extended. Hands rest on knees.", essence:"The circle formed by thumb and finger symbolizes unity. Thumb represents universal consciousness; index finger represents the individual ego. When the two meet, the ego merges into the cosmic whole. The other three fingers represent body, mind, and illusion.", meditation:"Sit quietly with this mudra. Observe breath. Gradually you realize: you are not the mind—you are the awareness behind it.", svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="none" stroke="currentColor"/><path d="M42,42 L58,58 M42,58 L58,42"/><circle cx="50" cy="50" r="8" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Karana", sanskrit:"Karaṇa Mudrā", meaning:"Gesture of Dispelling Negativity", how:"Index finger and little finger extended. Middle and ring fingers folded. Thumb holds them down.", essence:"Negativity is not external. It arises from unconsciousness, suppressed emotions, unnoticed thoughts. The real demon is lack of awareness. This mudra symbolizes the destruction of unconscious patterns. When awareness enters darkness, the darkness disappears.", meditation:"While making this mudra, visualize negativity leaving the mind. Breathe deeply. It creates psychological purification.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M35,55 L65,45 M35,45 L65,55 M50,65 L50,35"/><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Uttarabodhi", sanskrit:"Uttarabodhi Mudrā", meaning:"Gesture of Supreme Enlightenment", how:"Interlock fingers. Extend index fingers upward. Thumbs crossed.", essence:"This mudra represents the rising energy of awakening. The upward fingers symbolize expanding consciousness. It expresses the possibility that human awareness can grow beyond mind, ego, identity. In deep awareness, the mind becomes silent, the ego dissolves, only pure consciousness remains.", meditation:"Hold this mudra and imagine energy rising from the spine toward the head. Feel expansion—as if your consciousness is touching infinity.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M30,55 L70,55 M50,30 L50,70 M40,40 L60,60 M40,60 L60,40"/><circle cx="50" cy="50" r="28" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Vitarka", sanskrit:"Vitarka Mudrā", meaning:"Gesture of Discussion / Teaching", how:"Thumb and index finger form a circle. Palm faces outward. Hand slightly raised.", essence:"Vitarka represents conscious dialogue. Truth grows through questioning, reflection, and awareness. It is not argument—it is exploration. In the meeting of question, answer, and awareness, truth gradually reveals itself.", meditation:"Hold this mudra while contemplating a question. Let the answer arise naturally from silence.", svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="none" stroke="currentColor"/><path d="M38,45 L62,55 M38,55 L62,45"/><circle cx="50" cy="50" r="8" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Namaskara", sanskrit:"Namaskāra Mudrā", meaning:"Prayer Gesture", how:"Palms pressed together near the heart.", essence:"Namaste means: 'The divine in me honors the divine in you.' It is more than a greeting. It is recognition that the same consciousness lives in every being. When the hands join, the ego softens, humility appears, unity is remembered.", meditation:"Bring palms together at the heart. Feel the meeting of left and right—the meeting of opposites. Offer respect to all beings.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M30,60 L70,60 M50,40 L50,70 M40,45 L60,55 M40,55 L60,45"/><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Tarjani", sanskrit:"Tarjanī Mudrā", meaning:"Gesture of Warning / Direction", how:"Index finger extended, other fingers folded. Hand raised.", essence:"Tarjani symbolizes awareness pointing toward ignorance. Sometimes truth must wake people up strongly. This mudra represents the moment when awareness points directly at unconsciousness—urging it to awaken.", meditation:"Raise the index finger, not in anger, but as a reminder to yourself: 'Wake up. Don't be unconscious.'", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M50,65 L50,30 M40,45 L60,45"/><circle cx="50" cy="30" r="4" fill="none"/><circle cx="50" cy="50" r="22" fill="none" stroke="currentColor"/></svg>` },
-            { name:"Kesapana", sanskrit:"Keśapana Mudrā", meaning:"Gesture of Sprinkling Immortal Nectar", how:"Two hands together, fingers intertwined, as if sprinkling.", essence:"This mudra represents the showering of wisdom and compassion. It is the gesture of bestowing blessings, offering the nectar of immortality—the realization of your true self.", meditation:"Imagine cool, luminous nectar flowing from your hands into your own heart and then out to all beings. Let compassion fill your being.", svg:`<svg viewBox="0 0 100 100"><path stroke="currentColor" stroke-width="2" d="M35,55 L65,45 M35,45 L65,55 M45,65 L55,35 M45,35 L55,65"/><circle cx="50" cy="50" r="28" fill="none" stroke="currentColor"/></svg>` }
-        ];
-        let currentMudraIndex = 0;
-        function renderMudra(index) {
-            const mudra = mudrasData[index];
-            const container = document.getElementById('mudraContent');
-            if (!container) return;
-            container.innerHTML = `
-                <div class="mudra-svg">${mudra.svg}</div>
-                <div class="mudra-name">${mudra.name}</div>
-                <div class="mudra-sanskrit">${mudra.sanskrit}</div>
-                <div class="mudra-section"><h4>✨ Meaning</h4><p>${mudra.meaning}</p></div>
-                <div class="mudra-section"><h4>🖐️ How to Form</h4><p>${mudra.how}</p></div>
-                <div class="mudra-section"><h4>💎 Essence</h4><p>${mudra.essence}</p></div>
-                <div class="mudra-section"><h4>🧘 Inner Meditation</h4><p>${mudra.meditation}</p></div>
-            `;
-            document.getElementById('mudraCounter').innerText = `${index + 1} / ${mudrasData.length}`;
-        }
-        function nextMudra() { currentMudraIndex = (currentMudraIndex + 1) % mudrasData.length; renderMudra(currentMudraIndex); }
-        function prevMudra() { currentMudraIndex = (currentMudraIndex - 1 + mudrasData.length) % mudrasData.length; renderMudra(currentMudraIndex); }
-        function saveCurrentMudraToDiary() {
-            const mudra = mudrasData[currentMudraIndex];
-            const entry = `🧘 Mudra: ${mudra.name} (${mudra.sanskrit})\n\nMeaning: ${mudra.meaning}\n\nHow to Form: ${mudra.how}\n\nEssence: ${mudra.essence}\n\nInner Meditation: ${mudra.meditation}`;
-            if (typeof window.saveQuoteToBoth === 'function') {
-                window.saveQuoteToBoth(entry, `Mudra: ${mudra.name}`);
-            } else {
-                alert("Diary save function not available. This section must be placed inside the main page.");
-            }
-        }
-        document.getElementById('prevMudraBtn')?.addEventListener('click', prevMudra);
-        document.getElementById('nextMudraBtn')?.addEventListener('click', nextMudra);
-        document.getElementById('saveMudraBtn')?.addEventListener('click', saveCurrentMudraToDiary);
-        renderMudra(0);
-        
-        // ==================== NAVIGATION ====================
-        let transitioning=false;
-        const views={ home:'homeView', techniques:'techniquesView', breathwork:'breathworkView', quotes:'quotesView', diary:'diaryView', timer:'timerView', plan:'planView', profile:'profileView', enhanced:'enhancedView', stats:'statsView', achievements:'achievementsView' };
-        function showView(viewName) {
-            if(transitioning) return;
-            const target=document.getElementById(views[viewName]);
-            if(!target) return;
-            const current=document.querySelector('.view-container:not(.hidden)');
-            if(current===target) return;
-            transitioning=true;
-            document.body.classList.add('transitioning');
-            if(current){
-                current.classList.add('view-exit');
-                current.addEventListener('transitionend', function onExit(e){
-                    if(e.target!==current) return;
-                    current.removeEventListener('transitionend',onExit);
-                    current.classList.remove('view-exit');
-                    current.classList.add('hidden');
-                    target.classList.remove('hidden');
-                    target.classList.add('view-enter');
-                    void target.offsetWidth;
-                    target.classList.add('view-enter-active');
-                    target.addEventListener('transitionend', function onEnter(e){
-                        if(e.target!==target) return;
-                        target.removeEventListener('transitionend',onEnter);
-                        target.classList.remove('view-enter','view-enter-active');
-                        transitioning=false;
-                        document.body.classList.remove('transitioning');
-                    });
-                });
-            } else {
-                target.classList.remove('hidden');
-                target.classList.add('view-enter');
-                void target.offsetWidth;
-                target.classList.add('view-enter-active');
-                target.addEventListener('transitionend', function onEnter(e){
-                    if(e.target!==target) return;
-                    target.removeEventListener('transitionend',onEnter);
-                    target.classList.remove('view-enter','view-enter-active');
-                    transitioning=false;
-                    document.body.classList.remove('transitioning');
-                });
-            }
-            document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
-            const activeNav=document.querySelector(`.nav a[data-view="${viewName}"]`);
-            if(activeNav) activeNav.classList.add('active');
-        }
-        document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',(e)=>{ e.preventDefault(); showView(el.dataset.view); }));
-        document.getElementById('exploreBtn').addEventListener('click',()=>showView('techniques'));
-        document.getElementById('dailyBtn').addEventListener('click',()=>{ const ids=Object.keys(techniques); alert(`Today's technique: ${techniques[ids[Math.floor(Math.random()*ids.length)]].name}`); });
-        
-        // ==================== PROFILE TABS ====================
-        document.querySelectorAll('.tab-btn').forEach(btn=>{
-            btn.addEventListener('click',()=>{
-                const tab=btn.dataset.profileTab;
-                document.querySelectorAll('.profile-section-container').forEach(sec=>sec.classList.remove('active-tab'));
-                document.getElementById(`profile${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('active-tab');
-                document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-        
-        // ==================== NOTIFICATIONS ====================
-        if ('Notification' in window && Notification.permission !== 'granted') {
-            Notification.requestPermission();
-        }
-        
-        // ==================== THEME ====================
-        const themeBtn=document.getElementById('themeToggle');
-        themeBtn.addEventListener('click',()=>{ const html=document.documentElement; const cur=html.getAttribute('data-theme'); html.setAttribute('data-theme', cur==='dark'?'light':'dark'); themeBtn.innerHTML=cur==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'; localStorage.setItem('theme',html.getAttribute('data-theme')); });
-        const savedTheme=localStorage.getItem('theme')||'dark'; document.documentElement.setAttribute('data-theme',savedTheme); themeBtn.innerHTML=savedTheme==='dark'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
-        
-        function showToast(msg){ const t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
-        const scrollBtn=document.getElementById('scrollTop');
-        window.addEventListener('scroll',()=>scrollBtn.style.opacity=window.scrollY>200?'1':'0');
-        scrollBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-        
-        // Initialize
-        renderPlan(); renderDiary(); renderProfileSections(); updateUI(); showView('home');
-        
-        // PWA: register service worker (simulated)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(console.log);
-        }
-    </script>
-</body>
-</html>
+            { name:"Bhumisparsa", sanskrit:"Bhūmisparśa Mudrā", meaning:"Earth-Touching Gesture", how:"Sit in meditation posture. Left hand rests in lap. Right hand reaches down and touches the earth.", essence:"When the mind disappears, the whole existence becomes your witness. Buddha touched the earth not to ask for testimony, but to declare his unity with existence. You are not separate from the earth; your body is dust of the same soil. The gesture says: 'I belong to existence. Existence supports my awakening.'", meditation:"Sit silently. Touch the ground. Feel that the whole universe supports
